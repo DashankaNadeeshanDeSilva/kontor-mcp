@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { get as httpGet } from "node:http";
 import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
@@ -93,6 +94,27 @@ describe("readConfig (PRD §5.9 env surface)", () => {
     if (c.transport !== "http") throw new Error("unreachable");
     expect(c.authToken).toBeUndefined();
   });
+  it("KONTOR_ALLOWED_HOSTS is a trimmed comma list (Docker: bind 0.0.0.0 behind a proxy)", () => {
+    const c = readConfig({
+      KONTOR_TRANSPORT: "http",
+      KONTOR_AUTH_TOKEN: "x".repeat(16),
+      KONTOR_ALLOWED_HOSTS: "kontor.internal, mcp.example ",
+    });
+    if (c.transport !== "http") throw new Error("unreachable");
+    expect(c.allowedHosts).toEqual(["kontor.internal", "mcp.example"]);
+  });
+  it("session limits: KONTOR_MAX_SESSIONS / KONTOR_SESSION_IDLE_MINUTES with sane defaults", () => {
+    const base = { KONTOR_TRANSPORT: "http", KONTOR_AUTH_TOKEN: "x".repeat(16) };
+    const c = readConfig(base);
+    if (c.transport !== "http") throw new Error("unreachable");
+    expect(c.maxSessions).toBe(100);
+    expect(c.sessionIdleMs).toBe(30 * 60_000);
+    const d = readConfig({ ...base, KONTOR_MAX_SESSIONS: "5", KONTOR_SESSION_IDLE_MINUTES: "2" });
+    if (d.transport !== "http") throw new Error("unreachable");
+    expect(d.maxSessions).toBe(5);
+    expect(d.sessionIdleMs).toBe(120_000);
+    expect(() => readConfig({ ...base, KONTOR_MAX_SESSIONS: "0" })).toThrow(/KONTOR_MAX_SESSIONS/);
+  });
   it("rejects garbage", () => {
     expect(() => readConfig({ KONTOR_TRANSPORT: "grpc" })).toThrow(/KONTOR_TRANSPORT/);
     expect(() =>
@@ -182,6 +204,63 @@ describe("Streamable HTTP transport (Task 3.1)", () => {
     });
     expect(after.status).toBe(404);
     await client.close();
+  });
+
+  it("Host header: loopback always passes, other hosts only via KONTOR_ALLOWED_HOSTS (DNS rebinding)", async () => {
+    // undici's fetch silently drops a caller-set Host header, so use node:http here.
+    const withHost = (u: URL, host: string) =>
+      new Promise<number>((resolve, reject) =>
+        httpGet(
+          { host: u.hostname, port: u.port, path: "/healthz", headers: { Host: host } },
+          (r) => {
+            r.resume();
+            resolve(r.statusCode ?? 0);
+          },
+        ).on("error", reject),
+      );
+    expect(await withHost(url, "evil.example")).toBe(403);
+    expect(await withHost(url, "localhost:1234")).toBe(200);
+    const proxied = await startHttpServer({
+      port: 0,
+      bind: "127.0.0.1",
+      authToken: TOKEN,
+      allowedOrigins: [],
+      allowedHosts: ["kontor.internal"],
+    });
+    try {
+      const u = new URL(`http://127.0.0.1:${proxied.port}/mcp`);
+      expect(await withHost(u, "kontor.internal:8443")).toBe(200);
+      expect(await withHost(u, "127.0.0.1")).toBe(200);
+      expect(await withHost(u, "evil.example")).toBe(403);
+    } finally {
+      await proxied.close();
+    }
+  });
+
+  it("reaps idle sessions and caps concurrent sessions (503)", async () => {
+    const small = await startHttpServer({
+      port: 0,
+      bind: "127.0.0.1",
+      authToken: TOKEN,
+      allowedOrigins: [],
+      maxSessions: 1,
+      sessionIdleMs: 200,
+    });
+    try {
+      const u = new URL(`http://127.0.0.1:${small.port}/mcp`);
+      const c1 = new Client({ name: "a", version: "0" });
+      await c1.connect(new StreamableHTTPClientTransport(u, { requestInit: auth() }));
+      expect(small.sessionCount()).toBe(1);
+      const c2 = new Client({ name: "b", version: "0" });
+      await expect(
+        c2.connect(new StreamableHTTPClientTransport(u, { requestInit: auth() })),
+      ).rejects.toThrow(/503|Too many sessions/);
+      await new Promise((r) => setTimeout(r, 700));
+      expect(small.sessionCount()).toBe(0);
+      await expect(c1.listTools()).rejects.toThrow(); // its session id is gone (404)
+    } finally {
+      await small.close();
+    }
   });
 
   it("serves an unauthenticated /healthz for container health checks", async () => {

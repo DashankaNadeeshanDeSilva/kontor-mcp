@@ -69,6 +69,16 @@ npx @modelcontextprotocol/inspector@latest --cli node packages/server/dist/bin.j
   --tool-arg file_path=$PWD/packages/server/samples/broken-missing-buyer-reference.xml --tool-arg lang=en
 ```
 
+**Docker / Streamable HTTP** — the same server over HTTP for remote agents and containers (token required, loopback-published port, TLS is your reverse proxy's job):
+
+```sh
+docker build -t kontor-mcp .              # multi-stage, non-root, ~70 MB, amd64 + arm64
+docker run -d -p 127.0.0.1:3333:3333 -e KONTOR_AUTH_TOKEN="$(openssl rand -hex 24)" kontor-mcp
+curl -s http://127.0.0.1:3333/healthz     # {"ok":true,"name":"kontor-mcp",...}
+```
+
+Or `cp .env.example .env && docker compose up -d` (read-only root FS, `./invoices` mounted at `/data`). Config surface and the security posture: [`packages/server/README.md`](packages/server/README.md#streamable-http), [`SECURITY.md`](SECURITY.md).
+
 ## Tools
 
 | Tool | What it does |
@@ -146,7 +156,7 @@ Details, commands and recorded reports: [`docs/CONFORMANCE.md`](docs/CONFORMANCE
 |---|---|
 | [`@kontor-mcp/core`](packages/core) | MCP-free library: detect, parse, validate, audit, generate, convert, ZUGFeRD PDF |
 | [`@kontor-mcp/rules`](packages/rules) | Bundled standards artefacts (XSDs, compiled Schematron, code lists, legal timeline, PDF assets) + rule knowledge base |
-| [`@kontor-mcp/server`](packages/server) | MCP server (stdio; Streamable HTTP in Phase 3) exposing tools, resources, prompts |
+| [`@kontor-mcp/server`](packages/server) | MCP server (stdio and Streamable HTTP with bearer auth; Docker image) exposing tools, resources, prompts |
 | [`@kontor-mcp/client`](packages/client) | `kontor-agent` — reference MCP client CLI with an Anthropic agent loop (Phase 3) |
 
 ## FAQ

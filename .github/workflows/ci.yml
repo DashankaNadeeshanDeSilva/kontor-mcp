@@ -80,3 +80,65 @@ jobs:
         env:
           VERAPDF: /opt/verapdf/verapdf
           KONTOR_JAVA: java
+
+  docker:
+    name: Docker image (amd64+arm64 build, HTTP smoke via Inspector)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
+      - name: Build both platforms (no push; GHCR publish is owner-gated, Task 3.6)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Load amd64 image for the smoke test
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: kontor-mcp:ci
+          cache-from: type=gha
+      - name: Image size < 300 MB, runs as non-root, refuses to start without a token
+        run: |
+          size=$(docker image inspect kontor-mcp:ci --format '{{.Size}}')
+          echo "image size: $((size / 1000000)) MB"
+          test "$size" -lt 300000000
+          test "$(docker run --rm --entrypoint id -u kontor-mcp:ci)" != "0"
+          if docker run --rm kontor-mcp:ci; then echo "started without KONTOR_AUTH_TOKEN"; exit 1; fi
+      - name: Run container and wait for the health check
+        run: |
+          docker run -d --name kontor -p 127.0.0.1:3333:3333 -e KONTOR_AUTH_TOKEN=ci-smoke-token-0123456789 kontor-mcp:ci
+          for i in $(seq 1 30); do
+            if [ "$(docker inspect kontor --format '{{.State.Health.Status}}')" = healthy ]; then break; fi
+            sleep 1
+          done
+          docker inspect kontor --format 'health={{.State.Health.Status}}' | tee /dev/stderr | grep -q healthy
+          curl -sf http://127.0.0.1:3333/healthz
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:3333/mcp -H 'content-type: application/json' -d '{}')" = 401
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Inspector over HTTP with token — tools/list (8 tools) + validate_invoice on a bundled sample
+        run: |
+          H="Authorization: Bearer ci-smoke-token-0123456789"
+          npx -y @modelcontextprotocol/inspector@latest --cli http://127.0.0.1:3333/mcp --transport http --header "$H" \
+            --method tools/list > tools.json
+          test "$(jq '.tools | length' tools.json)" = 8
+          npx -y @modelcontextprotocol/inspector@latest --cli http://127.0.0.1:3333/mcp --transport http --header "$H" \
+            --method tools/call --tool-name validate_invoice --tool-arg file_path=/app/samples/valid-xrechnung-ubl.xml > call.json
+          jq -e '.structuredContent.verdict == "valid"' call.json
+          npx -y @modelcontextprotocol/inspector@latest --cli http://127.0.0.1:3333/mcp --transport http --header "$H" \
+            --method tools/call --tool-name validate_invoice --tool-arg file_path=/app/samples/broken-missing-buyer-reference.xml > broken.json
+          jq -e '.structuredContent.verdict == "invalid"' broken.json
+      - name: Graceful shutdown on SIGTERM
+        if: always()
+        run: |
+          docker stop -t 10 kontor
+          docker logs kontor 2>&1 | tail -5
+          docker rm kontor

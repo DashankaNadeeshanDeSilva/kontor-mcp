@@ -1,0 +1,17 @@
+.git
+.github
+node_modules
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+coverage
+docs
+fixtures
+tools
+graphify-out
+.vitest
+*.log
+.env
+.env.*
+Dockerfile
+docker-compose.yml

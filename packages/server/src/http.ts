@@ -22,7 +22,12 @@ import {
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import express, { type Express, type NextFunction, type Request, type Response } from "express";
-import { isLoopback } from "./config.js";
+import {
+  DEFAULT_MAX_SESSIONS,
+  DEFAULT_SESSION_IDLE_MINUTES,
+  isLoopback,
+  LOOPBACK_HOSTS,
+} from "./config.js";
 import { maxBytes } from "./input.js";
 import { createServer } from "./server.js";
 import { SERVER_NAME, SERVER_VERSION } from "./server-meta.js";
@@ -33,8 +38,12 @@ export interface HttpServerOptions {
   /** Undefined = no authentication (caller must have enforced the loopback opt-in). */
   authToken?: string | undefined;
   allowedOrigins: string[];
-  /** Extra hostnames accepted in the Host header when not bound to loopback. */
+  /** Extra hostnames accepted in the Host header (loopback names are always accepted). */
   allowedHosts?: string[];
+  /** Default 100; new sessions beyond it get 503. */
+  maxSessions?: number;
+  /** Default 30 min; sessions idle longer are closed. */
+  sessionIdleMs?: number;
   log?: (line: string) => void;
 }
 
@@ -102,14 +111,43 @@ export function jsonBodyLimit(): number {
 export function createHttpApp(opts: HttpServerOptions): {
   app: Express;
   sessions: Map<string, StreamableHTTPServerTransport>;
+  /** Stops the idle reaper. */
+  stop: () => void;
 } {
   const app = express();
   app.disable("x-powered-by");
-  if (opts.allowedHosts?.length) app.use(hostHeaderValidation(opts.allowedHosts));
-  else if (isLoopback(opts.bind)) app.use(localhostHostValidation());
+  // DNS-rebinding protection: on a loopback bind only loopback Host values are accepted; with an
+  // explicit list, loopback + that list. A non-loopback bind without a list relies on the token.
+  if (opts.allowedHosts?.length) {
+    app.use(hostHeaderValidation([...LOOPBACK_HOSTS, ...opts.allowedHosts]));
+  } else if (isLoopback(opts.bind)) {
+    app.use(localhostHostValidation());
+  }
 
   const sessions = new Map<string, StreamableHTTPServerTransport>();
+  const lastSeen = new Map<string, number>();
   const log = opts.log ?? (() => {});
+  const maxSessions = opts.maxSessions ?? DEFAULT_MAX_SESSIONS;
+  const idleMs = opts.sessionIdleMs ?? DEFAULT_SESSION_IDLE_MINUTES * 60_000;
+  const forget = (id: string): boolean => {
+    lastSeen.delete(id);
+    return sessions.delete(id);
+  };
+  // Idle reaper: clients that never DELETE (Inspector CLI, crashed agents) must not pin memory forever.
+  const reaper = setInterval(
+    () => {
+      const cutoff = Date.now() - idleMs;
+      for (const [id, seen] of lastSeen) {
+        if (seen < cutoff) {
+          log(`session ${id} idle for > ${Math.round(idleMs / 1000)}s, closing`);
+          sessions.get(id)?.close();
+          forget(id);
+        }
+      }
+    },
+    Math.max(50, Math.min(idleMs / 2, 60_000)),
+  );
+  reaper.unref();
 
   app.get("/healthz", (_req, res) => {
     res.json({ ok: true, name: SERVER_NAME, version: SERVER_VERSION, sessions: sessions.size });
@@ -129,24 +167,33 @@ export function createHttpApp(opts: HttpServerOptions): {
         res.status(404).json(jsonRpcError(-32001, "Session not found"));
         return;
       }
+      if (sessions.size >= maxSessions) {
+        res
+          .status(503)
+          .set("Retry-After", "30")
+          .json(jsonRpcError(-32000, `Too many sessions (limit ${maxSessions})`));
+        return;
+      }
       transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: () => randomUUID(),
         onsessioninitialized: (id) => {
           sessions.set(id, transport as StreamableHTTPServerTransport);
+          lastSeen.set(id, Date.now());
           log(`session ${id} opened (${sessions.size} active)`);
         },
         onsessionclosed: (id) => {
-          sessions.delete(id);
+          forget(id);
           log(`session ${id} closed (${sessions.size} active)`);
         },
       });
       transport.onclose = () => {
         const id = transport?.sessionId;
-        if (id && sessions.delete(id)) log(`session ${id} dropped (${sessions.size} active)`);
+        if (id && forget(id)) log(`session ${id} dropped (${sessions.size} active)`);
       };
       // Cast: the class's `onclose` getter type trips exactOptionalPropertyTypes; it is a Transport.
       await createServer().connect(transport as Transport);
     }
+    if (sid) lastSeen.set(sid, Date.now());
     await transport.handleRequest(req, res, req.body);
   });
 
@@ -157,6 +204,7 @@ export function createHttpApp(opts: HttpServerOptions): {
       res.status(sid ? 404 : 400).json(jsonRpcError(-32000, "Bad Request: no valid session"));
       return;
     }
+    lastSeen.set(sid as string, Date.now());
     await transport.handleRequest(req, res);
   };
   app.get(MCP_PATH, ...guards, withSession);
@@ -175,11 +223,11 @@ export function createHttpApp(opts: HttpServerOptions): {
     res.status(status).json(jsonRpcError(status === 413 ? -32000 : -32700, message));
   });
 
-  return { app, sessions };
+  return { app, sessions, stop: () => clearInterval(reaper) };
 }
 
 export async function startHttpServer(opts: HttpServerOptions): Promise<RunningHttpServer> {
-  const { app, sessions } = createHttpApp(opts);
+  const { app, sessions, stop } = createHttpApp(opts);
   const server: NodeHttpServer = await new Promise((resolve, reject) => {
     const s = app.listen(opts.port, opts.bind, () => resolve(s));
     s.once("error", reject);
@@ -191,6 +239,7 @@ export async function startHttpServer(opts: HttpServerOptions): Promise<RunningH
     sessionCount: () => sessions.size,
     close: () => {
       closing ??= (async () => {
+        stop();
         await Promise.allSettled([...sessions.values()].map((t) => t.close()));
         sessions.clear();
         server.closeAllConnections?.();

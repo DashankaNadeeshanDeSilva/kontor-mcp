@@ -88,9 +88,24 @@ npx @modelcontextprotocol/inspector@latest --cli http://127.0.0.1:3333/mcp --tra
 | `KONTOR_AUTH_TOKEN` | — | Bearer token (≥ 16 chars), compared in constant time. **Required** in HTTP mode |
 | `KONTOR_ALLOW_NO_AUTH` | — | `1` runs without a token — only honoured on a loopback bind (local experiments) |
 | `KONTOR_ALLOWED_ORIGINS` | — | Comma-separated browser origins allowed in addition to `http(s)://localhost|127.0.0.1|[::1]`. Requests without an `Origin` header (non-browser clients) always pass; any other origin → 403 |
+| `KONTOR_ALLOWED_HOSTS` | — | Comma-separated hostnames accepted in the `Host` header besides loopback (behind a reverse proxy / in a container). On a loopback bind only loopback hosts pass; on `0.0.0.0` without this list the Host header is not checked and the token is the guard |
+| `KONTOR_MAX_SESSIONS` | `100` | Concurrent MCP sessions; beyond it new `initialize` requests get 503 + `Retry-After` |
+| `KONTOR_SESSION_IDLE_MINUTES` | `30` | Sessions without a request for this long are closed (clients that never `DELETE`) |
 | `KONTOR_MAX_FILE_MB` | `20` | Also sizes the JSON body cap (`content_base64` inflates by 4/3) |
 
 Behaviour: one MCP session per client (`Mcp-Session-Id`, UUID), `DELETE /mcp` ends it, unknown ids → 404; `GET /healthz` (unauthenticated) returns `{ ok, name, version, sessions }` for container health checks; SIGINT/SIGTERM close all sessions, then the listener. Wrong or missing token → 401 with `WWW-Authenticate: Bearer`. There is **no TLS** in the server — terminate it in your reverse proxy (Caddy, nginx, Traefik) and forward to the loopback port; see `SECURITY.md`.
+
+### Docker
+
+The image (`Dockerfile` at the repo root; multi-stage, `node:22-alpine`, runs as `node`, ~70 MB, `linux/amd64` + `linux/arm64`) defaults to `KONTOR_TRANSPORT=http`, `KONTOR_BIND=0.0.0.0`, port 3333 and **refuses to start without `KONTOR_AUTH_TOKEN`**. A `HEALTHCHECK` polls `/healthz`. The samples ship at `/app/samples/`; mount your own invoices read-only (`-v ./invoices:/data:ro`) and reference them as `/data/<file>`.
+
+```sh
+docker build -t kontor-mcp .
+docker run -d --name kontor -p 127.0.0.1:3333:3333 -e KONTOR_AUTH_TOKEN="$(openssl rand -hex 24)" -v "$PWD/invoices:/data:ro" kontor-mcp
+docker run -i --rm -e KONTOR_TRANSPORT=stdio kontor-mcp        # stdio inside a container also works
+```
+
+`docker-compose.yml` is a hardened example (loopback-published port, `read_only`, `cap_drop: ALL`, `no-new-privileges`, token from `.env`). CI builds both platforms and runs an Inspector-over-HTTP smoke test against the image on every push.
 
 ## Privacy / sovereignty
 

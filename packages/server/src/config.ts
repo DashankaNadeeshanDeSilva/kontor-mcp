@@ -9,6 +9,8 @@ export const DEFAULT_PORT = 3333;
 export const DEFAULT_BIND = "127.0.0.1";
 /** Below this a token is a guess, not a secret. */
 export const MIN_TOKEN_LENGTH = 16;
+export const DEFAULT_MAX_SESSIONS = 100;
+export const DEFAULT_SESSION_IDLE_MINUTES = 30;
 
 export interface HttpConfig {
   transport: "http";
@@ -17,6 +19,12 @@ export interface HttpConfig {
   /** Undefined only with the explicit loopback opt-in (`KONTOR_ALLOW_NO_AUTH=1`). */
   authToken: string | undefined;
   allowedOrigins: string[];
+  /** Extra Host-header values (hostnames) accepted besides loopback; for proxied / container use. */
+  allowedHosts: string[];
+  /** Concurrent MCP sessions before new initializations get 503. */
+  maxSessions: number;
+  /** Sessions without a request for this long are closed (memory hygiene for clients that never DELETE). */
+  sessionIdleMs: number;
 }
 export type ServerConfig = { transport: "stdio" } | HttpConfig;
 
@@ -30,7 +38,10 @@ const EnvSchema = z.object({
   KONTOR_BIND: z.string().trim().min(1).default(DEFAULT_BIND),
   KONTOR_AUTH_TOKEN: z.string().min(MIN_TOKEN_LENGTH).optional(),
   KONTOR_ALLOWED_ORIGINS: z.string().optional(),
+  KONTOR_ALLOWED_HOSTS: z.string().optional(),
   KONTOR_ALLOW_NO_AUTH: z.string().optional(),
+  KONTOR_MAX_SESSIONS: z.coerce.number().int().min(1).default(DEFAULT_MAX_SESSIONS),
+  KONTOR_SESSION_IDLE_MINUTES: z.coerce.number().positive().default(DEFAULT_SESSION_IDLE_MINUTES),
 });
 
 export function readConfig(env: Record<string, string | undefined> = process.env): ServerConfig {
@@ -63,15 +74,21 @@ export function readConfig(env: Record<string, string | undefined> = process.env
       );
     }
   }
-  const allowedOrigins = (e.KONTOR_ALLOWED_ORIGINS ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
   return {
     transport: "http",
     port: e.KONTOR_PORT,
     bind: e.KONTOR_BIND,
     authToken: e.KONTOR_AUTH_TOKEN,
-    allowedOrigins,
+    allowedOrigins: csv(e.KONTOR_ALLOWED_ORIGINS),
+    allowedHosts: csv(e.KONTOR_ALLOWED_HOSTS),
+    maxSessions: e.KONTOR_MAX_SESSIONS,
+    sessionIdleMs: Math.round(e.KONTOR_SESSION_IDLE_MINUTES * 60_000),
   };
+}
+
+function csv(value: string | undefined): string[] {
+  return (value ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }

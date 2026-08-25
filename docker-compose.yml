@@ -1,0 +1,21 @@
+# Example deployment: `cp .env.example .env`, put a token in it, then `docker compose up -d`.
+# The server speaks plain HTTP on the loopback-published port; put a TLS-terminating reverse proxy
+# in front of it before exposing it beyond this host (see SECURITY.md).
+services:
+  kontor:
+    build: .
+    image: ghcr.io/dashankanadeeshandesilva/kontor-mcp:latest
+    env_file: .env # KONTOR_AUTH_TOKEN (required); optional KONTOR_ALLOWED_ORIGINS / KONTOR_ALLOWED_HOSTS
+    ports:
+      - "127.0.0.1:3333:3333"
+    volumes:
+      # Invoices you want to reference by file_path (read-only inside the container: /data/<name>).
+      - ./invoices:/data:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
