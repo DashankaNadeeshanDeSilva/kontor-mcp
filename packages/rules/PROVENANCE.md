@@ -45,3 +45,16 @@ Full checksums live in `tools/artifacts.manifest.json`.
 - **Apache-2.0 (KoSIT)** and **MIT (SchXslt)**: redistribution-compatible with our Apache-2.0 → **bundle**. Keep NOTICE attributions.
 - **EUPL-1.2 (EN 16931 artefacts)**: EUPL-1.2 is a copyleft licence with an explicit compatibility clause; redistributing the *unmodified* artefacts (and derived compiled forms) inside an Apache-2.0 project is permitted provided the EUPL notice accompanies them and the artefacts themselves remain under EUPL. → **bundle**, kept in a clearly separated directory with their own LICENSE, and stated in NOTICE. This is the same posture the KoSIT validator configuration (Apache-2.0) takes by shipping the compiled EN 16931 XSLTs. Re-verify before v1.0 publish (tracked in DECISIONS.md).
 - **OASIS UBL / UNECE CII XSDs**: standard schemas, redistributable under their respective terms; bundled via the KoSIT package.
+
+## Legal sources (`legal/timeline.json`, Task 2.5)
+
+Not artifacts but primary legal texts, checked at development time (last verified 2026-08-25); the JSON carries URL + verbatim quote per fact.
+
+| id | Source | URL |
+|---|---|---|
+| `ustg-14` | § 14 UStG | https://www.gesetze-im-internet.de/ustg_1980/__14.html |
+| `ustg-27-38` | § 27 Abs. 38 UStG (Gesetz v. 27.03.2024, BGBl. 2024 I Nr. 108) | https://www.gesetze-im-internet.de/ustg_1980/__27.html |
+| `ustdv-33` / `ustdv-34` / `ustdv-34a` | UStDV §§ 33, 34, 34a | https://www.gesetze-im-internet.de/ustdv_1980/ |
+| `erechv-3` | § 3 E-RechV | https://www.gesetze-im-internet.de/erechv/__3.html |
+| `bmf-faq` | BMF FAQ E-Rechnung (Stand 23.03.2026) | https://www.bundesfinanzministerium.de/Content/DE/FAQ/e-rechnung.html |
+| `erechnung-bund` | E-Rechnung Bund (Leitweg-ID, 27.11.2020) | https://www.e-rechnung-bund.de/ |

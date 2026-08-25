@@ -395,7 +395,8 @@ describe("check_obligations (Task 2.5)", () => {
     expect(r.isError).toBeFalsy();
     const obligations = r.sc.obligations as Structured[];
     expect(obligations.find((o) => o.id === "b2b-issue")?.status).toBe("required");
-    expect((obligations[0]?.sources as Structured[]).length).toBeGreaterThan(0);
+    const first = obligations[0] as Structured;
+    expect((first.sources as Structured[]).length).toBeGreaterThan(0);
     expect(r.sc.lastVerified).toBe("2026-08-25");
     expect(r.text).toMatch(/PFLICHT/);
     expect(r.text).toMatch(/keine steuerliche oder rechtliche Beratung/);

@@ -158,6 +158,7 @@
 ### Task 2.5 — `check_obligations` (T7) + legal data verification
 - Encode the mandate decision tree as data (`rules/src/legal/timeline.json`) with `sources[]` + `lastVerified`; **verify the legal parameters against authoritative web sources now and record citations**; non-advice disclaimer in every response (NFR-7).
 - **AC:** table-driven tests over ≥ 10 scenarios (freelancer B2G, small B2B receiver 2026, >800k issuer 2027, …); each answer carries sources + lastVerified.
+- > **Status (2026-08-25): done.** Legal parameters verified against the primary texts (gesetze-im-internet.de: § 14, § 27 Abs. 38 UStG; UStDV §§ 33/34/34a; § 3 E-RechV) and the BMF FAQ (Stand 23.03.2026) — `packages/rules/legal/timeline.json` (facts + sources + verbatim quotes, `lastVerified: 2026-08-25`, D-038); `core/src/obligations` decision tree; `check_obligations` tool; 15 scenario tests.
 
 ### Task 2.6 — Prompts + remaining resources + `list_capabilities` (T8)
 - Implement PRD §5.6 resources (codelists, cheatsheet, KB index) and §5.7 prompts; `list_capabilities` reporting bundled versions.
