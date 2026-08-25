@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/server",
   "version": "0.9.0",
-  "description": "Kontor MCP server \u2014 sovereign e-invoice tools for AI agents over stdio and Streamable HTTP",
+  "description": "Kontor MCP server — sovereign e-invoice tools for AI agents over stdio and Streamable HTTP",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -31,9 +31,13 @@
     "@kontor-mcp/core": "workspace:*",
     "@kontor-mcp/rules": "workspace:*",
     "@modelcontextprotocol/sdk": "1.30.0",
+    "express": "5.2.1",
     "zod": "4.4.3"
   },
   "bin": {
     "kontor-mcp": "./dist/bin.js"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.6"
   }
 }

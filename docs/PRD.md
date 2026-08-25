@@ -298,7 +298,7 @@ Purpose: prove the client half of MCP; usable as a demo and a smoke-test harness
 ### 5.9 Distribution & operations
 
 - **Install paths:** `npx @kontor/server` (stdio, zero-config); Claude Desktop/Code config snippet in README; `docker run -p 3333:3333 -e KONTOR_AUTH_TOKEN=… kontor/server` for HTTP mode.
-- **Config surface (env vars):** `KONTOR_TRANSPORT` (stdio|http), `KONTOR_PORT`, `KONTOR_BIND`, `KONTOR_AUTH_TOKEN`, `KONTOR_LANG_DEFAULT`, `KONTOR_MAX_FILE_MB`, `KONTOR_LOG_LEVEL`, `KONTOR_LOG_PAYLOADS`.
+- **Config surface (env vars):** `KONTOR_TRANSPORT` (stdio|http), `KONTOR_PORT`, `KONTOR_BIND`, `KONTOR_AUTH_TOKEN`, `KONTOR_ALLOWED_ORIGINS`, `KONTOR_ALLOW_NO_AUTH` (loopback only), `KONTOR_LANG_DEFAULT`, `KONTOR_MAX_FILE_MB`, `KONTOR_LOG_LEVEL`, `KONTOR_LOG_PAYLOADS`.
 - **Versioning:** semver. **Pin and surface standard versions** (e.g. "XRechnung 3.0.x, EN 16931 rule release YYYY-MM, ZUGFeRD 2.x profiles") in `list_capabilities`, README badge, and `CONFORMANCE.md`. Standards updates → minor releases with changelog.
 
 ---

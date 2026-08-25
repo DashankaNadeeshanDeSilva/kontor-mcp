@@ -9,6 +9,7 @@ Kontor MCP processes invoices — documents that carry personal and business dat
 - **PDF hardening:** embedded files are treated as untrusted bytes — never executed, decompression capped, encrypted PDFs rejected; the extracted XML goes through the same hardened loader.
 - **Path hygiene:** `file_path` must be absolute, is resolved and size-capped (`KONTOR_MAX_FILE_MB`, default 20 MB); `output_path` never overwrites without `overwrite=true`; no shell interpolation anywhere.
 - **Stateless, no payload logging:** invoice contents are not logged unless `KONTOR_LOG_PAYLOADS` is set explicitly for debugging.
+- **HTTP transport (`KONTOR_TRANSPORT=http`):** binds to `127.0.0.1` by default with Host-header validation against DNS rebinding (SDK middleware); Bearer token required (`KONTOR_AUTH_TOKEN`, ≥ 16 characters, `crypto.timingSafeEqual`); browser `Origin` restricted to localhost plus `KONTOR_ALLOWED_ORIGINS`; JSON body capped in line with `KONTOR_MAX_FILE_MB`; sessions live only in memory and die with the process. The server speaks plain HTTP — **TLS termination is the deployer's reverse proxy's job**; never expose the port directly on a public interface. `KONTOR_ALLOW_NO_AUTH=1` is refused for non-loopback binds.
 - **Supply chain:** exact dependency versions, `pnpm install --frozen-lockfile` in CI, no native compilation.
 
 ## Supported versions

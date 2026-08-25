@@ -4,6 +4,9 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+### Added
+- Streamable HTTP transport (Task 3.1): `KONTOR_TRANSPORT=http` starts an Express host on `127.0.0.1:3333/mcp` with one `StreamableHTTPServerTransport` per session (UUID `Mcp-Session-Id`, `DELETE` terminates), Bearer auth via `KONTOR_AUTH_TOKEN` (constant-time compare, 401 + `WWW-Authenticate`), Origin allow-list (`localhost` + `KONTOR_ALLOWED_ORIGINS`, else 403), Host-header validation on loopback binds, JSON body cap derived from `KONTOR_MAX_FILE_MB`, `GET /healthz`, graceful shutdown on SIGINT/SIGTERM; `KONTOR_PORT`, `KONTOR_BIND`, `KONTOR_ALLOW_NO_AUTH` (loopback only). The stdio path and tool surface are unchanged; `readConfig`, `startHttpServer`, `createHttpApp` are exported. `express` 5.2.1 becomes a direct dependency of `@kontor-mcp/server` (D-044).
+
 ## [0.9.0] — 2026-08-25 (Phase 2 exit)
 
 ### Added

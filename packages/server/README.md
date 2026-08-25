@@ -69,6 +69,29 @@ npx @modelcontextprotocol/inspector@latest node packages/server/dist/bin.js
 npx @modelcontextprotocol/inspector@latest --cli node packages/server/dist/bin.js --method tools/list
 ```
 
+## Streamable HTTP
+
+The same server over HTTP (MCP Streamable HTTP, endpoint `/mcp`) for remote agents, Docker and clients that cannot hand attachment bytes to a stdio server:
+
+```sh
+KONTOR_TRANSPORT=http KONTOR_AUTH_TOKEN="$(openssl rand -hex 24)" node packages/server/dist/bin.js
+# → [kontor-mcp] kontor-mcp 0.9.0 listening on http://127.0.0.1:3333/mcp (auth: bearer, origins: localhost)
+npx @modelcontextprotocol/inspector@latest --cli http://127.0.0.1:3333/mcp --transport http \
+  --header "Authorization: Bearer $KONTOR_AUTH_TOKEN" --method tools/list
+```
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `KONTOR_TRANSPORT` | `stdio` | `stdio` or `http` |
+| `KONTOR_PORT` | `3333` | TCP port (`0` = ephemeral) |
+| `KONTOR_BIND` | `127.0.0.1` | Bind address. Loopback (`127.0.0.1`, `localhost`, `::1`) enables Host-header / DNS-rebinding protection |
+| `KONTOR_AUTH_TOKEN` | — | Bearer token (≥ 16 chars), compared in constant time. **Required** in HTTP mode |
+| `KONTOR_ALLOW_NO_AUTH` | — | `1` runs without a token — only honoured on a loopback bind (local experiments) |
+| `KONTOR_ALLOWED_ORIGINS` | — | Comma-separated browser origins allowed in addition to `http(s)://localhost|127.0.0.1|[::1]`. Requests without an `Origin` header (non-browser clients) always pass; any other origin → 403 |
+| `KONTOR_MAX_FILE_MB` | `20` | Also sizes the JSON body cap (`content_base64` inflates by 4/3) |
+
+Behaviour: one MCP session per client (`Mcp-Session-Id`, UUID), `DELETE /mcp` ends it, unknown ids → 404; `GET /healthz` (unauthenticated) returns `{ ok, name, version, sessions }` for container health checks; SIGINT/SIGTERM close all sessions, then the listener. Wrong or missing token → 401 with `WWW-Authenticate: Bearer`. There is **no TLS** in the server — terminate it in your reverse proxy (Caddy, nginx, Traefik) and forward to the loopback port; see `SECURITY.md`.
+
 ## Privacy / sovereignty
 
 Stateless; nothing is stored or transmitted; invoice contents are never logged (see PRD NFR-2/NFR-5/NFR-6). Findings are formal/technical checks, not tax or legal advice.
