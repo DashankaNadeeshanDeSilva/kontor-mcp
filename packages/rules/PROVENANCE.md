@@ -27,6 +27,7 @@ Retrieval date for all entries below: **2026-08-25**.
 | id | Artifact | Version | Source | License | sha256 |
 |---|---|---|---|---|---|
 | `xrechnung-testsuite` | Official XRechnung test suite (conformance corpus) | 2026-01-31 (XRechnung 3.0.2) | https://github.com/itplr-kosit/xrechnung-testsuite/releases/tag/v2026-01-31 | Apache-2.0 | `a1e2b26d…29ee` |
+| — | `packages/server/samples/` (shipped with the server): `valid-xrechnung-{ubl,cii}.xml` = test-suite `01.01a-INVOICE_{ubl,uncefact}.xml`, `broken-missing-buyer-reference.xml` = same UBL file without BuyerReference, `valid-zugferd-en16931.pdf` = corpus `MustangGnuaccountingBeispielRE-20201121_508.pdf` | as above | XRechnung test suite / ZUGFeRD corpus | Apache-2.0 | see sources |
 | — | ZUGFeRD/Factur-X sample PDFs in `fixtures/zugferd/` (8 files) | corpus commit `d891458e` | https://github.com/ZUGFeRD/corpus (`ZUGFeRDv2/{correct,fail}/{FNFE-factur-x-examples,Mustangproject}`) | Apache-2.0 | see `fixtures/zugferd/SHA256SUMS` |
 
 ## Build / CI only (never shipped)

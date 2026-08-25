@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/core",
-  "version": "0.0.0",
-  "description": "Kontor MCP — MCP-free core library: detect, parse, validate, generate, convert EN 16931 e-invoices (XRechnung, ZUGFeRD)",
+  "version": "0.1.0",
+  "description": "Kontor MCP \u2014 MCP-free core library: detect, parse, validate, generate, convert EN 16931 e-invoices (XRechnung, ZUGFeRD)",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {

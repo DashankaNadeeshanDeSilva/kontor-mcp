@@ -1,0 +1,76 @@
+/** Document input convention (PRD §5.4) + path/size hygiene (NFR-5). */
+import { readFileSync, statSync } from "node:fs";
+import { extname, isAbsolute, resolve } from "node:path";
+import { z } from "zod";
+
+export const DEFAULT_MAX_MB = 20;
+export const ALLOWED_EXTENSIONS = new Set([".xml", ".pdf"]);
+
+export const DocumentInputSchema = z.object({
+  file_path: z
+    .string()
+    .min(1)
+    .optional()
+    .describe("Absolute path to an XML (UBL/CII) or ZUGFeRD/Factur-X PDF file"),
+  content_base64: z
+    .string()
+    .min(1)
+    .optional()
+    .describe("Base64-encoded document content (alternative to file_path)"),
+  content_type: z
+    .enum(["application/xml", "text/xml", "application/pdf"])
+    .optional()
+    .describe("MIME type of content_base64; auto-detected when omitted"),
+});
+export type DocumentInput = z.infer<typeof DocumentInputSchema>;
+
+export const LangSchema = z
+  .enum(["de", "en"])
+  .default("de")
+  .describe("Language of explanations and summaries");
+export type Lang = "de" | "en";
+
+/** User-facing tool error (message is safe to show; never carries a stack). */
+export class ToolError extends Error {
+  override readonly name = "ToolError";
+}
+
+export function maxBytes(): number {
+  const mb = Number(process.env.KONTOR_MAX_FILE_MB ?? DEFAULT_MAX_MB);
+  return (Number.isFinite(mb) && mb > 0 ? mb : DEFAULT_MAX_MB) * 1024 * 1024;
+}
+
+export function resolveInput(input: DocumentInput): { bytes: Uint8Array; label: string } {
+  const has = [input.file_path, input.content_base64].filter(Boolean).length;
+  if (has !== 1) throw new ToolError("Provide exactly one of file_path or content_base64.");
+  const cap = maxBytes();
+  if (input.file_path) {
+    const p = input.file_path;
+    if (!isAbsolute(p)) throw new ToolError(`file_path must be absolute (got "${p}").`);
+    const abs = resolve(p);
+    if (!ALLOWED_EXTENSIONS.has(extname(abs).toLowerCase())) {
+      throw new ToolError(`Unsupported file extension "${extname(abs)}"; expected .xml or .pdf.`);
+    }
+    let st: ReturnType<typeof statSync>;
+    try {
+      st = statSync(abs);
+    } catch {
+      throw new ToolError(`File not found: ${abs}`);
+    }
+    if (!st.isFile()) throw new ToolError(`Not a regular file: ${abs}`);
+    if (st.size > cap)
+      throw new ToolError(
+        `File is ${st.size} bytes; the limit is ${cap} bytes (KONTOR_MAX_FILE_MB).`,
+      );
+    return { bytes: new Uint8Array(readFileSync(abs)), label: abs };
+  }
+  const b64 = (input.content_base64 ?? "").replace(/\s+/g, "");
+  if (!/^[A-Za-z0-9+/]+={0,2}$/.test(b64) || b64.length % 4 !== 0)
+    throw new ToolError("content_base64 is not valid base64.");
+  if ((b64.length * 3) / 4 > cap)
+    throw new ToolError(`Content exceeds the ${cap}-byte limit (KONTOR_MAX_FILE_MB).`);
+  return {
+    bytes: new Uint8Array(Buffer.from(b64, "base64")),
+    label: `<${input.content_type ?? "base64 content"}>`,
+  };
+}

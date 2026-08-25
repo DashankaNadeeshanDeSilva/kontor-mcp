@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/client",
-  "version": "0.0.0",
-  "description": "kontor-agent — reference MCP client CLI with an Anthropic agent loop",
+  "version": "0.1.0",
+  "description": "kontor-agent \u2014 reference MCP client CLI with an Anthropic agent loop",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {

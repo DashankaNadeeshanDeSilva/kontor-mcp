@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/server",
-  "version": "0.0.0",
-  "description": "Kontor MCP server — sovereign e-invoice tools for AI agents over stdio and Streamable HTTP",
+  "version": "0.1.0",
+  "description": "Kontor MCP server \u2014 sovereign e-invoice tools for AI agents over stdio and Streamable HTTP",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -17,15 +17,23 @@
   },
   "files": [
     "dist",
+    "samples",
     "README.md"
   ],
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --pretty",
     "test": "vitest run",
-    "clean": "rm -rf dist *.tsbuildinfo"
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "start": "node dist/bin.js"
   },
   "dependencies": {
-    "@kontor-mcp/core": "workspace:*"
+    "@kontor-mcp/core": "workspace:*",
+    "@kontor-mcp/rules": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "zod": "4.4.3"
+  },
+  "bin": {
+    "kontor-mcp": "./dist/bin.js"
   }
 }
