@@ -138,6 +138,7 @@
 ### Task 2.1 — Plausibility layer (`core/src/plausibility`)
 - Implement all Layer-3 checks (PRD §5.2): decimal recompute of BR-CO totals, IBAN/BIC, USt-IdNr & Steuernummer formats, Leitweg-ID check digit (ISO 7064 MOD 97-10), VAT-rate/category consistency, date sanity, duplicate check via caller-provided list. Namespace `KONTOR-PLAUS-*`; each check individually unit-tested with crafted fixtures (e.g. off-by-€0.02 VAT fixture).
 - **AC:** ≥ 15 targeted fixtures each triggering exactly their intended finding and nothing else on otherwise-valid invoices.
+- > **Status (2026-08-25): done.** 22 rule ids (D-032–D-034); 34 targeted cases in `packages/core/test/plausibility.test.ts` (each fixture = KoSIT sample + one explicit mutation, exactly one finding), wired into `validateInvoice` as `layers.plausibility`.
 
 ### Task 2.2 — `audit_invoice` (T3)
 - Compose parse+validate+plausibility; build structured audit report (header facts, verdict, grouped findings with KB explanations, recommendation accept/reject/review with rationale); compact text rendering (DE/EN).

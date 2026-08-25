@@ -8,9 +8,12 @@ const spike = (name: string) =>
 
 describe("validateInvoice — full pipeline (PRD §5.2 layers 1+2)", () => {
   it("accepts a valid XRechnung UBL invoice with the same non-error findings as the KoSIT oracle", async () => {
-    const r = await validateInvoice(spike("valid-ubl.xml"));
+    // `today` pinned near the sample's 2016 issue date so the plausibility layer stays silent
+    const r = await validateInvoice(spike("valid-ubl.xml"), {
+      plausibility: { today: new Date("2016-04-05T00:00:00Z") },
+    });
     expect(r.scenario).toBe("EN16931 XRechnung (UBL Invoice)");
-    expect(r.layers).toEqual({ xsd: "pass", schematron: "pass" });
+    expect(r.layers).toEqual({ xsd: "pass", schematron: "pass", plausibility: "pass" });
     expect(r.valid).toBe(true);
     const ids = r.findings.map((f) => `${f.ruleId}:${f.severity}`).sort();
     expect(ids).toEqual(["BR-DE-TMP-32:info"]);
@@ -36,7 +39,7 @@ describe("validateInvoice — full pipeline (PRD §5.2 layers 1+2)", () => {
   it("reports XSD violations as fatal and skips Schematron (KoSIT behaviour)", async () => {
     const r = await validateInvoice(fx("ubl-xsd-invalid.xml"));
     expect(r.valid).toBe(false);
-    expect(r.layers).toEqual({ xsd: "fail", schematron: "skipped" });
+    expect(r.layers).toEqual({ xsd: "fail", schematron: "skipped", plausibility: "skipped" });
     expect(r.findings[0]).toMatchObject({ ruleId: "XSD", severity: "fatal", source: "xsd" });
     expect(r.findings[0]?.message).toContain("NotInSchema");
   });
@@ -59,9 +62,9 @@ describe("validateInvoice — full pipeline (PRD §5.2 layers 1+2)", () => {
 
   it("honours skipLayers", async () => {
     const r = await validateInvoice(spike("invalid-ubl-missing-buyerref.xml"), {
-      skipLayers: ["schematron"],
+      skipLayers: ["schematron", "plausibility"],
     });
-    expect(r.layers).toEqual({ xsd: "pass", schematron: "skipped" });
+    expect(r.layers).toEqual({ xsd: "pass", schematron: "skipped", plausibility: "skipped" });
     expect(r.valid).toBe(true);
   });
 
@@ -70,5 +73,40 @@ describe("validateInvoice — full pipeline (PRD §5.2 layers 1+2)", () => {
     const t0 = performance.now();
     await validateInvoice(spike("valid-ubl.xml"));
     expect(performance.now() - t0).toBeLessThan(2000);
+  });
+});
+
+describe("validateInvoice — plausibility layer (Task 2.1)", () => {
+  const base = spike("valid-ubl.xml").toString("utf8");
+  const offByTwoCents = base
+    .split('<cbc:TaxAmount currencyID="EUR">22.04</cbc:TaxAmount>')
+    .join('<cbc:TaxAmount currencyID="EUR">22.06</cbc:TaxAmount>')
+    .replace("336.9</cbc:TaxInclusiveAmount>", "336.92</cbc:TaxInclusiveAmount>")
+    .replace("336.9</cbc:PayableAmount>", "336.92</cbc:PayableAmount>");
+
+  it("runs after Schematron, fails the layer on error-level findings but keeps the official verdict", async () => {
+    const r = await validateInvoice(offByTwoCents);
+    const plaus = r.findings.filter((f) => f.ruleId.startsWith("KONTOR-PLAUS-"));
+    expect(plaus.map((f) => f.ruleId)).toContain("KONTOR-PLAUS-VAT-BREAKDOWN-AMOUNT");
+    expect(r.layers.plausibility).toBe("fail");
+    expect(r.valid).toBe(true); // KoSIT verdict parity: BR-CO-17 tolerates ±1, so officially valid
+    expect(typeof r.timings.plausibility).toBe("number");
+  });
+
+  it("passes the layer on the clean sample and can be skipped", async () => {
+    const clean = await validateInvoice(base, {
+      plausibility: { today: new Date("2016-04-05T00:00:00Z") },
+    });
+    expect(clean.layers.plausibility).toBe("pass");
+    expect(clean.findings.filter((f) => f.ruleId.startsWith("KONTOR-PLAUS-"))).toEqual([]);
+
+    const skipped = await validateInvoice(offByTwoCents, { skipLayers: ["plausibility"] });
+    expect(skipped.layers.plausibility).toBe("skipped");
+    expect(skipped.findings.some((f) => f.ruleId.startsWith("KONTOR-PLAUS-"))).toBe(false);
+  });
+
+  it("flags a caller-provided duplicate invoice number", async () => {
+    const r = await validateInvoice(base, { plausibility: { knownInvoiceNumbers: ["123456XX"] } });
+    expect(r.findings.map((f) => f.ruleId)).toContain("KONTOR-PLAUS-DUPLICATE");
   });
 });

@@ -5,6 +5,8 @@ All notable changes to this project are documented here. Format follows [Keep a 
 ## [Unreleased]
 
 ### Added
+- `@kontor-mcp/core`: Layer-3 plausibility checks (`runPlausibility`, namespace `KONTOR-PLAUS-*`, 22 rule ids with DE+EN explanation and fix hint): decimal recomputation of line nets, document totals and VAT breakdown (cent-exact where the official BR-CO-17 tolerates ±1), DE VAT-rate and category/rate consistency, IBAN mod-97 and BIC, EU VAT-ID formats, German Steuernummer, Leitweg-ID structure + ISO 7064 MOD 97-10 check digits, date sanity (future / stale / due-before-issue / inverted periods) and caller-provided duplicate list. Runs as third layer of `validateInvoice` (`layers.plausibility`, `skipLayers: ["plausibility"]`, `plausibility: { knownInvoiceNumbers, today, futureToleranceDays }`); never changes the official verdict (Task 2.1).
+- `validate_invoice`: `skip_layers` accepts `"plausibility"`; `layers`/`timingsMs` report it; an officially valid invoice with error-level plausibility findings is rendered as `valid_with_warnings` instead of `valid`.
 - `docs/VERIFICATION-v0.1.md`: Claude Desktop manual verification (S1–S6) with findings, plus first demo recording and screenshots in `docs/media/`.
 
 ### Changed

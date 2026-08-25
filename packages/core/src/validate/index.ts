@@ -6,18 +6,22 @@ import type { Scenario } from "@kontor-mcp/rules";
 import { loadScenarios, loadSef, loadXsdSet } from "@kontor-mcp/rules";
 import { type DetectedFormat, detectFormatFromDocument } from "../detect/index.js";
 import type { Finding } from "../finding.js";
+import { parseInvoice } from "../parse/index.js";
+import { type PlausibilityOptions, runPlausibility } from "../plausibility/index.js";
 import { loadXml, XmlDocument, type XmlLoadOptions } from "../xml/index.js";
 import { selectScenario } from "./scenario.js";
 import { runStylesheet } from "./schematron.js";
 import { validateXsd } from "./xsd.js";
 
-export type ValidationLayer = "xsd" | "schematron";
+export type ValidationLayer = "xsd" | "schematron" | "plausibility";
 export type LayerStatus = "pass" | "fail" | "skipped";
 
 export interface ValidateOptions extends XmlLoadOptions {
   skipLayers?: ValidationLayer[];
   /** Force a scenario by CustomizationID / guideline ID (PRD T2 `profile_override`). */
   customizationIdOverride?: string;
+  /** Options for the Layer-3 plausibility checks (KONTOR-PLAUS-*). */
+  plausibility?: PlausibilityOptions;
 }
 
 export interface ValidationResult {
@@ -43,7 +47,11 @@ export async function validateInvoice(
   const skip = new Set(options.skipLayers ?? []);
   const scenario: Scenario | undefined = selectScenario(format, options.customizationIdOverride);
   const findings: Finding[] = [];
-  const layers: ValidationResult["layers"] = { xsd: "skipped", schematron: "skipped" };
+  const layers: ValidationResult["layers"] = {
+    xsd: "skipped",
+    schematron: "skipped",
+    plausibility: "skipped",
+  };
   const timings: ValidationResult["timings"] = {};
 
   if (!scenario) {
@@ -75,10 +83,19 @@ export async function validateInvoice(
       : "pass";
   }
 
+  // Layer 3 — plausibility on the semantic model (never changes the official verdict)
+  if (!skip.has("plausibility") && format.syntax && layers.xsd !== "fail") {
+    const t0 = performance.now();
+    const plaus = runPlausibility(parseInvoice(doc).invoice, options.plausibility);
+    timings.plausibility = Math.round(performance.now() - t0);
+    findings.push(...plaus);
+    layers.plausibility = plaus.some(isErrorLevel) ? "fail" : "pass";
+  }
+
   return {
     format,
     scenario: scenario?.name ?? null,
-    valid: !findings.some(isErrorLevel),
+    valid: !findings.some((f) => f.source !== "plausibility" && isErrorLevel(f)),
     findings,
     layers,
     timings,

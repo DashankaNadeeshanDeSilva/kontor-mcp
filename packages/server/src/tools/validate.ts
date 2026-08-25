@@ -10,7 +10,7 @@ export const ValidateInputSchema = DocumentInputSchema.extend({
     .optional()
     .describe("Force a rule set by CustomizationID / guideline identifier"),
   skip_layers: z
-    .array(z.enum(["xsd", "schematron"]))
+    .array(z.enum(["xsd", "schematron", "plausibility"]))
     .optional()
     .describe("Validation layers to skip"),
   lang: LangSchema,
@@ -38,8 +38,13 @@ export const ValidateOutputSchema = z.object({
   layers: z.object({
     xsd: z.enum(["pass", "fail", "skipped"]),
     schematron: z.enum(["pass", "fail", "skipped"]),
+    plausibility: z.enum(["pass", "fail", "skipped"]),
   }),
-  timingsMs: z.object({ xsd: z.number().optional(), schematron: z.number().optional() }),
+  timingsMs: z.object({
+    xsd: z.number().optional(),
+    schematron: z.number().optional(),
+    plausibility: z.number().optional(),
+  }),
   disclaimer: z.string(),
 });
 export type ValidateOutput = z.infer<typeof ValidateOutputSchema>;
@@ -74,7 +79,12 @@ export async function runValidate(
     .sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
   const stats = { fatal: 0, error: 0, warning: 0, info: 0 };
   for (const f of findings) stats[f.severity]++;
-  const verdict = !r.valid ? "invalid" : stats.warning > 0 ? "valid_with_warnings" : "valid";
+  // Plausibility errors never make the official verdict "invalid" (KoSIT parity), but they must surface.
+  const verdict = !r.valid
+    ? "invalid"
+    : stats.error + stats.warning > 0
+      ? "valid_with_warnings"
+      : "valid";
   const ruleSets: ValidateOutput["ruleSets"] = [];
   if (r.layers.xsd !== "skipped")
     ruleSets.push({

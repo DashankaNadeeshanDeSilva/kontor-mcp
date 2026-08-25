@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/core",
   "version": "0.1.0",
-  "description": "Kontor MCP \u2014 MCP-free core library: detect, parse, validate, generate, convert EN 16931 e-invoices (XRechnung, ZUGFeRD)",
+  "description": "Kontor MCP — MCP-free core library: detect, parse, validate, generate, convert EN 16931 e-invoices (XRechnung, ZUGFeRD)",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -28,6 +28,8 @@
   "dependencies": {
     "@kontor-mcp/rules": "workspace:*",
     "@xmldom/xmldom": "0.9.12",
+    "decimal.js": "10.6.0",
+    "ibantools": "4.5.4",
     "pdf-lib": "1.17.1",
     "saxon-js": "2.7.0",
     "xmllint-wasm": "5.3.0",

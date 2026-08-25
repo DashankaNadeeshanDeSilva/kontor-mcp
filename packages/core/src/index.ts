@@ -9,3 +9,4 @@ export * from "./pdf/index.js";
 export * from "./validate/index.js";
 export * from "./xml/index.js";
 export const CORE_PACKAGE = "@kontor-mcp/core" as const;
+export * from "./plausibility/index.js";
