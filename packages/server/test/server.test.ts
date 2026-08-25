@@ -33,10 +33,16 @@ describe("kontor-mcp server (Task 1.6)", () => {
   it("lists parse_invoice, validate_invoice, audit_invoice, explain_rule with annotations and output schemas", async () => {
     const { tools } = await client.listTools();
     const names = tools.map((t) => t.name).sort();
-    expect(names).toEqual(["audit_invoice", "explain_rule", "parse_invoice", "validate_invoice"]);
+    expect(names).toEqual([
+      "audit_invoice",
+      "explain_rule",
+      "generate_invoice",
+      "parse_invoice",
+      "validate_invoice",
+    ]);
     for (const t of tools) {
       expect(t.annotations).toMatchObject({
-        readOnlyHint: true,
+        readOnlyHint: t.name !== "generate_invoice",
         destructiveHint: false,
         openWorldHint: false,
       });
@@ -209,6 +215,86 @@ describe("audit_invoice + Phase-2 server work (Task 2.2, F5, F10)", () => {
       expect(locked.text).not.toMatch(/File not found/);
     } finally {
       chmodSync(p, 0o600);
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("generate_invoice (Task 2.3)", () => {
+  const invoice = {
+    number: "RE-2026-0815",
+    issueDate: "2026-08-25",
+    dueDate: "2026-09-24",
+    buyerReference: "04011000-12345-03",
+    seller: {
+      name: "Muster Consulting GmbH",
+      vatId: "DE123456789",
+      address: { street: "Musterstraße 1", city: "Berlin", postCode: "10115" },
+      contactName: "Erika Muster",
+      phone: "+49 30 1234567",
+      email: "rechnung@muster-consulting.example",
+    },
+    buyer: {
+      name: "Bundesamt für Beispiele",
+      email: "rechnungseingang@bfb.example",
+      address: { street: "Amtsweg 2", city: "Bonn", postCode: "53113" },
+    },
+    payment: { iban: "DE75512108001245126199" },
+    lines: [{ description: "Beratung", quantity: 10, unit: "HUR", netPrice: 120 }],
+  };
+
+  it("is listed as a non-read-only tool and generates a valid XRechnung", async () => {
+    const tools = await client.listTools();
+    const t = tools.tools.find((x) => x.name === "generate_invoice");
+    expect(t?.annotations?.readOnlyHint).toBe(false);
+    expect(t?.annotations?.destructiveHint).toBe(false);
+
+    const r = await call("generate_invoice", { invoice, lang: "en" });
+    expect(r.isError).toBeFalsy();
+    expect(r.sc.valid).toBe(true);
+    expect(r.sc.plausible).toBe(true);
+    expect(String(r.sc.xml)).toContain("xrechnung_3.0");
+    expect((r.sc.totals as Structured).payable).toBe("1428.00");
+    expect(r.text).toMatch(/VALID/);
+    expect(r.text).toContain("1428.00");
+  });
+
+  it("is fail-honest: missing payment → valid:false with BR-DE findings, XML still returned", async () => {
+    const { payment: _p, ...noPayment } = invoice;
+    const r = await call("generate_invoice", { invoice: noPayment, lang: "de" });
+    expect(r.isError).toBeFalsy();
+    expect(r.sc.valid).toBe(false);
+    expect((r.sc.findings as Structured[]).some((f) => String(f.ruleId).startsWith("BR-DE-"))).toBe(
+      true,
+    );
+    expect(r.text).toMatch(/UNGÜLTIG/);
+    expect(String(r.sc.xml)).toContain("<cbc:ID>RE-2026-0815</cbc:ID>");
+  });
+
+  it("writes to output_path (absolute .xml), refuses to overwrite unless asked", async () => {
+    const { mkdtempSync, readFileSync: read, rmSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { tmpdir } = await import("node:os");
+    const dir = mkdtempSync(join(tmpdir(), "kontor-gen-"));
+    const out = join(dir, "re-2026-0815.xml");
+    try {
+      const first = await call("generate_invoice", { invoice, output_path: out });
+      expect(first.isError).toBeFalsy();
+      expect(first.sc.writtenTo).toBe(out);
+      expect(read(out, "utf8")).toContain("<cbc:ID>RE-2026-0815</cbc:ID>");
+
+      const second = await call("generate_invoice", { invoice, output_path: out });
+      expect(second.isError).toBe(true);
+      expect(second.text).toMatch(/exists/);
+
+      const third = await call("generate_invoice", { invoice, output_path: out, overwrite: true });
+      expect(third.isError).toBeFalsy();
+
+      const bad = await call("generate_invoice", { invoice, output_path: "relative.xml" });
+      expect(bad.isError).toBe(true);
+      const badExt = await call("generate_invoice", { invoice, output_path: join(dir, "x.txt") });
+      expect(badExt.isError).toBe(true);
+    } finally {
       rmSync(dir, { recursive: true, force: true });
     }
   });

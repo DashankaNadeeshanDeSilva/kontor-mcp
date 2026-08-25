@@ -148,6 +148,7 @@
 ### Task 2.3 — `generate_invoice` (T5)
 - `InvoiceInput` Zod schema (design for LLM ergonomics: flat where possible, enums for codes, currency default EUR); decimal-safe derivation of all totals/tax breakdown; UBL 2.1 serializer with pinned XRechnung CustomizationID; internal validate loop + deterministic auto-fix pass; fail-honest contract (PRD D5); optional `output_path` write.
 - **AC:** property-style test: N=50 randomized valid inputs → generated XML all pass full validation (oracle-checked in CI batch); invalid input (e.g. missing payment details for XRechnung) → `valid:false` with the right BR-DE findings; Leitweg-ID path covered.
+- > **Status (2026-08-25): done (UBL target).** `core/src/generate` (D-036), `generate_invoice` tool with `output_path`; 50-seed property test passes the full in-process pipeline incl. plausibility (the Java KoSIT oracle is not a CI job — parity of the in-process validator is the oracle, see D-036); golden `generated-reference.xml`. CII target arrives with the 2.4 pivot.
 
 ### Task 2.4 — `convert_invoice` (T6) + HTML preview
 - `extract-xml`; UBL↔CII via model pivot with post-validate + lossReport; `html-preview` (clean, self-contained HTML rendering of the model — no external assets).

@@ -9,6 +9,7 @@ Sovereign MCP server for German/EU e-invoices (XRechnung, ZUGFeRD/Factur-X, EN 1
 | `parse_invoice` | Detect format (UBL/CII · EN 16931 · XRechnung version/variant · ZUGFeRD profile) and return the EN 16931 semantic model |
 | `validate_invoice` | XSD + official EN 16931 / XRechnung Schematron with the KoSIT scenario model → `valid` / `valid_with_warnings` / `invalid`, findings with DE/EN explanations and fix hints |
 | `audit_invoice` | One call for AP: parse + validate + Kontor plausibility (totals recomputed, VAT rates, IBAN, Leitweg-ID check digits, dates, `known_invoice_numbers` duplicates) → header facts, VAT breakdown, verdict, grouped findings, **accept / review / reject** with rationale |
+| `generate_invoice` | Structured data → compliant **XRechnung 3.0 (UBL)**: decimal-safe amounts/VAT/totals, internal validation (fail-honest `valid`), deterministic auto-fixes reported, optional `output_path` (never overwrites unless `overwrite=true`) — the only non-read-only tool |
 | `explain_rule` | Explain a rule id such as `BR-DE-15` (official text, explanation, affected BTs, fix hint); unknown ids get suggestions |
 
 Every document tool accepts either `file_path` (absolute; `.xml`/`.pdf`; ≤ 20 MB, `KONTOR_MAX_FILE_MB`) or `content_base64` (+ optional `content_type`), and `lang: "de" | "en"` (default `de`).

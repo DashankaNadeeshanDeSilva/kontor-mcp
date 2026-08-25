@@ -4,6 +4,7 @@ import { ToolError } from "./input.js";
 import { registerResources } from "./resources.js";
 import { AuditInputSchema, AuditOutputSchema, runAudit } from "./tools/audit.js";
 import { ExplainInputSchema, ExplainOutputSchema, runExplain } from "./tools/explain.js";
+import { GenerateInputSchema, GenerateOutputSchema, runGenerate } from "./tools/generate.js";
 import { ParseInputSchema, ParseOutputSchema, runParse } from "./tools/parse.js";
 import { runValidate, ValidateInputSchema, ValidateOutputSchema } from "./tools/validate.js";
 
@@ -113,6 +114,22 @@ export function createServer(): McpServer {
     async (input) => {
       void log("audit_invoice called");
       return guard(() => runAudit(input));
+    },
+  );
+
+  server.registerTool(
+    "generate_invoice",
+    {
+      title: "Generate XRechnung",
+      description:
+        "Create a compliant XRechnung 3.0 (UBL 2.1) invoice from structured data: amounts, VAT breakdown and totals are derived decimal-safe, the result is validated internally (fail-honest: `valid` reports the real verdict, findings tell what is missing). Optional `output_path` writes the XML to the server's local filesystem (no overwrite unless `overwrite=true`). Fully offline.",
+      inputSchema: GenerateInputSchema.shape,
+      outputSchema: GenerateOutputSchema.shape,
+      annotations: { ...ANNOTATIONS, readOnlyHint: false },
+    },
+    async (input) => {
+      void log("generate_invoice called");
+      return guard(() => runGenerate(input));
     },
   );
 
