@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   generateInvoice,
@@ -8,7 +9,7 @@ import {
   runPlausibility,
 } from "../src/index.js";
 
-const golden = (name: string) => new URL(`./golden/${name}`, import.meta.url).pathname;
+const golden = (name: string) => fileURLToPath(new URL(`./golden/${name}`, import.meta.url));
 const TODAY = new Date("2026-08-26T00:00:00Z");
 
 /** A complete, XRechnung-valid B2G input — the reference case. */

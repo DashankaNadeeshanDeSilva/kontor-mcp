@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { auditInvoice, detectInvoicePdf, renderAuditText } from "../src/index.js";
 
 const fx = (rel: string) => readFileSync(new URL(`../../../fixtures/${rel}`, import.meta.url));
 const TODAY = new Date("2016-04-05T00:00:00Z");
-const golden = (name: string) => new URL(`./golden/${name}`, import.meta.url).pathname;
+const golden = (name: string) => fileURLToPath(new URL(`./golden/${name}`, import.meta.url));
 
 /** Golden reports must be stable: drop timings before comparing. */
 const stable = (r: Awaited<ReturnType<typeof auditInvoice>>) => {

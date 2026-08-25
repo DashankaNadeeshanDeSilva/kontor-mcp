@@ -1,4 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   convertInvoice,
@@ -11,7 +12,7 @@ import {
 } from "../src/index.js";
 
 const fx = (rel: string) => readFileSync(new URL(`../../../fixtures/${rel}`, import.meta.url));
-const golden = (name: string) => new URL(`./golden/${name}`, import.meta.url).pathname;
+const golden = (name: string) => fileURLToPath(new URL(`./golden/${name}`, import.meta.url));
 
 /**
  * Documented round-trip exceptions (see D-037); everything else must survive UBL ↔ CII unchanged:
