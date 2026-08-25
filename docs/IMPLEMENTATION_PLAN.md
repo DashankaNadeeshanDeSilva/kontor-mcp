@@ -143,6 +143,7 @@
 ### Task 2.2 — `audit_invoice` (T3)
 - Compose parse+validate+plausibility; build structured audit report (header facts, verdict, grouped findings with KB explanations, recommendation accept/reject/review with rationale); compact text rendering (DE/EN).
 - **AC:** golden-file tests: 3 scenario fixtures (clean invoice / broken-Leitweg+VAT-math / ZUGFeRD PDF) produce stable structured reports; manual Claude Desktop run reads like something an AP clerk could act on.
+- > **Status (2026-08-25): code done** (`core/src/audit`, `server/src/tools/audit.ts`, goldens in `packages/core/test/golden/`, D-035). Folded in F5 (server `instructions` + tool descriptions), F9 (BG-23 in header/text), F10 (EACCES/EPERM hint). **Open:** the manual Claude Desktop run (owner action after `pnpm build` + restart).
 
 ### Task 2.3 — `generate_invoice` (T5)
 - `InvoiceInput` Zod schema (design for LLM ergonomics: flat where possible, enums for codes, currency default EUR); decimal-safe derivation of all totals/tax breakdown; UBL 2.1 serializer with pinned XRechnung CustomizationID; internal validate loop + deterministic auto-fix pass; fail-honest contract (PRD D5); optional `output_path` write.

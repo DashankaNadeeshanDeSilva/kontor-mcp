@@ -6,6 +6,9 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ### Added
 - `@kontor-mcp/core`: Layer-3 plausibility checks (`runPlausibility`, namespace `KONTOR-PLAUS-*`, 22 rule ids with DE+EN explanation and fix hint): decimal recomputation of line nets, document totals and VAT breakdown (cent-exact where the official BR-CO-17 tolerates ±1), DE VAT-rate and category/rate consistency, IBAN mod-97 and BIC, EU VAT-ID formats, German Steuernummer, Leitweg-ID structure + ISO 7064 MOD 97-10 check digits, date sanity (future / stale / due-before-issue / inverted periods) and caller-provided duplicate list. Runs as third layer of `validateInvoice` (`layers.plausibility`, `skipLayers: ["plausibility"]`, `plausibility: { knownInvoiceNumbers, today, futureToleranceDays }`); never changes the official verdict (Task 2.1).
+- `audit_invoice` (T3): one-call audit — parse + XSD + official rules + plausibility → header facts (totals, BG-23 VAT breakdown, Leitweg-ID, IBANs, PDF provenance), verdict, grouped findings with KB explanations, `accept` / `review` / `reject` recommendation with DE/EN rationale, compact DE/EN text; `known_invoice_numbers` for stateless duplicate detection. Core: `auditInvoice`, `renderAuditText`, `enrichFinding`, `DISCLAIMER`; golden-file tests for clean / broken-Leitweg+VAT-math / ZUGFeRD PDF (Task 2.2).
+- Server `instructions` (sent on initialize) and all document tool descriptions state the `file_path`-vs-`content_base64` convention up front (verification finding F5).
+- `fixtures/plausibility/broken-leitweg-vat-math.xml`: officially valid invoice with wrong Leitweg check digits and VAT €0.02 off.
 - `validate_invoice`: `skip_layers` accepts `"plausibility"`; `layers`/`timingsMs` report it; an officially valid invoice with error-level plausibility findings is rendered as `valid_with_warnings` instead of `valid`.
 - `docs/VERIFICATION-v0.1.md`: Claude Desktop manual verification (S1–S6) with findings, plus first demo recording and screenshots in `docs/media/`.
 
@@ -13,6 +16,8 @@ All notable changes to this project are documented here. Format follows [Keep a 
 - Server README: Inspector commands use `@latest`; notes on absolute `node` path, read-only tools / "Always allow", and referencing PDFs by local path in Claude Desktop.
 
 ### Fixed
+- File errors now distinguish a missing file (`ENOENT`) from an unreadable one (`EACCES`/`EPERM`) and point to macOS Privacy & Security / Full Disk Access (verification finding F10).
+- German 16 % / 5 % VAT rates are accepted for invoices issued 1 Jul–31 Dec 2020 instead of being flagged by `KONTOR-PLAUS-VAT-RATE-DE`.
 - `file_path` description and "File not found" error now tell the model to fall back to `content_base64` for chat attachments / sandboxed uploads, avoiding a wasted round-trip in Claude Desktop.
 - Sample resources now carry their filename as `title`, so Claude Desktop lists four distinct entries instead of four identical "Sample invoices" rows.
 

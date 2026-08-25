@@ -182,6 +182,15 @@ describe("plausibility layer — VAT breakdown", () => {
     expect(f.message).toMatch(/2020/);
   });
 
+  it("16 % / 5 % are accepted for invoices issued between 1 Jul and 31 Dec 2020", () => {
+    const xml = mutate(BASE, [
+      ["<cbc:IssueDate>2016-04-04</cbc:IssueDate>", "<cbc:IssueDate>2020-11-21</cbc:IssueDate>"],
+      ["<cbc:Percent>7</cbc:Percent>", "<cbc:Percent>16</cbc:Percent>", true],
+      ...setTaxAndTotals("50.38", "365.24"),
+    ]);
+    expect(ids(xml, { today: new Date("2020-11-22T00:00:00Z") })).toEqual([]);
+  });
+
   it("KONTOR-PLAUS-VAT-CATEGORY-RATE: category E must carry 0 %", () => {
     const xml = mutate(BASE, [["<cbc:ID>S</cbc:ID>", "<cbc:ID>E</cbc:ID>", true]]);
     const [f] = findings(xml);

@@ -152,10 +152,15 @@ export function checkTotals(m: InvoiceModel): Finding[] {
 const ZERO_RATE_CATEGORIES = new Set(["Z", "E", "AE", "K", "G", "O"]);
 const DE_RATES = ["19", "7"].map((r) => new D(r));
 const DE_HISTORIC_2020 = ["16", "5"].map((r) => new D(r));
+/** Temporary German rates of the 2020 stimulus package applied to invoices issued 1 Jul–31 Dec 2020. */
+const inH2_2020 = (issueDate: string) => issueDate >= "2020-07-01" && issueDate <= "2020-12-31";
 
 export function checkVat(m: InvoiceModel): Finding[] {
   const out: Finding[] = [];
   const sellerIsDE = m.seller.postalAddress?.countryCode?.trim().toUpperCase() === "DE";
+  const allowedDeRates = inH2_2020(m.issueDate.trim())
+    ? [...DE_RATES, ...DE_HISTORIC_2020]
+    : DE_RATES;
 
   // Net amounts per category/rate group across lines and document-level allowances/charges.
   const groupNet = new Map<string, Dec>();
@@ -195,7 +200,12 @@ export function checkVat(m: InvoiceModel): Finding[] {
           ["BT-118", "BT-119"],
         ),
       );
-    } else if (sellerIsDE && category === "S" && rate?.gt(0) && !DE_RATES.some((r) => r.eq(rate))) {
+    } else if (
+      sellerIsDE &&
+      category === "S" &&
+      rate?.gt(0) &&
+      !allowedDeRates.some((r) => r.eq(rate))
+    ) {
       const historic = DE_HISTORIC_2020.some((r) => r.eq(rate));
       out.push(
         finding(

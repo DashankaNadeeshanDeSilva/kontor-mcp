@@ -1,5 +1,5 @@
-import { DetectedFormatSchema, type Finding, validateInvoice } from "@kontor-mcp/core";
-import { bundledStandards, explainRule } from "@kontor-mcp/rules";
+import { DetectedFormatSchema, enrichFinding, validateInvoice } from "@kontor-mcp/core";
+import { bundledStandards } from "@kontor-mcp/rules";
 import { z } from "zod";
 import { DocumentInputSchema, type Lang, LangSchema, resolveInput } from "../input.js";
 import { DISCLAIMER, loadDocument, toToolError } from "./shared.js";
@@ -51,15 +51,6 @@ export type ValidateOutput = z.infer<typeof ValidateOutputSchema>;
 
 const SEVERITY_ORDER = { fatal: 0, error: 1, warning: 2, info: 3 } as const;
 
-export function enrich(f: Finding): Finding {
-  if (f.explanation) return f;
-  const r = explainRule(f.ruleId);
-  if (!r.found) return f;
-  const out: Finding = { ...f, explanation: r.entry.explanation, fixHint: r.entry.fixHint };
-  if (!out.bt && r.entry.bt.length) out.bt = r.entry.bt;
-  return out;
-}
-
 export async function runValidate(
   input: z.infer<typeof ValidateInputSchema>,
 ): Promise<{ output: ValidateOutput; text: string }> {
@@ -75,7 +66,7 @@ export async function runValidate(
     throw toToolError(e);
   }
   const findings = r.findings
-    .map(enrich)
+    .map(enrichFinding)
     .sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
   const stats = { fatal: 0, error: 0, warning: 0, info: 0 };
   for (const f of findings) stats[f.severity]++;

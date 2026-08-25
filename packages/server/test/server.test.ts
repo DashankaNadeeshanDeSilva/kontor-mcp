@@ -30,10 +30,10 @@ async function call(name: string, args: Record<string, unknown>) {
 }
 
 describe("kontor-mcp server (Task 1.6)", () => {
-  it("lists parse_invoice, validate_invoice, explain_rule with annotations and output schemas", async () => {
+  it("lists parse_invoice, validate_invoice, audit_invoice, explain_rule with annotations and output schemas", async () => {
     const { tools } = await client.listTools();
     const names = tools.map((t) => t.name).sort();
-    expect(names).toEqual(["explain_rule", "parse_invoice", "validate_invoice"]);
+    expect(names).toEqual(["audit_invoice", "explain_rule", "parse_invoice", "validate_invoice"]);
     for (const t of tools) {
       expect(t.annotations).toMatchObject({
         readOnlyHint: true,
@@ -142,5 +142,74 @@ describe("kontor-mcp server (Task 1.6)", () => {
     await expect(
       client.readResource({ uri: "kontor://samples/../package.json" }),
     ).rejects.toThrow();
+  });
+});
+
+describe("audit_invoice + Phase-2 server work (Task 2.2, F5, F10)", () => {
+  it("lists audit_invoice with an output schema and advertises the attachment convention in instructions", async () => {
+    const tools = await client.listTools();
+    const audit = tools.tools.find((t) => t.name === "audit_invoice");
+    expect(audit?.outputSchema).toBeTruthy();
+    expect(audit?.description).toMatch(/content_base64/);
+    expect(client.getInstructions()).toMatch(/content_base64/);
+  });
+
+  it("audit_invoice: broken sample → reject with header facts, tax breakdown and rationale", async () => {
+    const r = await call("audit_invoice", {
+      file_path: sample("broken-missing-buyer-reference.xml"),
+      lang: "en",
+    });
+    expect(r.isError).toBeFalsy();
+    expect(r.sc.recommendation).toBe("reject");
+    expect(r.sc.verdict).toBe("invalid");
+    const header = r.sc.header as Structured;
+    expect(Array.isArray(header.taxBreakdown)).toBe(true);
+    expect((header.taxBreakdown as Structured[]).length).toBeGreaterThan(0);
+    expect((r.sc.rationale as Structured).en).toMatch(/BR-DE-15/);
+    expect(r.text).toMatch(/Recommendation: REJECT/);
+    expect(r.text).toMatch(/VAT breakdown \(BG-23\)/);
+    expect(r.text).toContain("not tax or legal advice");
+  });
+
+  it("audit_invoice: ZUGFeRD PDF via file_path carries pdf provenance; duplicates → review (DE text)", async () => {
+    const r = await call("audit_invoice", { file_path: sample("valid-zugferd-en16931.pdf") });
+    expect(r.isError).toBeFalsy();
+    const header = r.sc.header as Structured;
+    expect(((header.source as Structured)?.pdf as Structured)?.filename).toBeTruthy();
+    expect(r.text).toMatch(/Empfehlung: /);
+
+    const parsed = await call("parse_invoice", { file_path: sample("valid-xrechnung-ubl.xml") });
+    const number = (parsed.sc.invoice as Structured).number as string;
+    const dup = await call("audit_invoice", {
+      file_path: sample("valid-xrechnung-ubl.xml"),
+      known_invoice_numbers: [number],
+    });
+    expect(dup.sc.recommendation).toBe("review");
+    expect(dup.text).toMatch(/Empfehlung: PRÜFEN/);
+  });
+
+  it("distinguishes a missing file from an unreadable one (F10: macOS privacy hint)", async () => {
+    const missing = await call("parse_invoice", { file_path: sample("nope.xml") });
+    expect(missing.text).toMatch(/File not found/);
+    expect(missing.text).not.toMatch(/Full Disk Access/);
+
+    if (process.getuid?.() === 0 || process.platform === "win32") return; // chmod 000 is not enforced
+    const { mkdtempSync, writeFileSync, chmodSync, rmSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { tmpdir } = await import("node:os");
+    const dir = mkdtempSync(join(tmpdir(), "kontor-eacces-"));
+    const p = join(dir, "locked.xml");
+    writeFileSync(p, "<a/>");
+    chmodSync(p, 0o000);
+    try {
+      const locked = await call("parse_invoice", { file_path: p });
+      expect(locked.isError).toBe(true);
+      expect(locked.text).toMatch(/permission/i);
+      expect(locked.text).toMatch(/Full Disk Access/);
+      expect(locked.text).not.toMatch(/File not found/);
+    } finally {
+      chmodSync(p, 0o600);
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

@@ -43,7 +43,4 @@ export function toToolError(e: unknown): ToolError {
   return new ToolError(`Unexpected error: ${e instanceof Error ? e.message : String(e)}`);
 }
 
-export const DISCLAIMER = {
-  de: "Hinweis: Formale/technische Prüfung nach EN 16931 / XRechnung – keine steuerliche oder rechtliche Beratung.",
-  en: "Note: formal/technical checks per EN 16931 / XRechnung – not tax or legal advice.",
-} as const;
+export { DISCLAIMER } from "@kontor-mcp/core";

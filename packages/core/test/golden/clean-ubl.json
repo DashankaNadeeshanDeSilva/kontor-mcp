@@ -1,0 +1,99 @@
+{
+  "header": {
+    "number": "123456XX",
+    "issueDate": "2016-04-04",
+    "typeCode": "380",
+    "currency": "EUR",
+    "seller": {
+      "name": "[Seller name]",
+      "vatId": "DE 123456789",
+      "countryCode": "DE"
+    },
+    "buyer": {
+      "name": "[Buyer name]",
+      "countryCode": "DE"
+    },
+    "lineCount": 2,
+    "totals": {
+      "lineExtension": "314.86",
+      "taxExclusive": "314.86",
+      "taxInclusive": "336.9",
+      "payable": "336.9",
+      "taxAmount": "22.04"
+    },
+    "taxBreakdown": [
+      {
+        "categoryCode": "S",
+        "taxableAmount": "314.86",
+        "taxAmount": "22.04",
+        "rate": "7"
+      }
+    ],
+    "format": {
+      "container": "xml",
+      "syntax": "ubl-invoice",
+      "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+      "profileId": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
+      "standard": "en16931",
+      "cius": "xrechnung",
+      "xrechnungVariant": "base",
+      "version": "3.0",
+      "profile": null
+    },
+    "scenario": "EN16931 XRechnung (UBL Invoice)",
+    "buyerReference": "04011000-12345-03",
+    "payment": {
+      "meansCode": "58",
+      "ibans": [
+        "DE75512108001245126199"
+      ]
+    }
+  },
+  "verdict": "valid",
+  "recommendation": "accept",
+  "rationale": {
+    "de": "Formal gültig und rechnerisch plausibel; keine Auffälligkeiten.",
+    "en": "Formally valid and arithmetically plausible; nothing to flag."
+  },
+  "findings": {
+    "structure": [],
+    "businessRules": [
+      {
+        "ruleId": "BR-DE-TMP-32",
+        "severity": "info",
+        "source": "schematron-xrechnung",
+        "message": "[BR-DE-TMP-32] Eine Rechnung sollte zur Angabe des Liefer-/Leistungsdatums entweder BT-72 \"Actual delivery date\", BG-14 \"Invoicing period\" oder in jeder Rechnungsposition BG-26 \"Invoice line period\" enthalten.",
+        "location": "/ubl:Invoice[1]",
+        "explanation": {
+          "de": "Hinweis: Eine Rechnung sollte das Liefer- bzw. Leistungsdatum ausweisen – entweder als tatsächliches Lieferdatum (BT-72), als Rechnungszeitraum (BG-14) oder in jeder Position als Positionszeitraum (BG-26). Das ist derzeit nur eine Information, wird aber in künftigen XRechnung-Versionen voraussichtlich verpflichtend.",
+          "en": "Notice: an invoice should state the delivery/service date – as actual delivery date (BT-72), invoicing period (BG-14) or an invoice line period (BG-26) on every line. Currently informational; expected to become mandatory in future XRechnung versions."
+        },
+        "fixHint": {
+          "de": "cbc:ActualDeliveryDate (UBL) / ram:ActualDeliverySupplyChainEvent (CII) oder cac:InvoicePeriod / ram:BillingSpecifiedPeriod ergänzen.",
+          "en": "Add cbc:ActualDeliveryDate (UBL) / ram:ActualDeliverySupplyChainEvent (CII) or cac:InvoicePeriod / ram:BillingSpecifiedPeriod."
+        },
+        "bt": [
+          "BG-14",
+          "BG-26",
+          "BT-72"
+        ]
+      }
+    ],
+    "plausibility": []
+  },
+  "stats": {
+    "fatal": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 1
+  },
+  "layers": {
+    "xsd": "pass",
+    "schematron": "pass",
+    "plausibility": "pass"
+  },
+  "disclaimer": {
+    "de": "Hinweis: Formale/technische Prüfung nach EN 16931 / XRechnung – keine steuerliche oder rechtliche Beratung.",
+    "en": "Note: formal/technical checks per EN 16931 / XRechnung – not tax or legal advice."
+  }
+}

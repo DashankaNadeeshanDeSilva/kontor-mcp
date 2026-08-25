@@ -1,0 +1,92 @@
+{
+  "header": {
+    "number": "RE-20201121/508",
+    "issueDate": "2020-11-21",
+    "typeCode": "380",
+    "currency": "EUR",
+    "seller": {
+      "name": "Bei Spiel GmbH",
+      "vatId": "DE136695976",
+      "countryCode": "DE"
+    },
+    "buyer": {
+      "name": "Theodor Est",
+      "countryCode": "DE"
+    },
+    "lineCount": 3,
+    "totals": {
+      "lineExtension": "496.00",
+      "taxExclusive": "496.00",
+      "taxInclusive": "571.04",
+      "payable": "571.04",
+      "taxAmount": "75.04"
+    },
+    "taxBreakdown": [
+      {
+        "categoryCode": "S",
+        "taxableAmount": "160.00",
+        "taxAmount": "11.20",
+        "rate": "7.00"
+      },
+      {
+        "categoryCode": "S",
+        "taxableAmount": "336.00",
+        "taxAmount": "63.84",
+        "rate": "19.00"
+      }
+    ],
+    "format": {
+      "container": "xml",
+      "syntax": "cii",
+      "customizationId": "urn:cen.eu:en16931:2017",
+      "profileId": null,
+      "standard": "en16931",
+      "cius": null,
+      "xrechnungVariant": null,
+      "version": null,
+      "profile": "en16931"
+    },
+    "scenario": "EN16931 (CII)",
+    "dueDate": "2020-12-12",
+    "buyerReference": "AB321",
+    "payment": {
+      "meansCode": "42",
+      "ibans": [
+        "DE88200800000970375700"
+      ],
+      "remittanceInfo": "RE-20201121/508"
+    },
+    "source": {
+      "pdf": {
+        "filename": "factur-x.xml",
+        "conformanceLevel": "EN 16931"
+      }
+    }
+  },
+  "verdict": "valid",
+  "recommendation": "accept",
+  "rationale": {
+    "de": "Formal gültig und rechnerisch plausibel; keine Auffälligkeiten.",
+    "en": "Formally valid and arithmetically plausible; nothing to flag."
+  },
+  "findings": {
+    "structure": [],
+    "businessRules": [],
+    "plausibility": []
+  },
+  "stats": {
+    "fatal": 0,
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "layers": {
+    "xsd": "pass",
+    "schematron": "pass",
+    "plausibility": "pass"
+  },
+  "disclaimer": {
+    "de": "Hinweis: Formale/technische Prüfung nach EN 16931 / XRechnung – keine steuerliche oder rechtliche Beratung.",
+    "en": "Note: formal/technical checks per EN 16931 / XRechnung – not tax or legal advice."
+  }
+}

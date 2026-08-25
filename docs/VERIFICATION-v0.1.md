@@ -33,11 +33,11 @@ Verdict: **Phase 1 exit criterion met** — all three tools work end-to-end in C
 | F2 | fixed `43b018c` | server | All sample resources listed as identical "Sample invoices" → per-resource `title`. |
 | F3 | fixed `3938fe5` | server | Desktop passes attachments as `/mnt/user-data/uploads/…`; `file_path` description + "File not found" message now point to `content_base64`. |
 | F4 | fixed (docs) | README | Note that tools are read-only/offline and safe for "Always allow"; first-use approval prompt. |
-| F5 | open | server UX | Despite F3, the model still tries `file_path` first for attachments (one wasted round-trip). Move the hint into the *tool* description / server `instructions`; cost is already bounded by the actionable error. |
+| F5 | fixed (Task 2.2) | server UX | Despite F3, the model still tries `file_path` first for attachments (one wasted round-trip). Move the hint into the *tool* description / server `instructions`; cost is already bounded by the actionable error. |
 | F6 | open, minor | text summary | Disclaimer line is dropped by the model in prose. Consider leading with it or accept (present in `structuredContent`). |
 | F7 | **open, high** | Desktop attachments | Attached PDFs never reach the server (no bytes, sandbox dir empty). Documented workaround: local path in the prompt (F8). Phase 2: consider a local-file discovery resource/tool and mention paths in the tool descriptions. |
 | F8 | fixed (docs) | README | Document "reference PDFs by local path" for Desktop. |
-| F9 | open, minor | parse output | Model guessed at mixed VAT rates although BG-23 breakdown is in the model → make `taxBreakdown` more prominent in `invoiceAnnotated` / text summary. |
-| F10 | open, small | server errors | Distinguish `ENOENT` from `EACCES`/`EPERM` (macOS TCC / Full Disk Access hint) in the file error message. |
+| F9 | fixed (Task 2.2: `audit_invoice` header + text) | parse output | Model guessed at mixed VAT rates although BG-23 breakdown is in the model → make `taxBreakdown` more prominent in `invoiceAnnotated` / text summary. |
+| F10 | fixed (Task 2.2) | server errors | Distinguish `ENOENT` from `EACCES`/`EPERM` (macOS TCC / Full Disk Access hint) in the file error message. |
 
 Observed timings: Opus 5 · High took ~3 min on S1 in the recorded take (memory recall + extended thinking, not server time — Inspector calls return in < 2 s). For demos use a lower effort setting.

@@ -1,0 +1,138 @@
+{
+  "header": {
+    "number": "123456XX",
+    "issueDate": "2016-04-04",
+    "typeCode": "380",
+    "currency": "EUR",
+    "seller": {
+      "name": "[Seller name]",
+      "vatId": "DE 123456789",
+      "countryCode": "DE"
+    },
+    "buyer": {
+      "name": "[Buyer name]",
+      "countryCode": "DE"
+    },
+    "lineCount": 2,
+    "totals": {
+      "lineExtension": "314.86",
+      "taxExclusive": "314.86",
+      "taxInclusive": "336.92",
+      "payable": "336.92",
+      "taxAmount": "22.06"
+    },
+    "taxBreakdown": [
+      {
+        "categoryCode": "S",
+        "taxableAmount": "314.86",
+        "taxAmount": "22.06",
+        "rate": "7"
+      }
+    ],
+    "format": {
+      "container": "xml",
+      "syntax": "ubl-invoice",
+      "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+      "profileId": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
+      "standard": "en16931",
+      "cius": "xrechnung",
+      "xrechnungVariant": "base",
+      "version": "3.0",
+      "profile": null
+    },
+    "scenario": "EN16931 XRechnung (UBL Invoice)",
+    "buyerReference": "04011000-12345-04",
+    "payment": {
+      "meansCode": "58",
+      "ibans": [
+        "DE75512108001245126199"
+      ]
+    }
+  },
+  "verdict": "valid_with_warnings",
+  "recommendation": "review",
+  "rationale": {
+    "de": "Formal gültig, aber 2 Plausibilitätsfehler (KONTOR-PLAUS-VAT-BREAKDOWN-AMOUNT, KONTOR-PLAUS-LEITWEG-CHECK) — vor Zahlung manuell prüfen bzw. beim Lieferanten klären.",
+    "en": "Formally valid, but 2 plausibility errors (KONTOR-PLAUS-VAT-BREAKDOWN-AMOUNT, KONTOR-PLAUS-LEITWEG-CHECK) — review manually or clarify with the supplier before payment."
+  },
+  "findings": {
+    "structure": [],
+    "businessRules": [
+      {
+        "ruleId": "BR-DE-TMP-32",
+        "severity": "info",
+        "source": "schematron-xrechnung",
+        "message": "[BR-DE-TMP-32] Eine Rechnung sollte zur Angabe des Liefer-/Leistungsdatums entweder BT-72 \"Actual delivery date\", BG-14 \"Invoicing period\" oder in jeder Rechnungsposition BG-26 \"Invoice line period\" enthalten.",
+        "location": "/ubl:Invoice[1]",
+        "explanation": {
+          "de": "Hinweis: Eine Rechnung sollte das Liefer- bzw. Leistungsdatum ausweisen – entweder als tatsächliches Lieferdatum (BT-72), als Rechnungszeitraum (BG-14) oder in jeder Position als Positionszeitraum (BG-26). Das ist derzeit nur eine Information, wird aber in künftigen XRechnung-Versionen voraussichtlich verpflichtend.",
+          "en": "Notice: an invoice should state the delivery/service date – as actual delivery date (BT-72), invoicing period (BG-14) or an invoice line period (BG-26) on every line. Currently informational; expected to become mandatory in future XRechnung versions."
+        },
+        "fixHint": {
+          "de": "cbc:ActualDeliveryDate (UBL) / ram:ActualDeliverySupplyChainEvent (CII) oder cac:InvoicePeriod / ram:BillingSpecifiedPeriod ergänzen.",
+          "en": "Add cbc:ActualDeliveryDate (UBL) / ram:ActualDeliverySupplyChainEvent (CII) or cac:InvoicePeriod / ram:BillingSpecifiedPeriod."
+        },
+        "bt": [
+          "BG-14",
+          "BG-26",
+          "BT-72"
+        ]
+      }
+    ],
+    "plausibility": [
+      {
+        "ruleId": "KONTOR-PLAUS-VAT-BREAKDOWN-AMOUNT",
+        "severity": "error",
+        "source": "plausibility",
+        "location": "/vatBreakdown/0/taxAmount",
+        "message": "VAT amount 22.06 for S/7 % differs from computed 22.04 (314.86 × 7 %) by 0.02",
+        "explanation": {
+          "de": "Der Umsatzsteuerbetrag (BT-117) weicht von steuerbarem Betrag × Steuersatz (kaufmännisch auf Cent gerundet) ab. Die amtliche Regel BR-CO-17 toleriert bis zu ±1 Währungseinheit; Kontor prüft centgenau.",
+          "en": "The VAT amount (BT-117) differs from taxable amount × rate (rounded half-up to cents). The official rule BR-CO-17 tolerates ±1 currency unit; Kontor checks to the cent."
+        },
+        "fixHint": {
+          "de": "BT-117 pro Aufschlüsselung neu berechnen; Rundung auf Ebene der Aufschlüsselung, nicht je Position.",
+          "en": "Recompute BT-117 per breakdown; round at breakdown level, not per line."
+        },
+        "bt": [
+          "BT-117",
+          "BT-116",
+          "BT-119"
+        ]
+      },
+      {
+        "ruleId": "KONTOR-PLAUS-LEITWEG-CHECK",
+        "severity": "error",
+        "source": "plausibility",
+        "location": "/buyerReference",
+        "message": "Leitweg-ID 04011000-12345-04 has invalid check digits 04 (ISO 7064 MOD 97-10 expects 03)",
+        "explanation": {
+          "de": "Die Prüfziffern der Leitweg-ID (ISO 7064 MOD 97-10) stimmen nicht. Rechnungen mit falscher Leitweg-ID werden von öffentlichen Auftraggebern nicht zugestellt.",
+          "en": "The Leitweg-ID check digits (ISO 7064 MOD 97-10) are wrong. Public-sector buyers cannot route invoices with an invalid Leitweg-ID."
+        },
+        "fixHint": {
+          "de": "Leitweg-ID beim Auftraggeber erfragen und exakt übernehmen.",
+          "en": "Obtain the Leitweg-ID from the buyer and copy it exactly."
+        },
+        "bt": [
+          "BT-10"
+        ]
+      }
+    ]
+  },
+  "stats": {
+    "fatal": 0,
+    "error": 2,
+    "warning": 0,
+    "info": 1
+  },
+  "layers": {
+    "xsd": "pass",
+    "schematron": "pass",
+    "plausibility": "fail"
+  },
+  "disclaimer": {
+    "de": "Hinweis: Formale/technische Prüfung nach EN 16931 / XRechnung – keine steuerliche oder rechtliche Beratung.",
+    "en": "Note: formal/technical checks per EN 16931 / XRechnung – not tax or legal advice."
+  }
+}

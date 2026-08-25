@@ -43,6 +43,26 @@ export function maxBytes(): number {
   return (Number.isFinite(mb) && mb > 0 ? mb : DEFAULT_MAX_MB) * 1024 * 1024;
 }
 
+/** ENOENT vs. EACCES/EPERM need different advice (Desktop verification finding F10). */
+function fsError(e: unknown, abs: string): ToolError {
+  const code = (e as { code?: string } | null)?.code;
+  if (code === "EACCES" || code === "EPERM") {
+    return new ToolError(
+      `Permission denied reading ${abs}. The file exists but this server process may not read it. ` +
+        "On macOS, folders like Desktop, Documents and Downloads are protected: grant the MCP host app " +
+        "(e.g. Claude Desktop) access under System Settings → Privacy & Security → Files and Folders " +
+        "or Full Disk Access, or move the file elsewhere. Alternatively pass the document via content_base64.",
+    );
+  }
+  if (code === "ENOENT") {
+    return new ToolError(
+      `File not found: ${abs}. This server only sees the local filesystem of the machine it runs on; ` +
+        "for attachments or sandboxed uploads pass the document via content_base64 instead.",
+    );
+  }
+  return new ToolError(`Cannot read ${abs}: ${e instanceof Error ? e.message : String(e)}`);
+}
+
 export function resolveInput(input: DocumentInput): { bytes: Uint8Array; label: string } {
   const has = [input.file_path, input.content_base64].filter(Boolean).length;
   if (has !== 1) throw new ToolError("Provide exactly one of file_path or content_base64.");
@@ -57,18 +77,19 @@ export function resolveInput(input: DocumentInput): { bytes: Uint8Array; label: 
     let st: ReturnType<typeof statSync>;
     try {
       st = statSync(abs);
-    } catch {
-      throw new ToolError(
-        `File not found: ${abs}. This server only sees the local filesystem of the machine it runs on; ` +
-          "for attachments or sandboxed uploads pass the document via content_base64 instead.",
-      );
+    } catch (e) {
+      throw fsError(e, abs);
     }
     if (!st.isFile()) throw new ToolError(`Not a regular file: ${abs}`);
     if (st.size > cap)
       throw new ToolError(
         `File is ${st.size} bytes; the limit is ${cap} bytes (KONTOR_MAX_FILE_MB).`,
       );
-    return { bytes: new Uint8Array(readFileSync(abs)), label: abs };
+    try {
+      return { bytes: new Uint8Array(readFileSync(abs)), label: abs };
+    } catch (e) {
+      throw fsError(e, abs);
+    }
   }
   const b64 = (input.content_base64 ?? "").replace(/\s+/g, "");
   if (!/^[A-Za-z0-9+/]+={0,2}$/.test(b64) || b64.length % 4 !== 0)
