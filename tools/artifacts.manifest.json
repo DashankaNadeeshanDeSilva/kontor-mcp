@@ -1,0 +1,55 @@
+{
+  "$comment": "Pinned third-party standards artifacts. Every entry is mirrored in packages/rules/PROVENANCE.md. Change a version → update both + sha256.",
+  "cacheDir": "fixtures/_downloads",
+  "artifacts": [
+    {
+      "id": "xrechnung-schematron",
+      "url": "https://github.com/itplr-kosit/xrechnung-schematron/releases/download/v2.5.0/xrechnung-3.0.2-schematron-2.5.0.zip",
+      "sha256": "a0f3d82737759bee8591c298ff24983a8f1c667f85e45a34863c75a242bc6f43",
+      "extract": true,
+      "scope": "runtime-source"
+    },
+    {
+      "id": "xrechnung-validator-configuration",
+      "url": "https://github.com/itplr-kosit/validator-configuration-xrechnung/releases/download/v2026-01-31/xrechnung-3.0.2-validator-configuration-2026-01-31.zip",
+      "sha256": "6a5a5911a421b25fbc423f62f93f894df7b236f5d73ca4f84bb222a945082704",
+      "extract": true,
+      "scope": "runtime-source"
+    },
+    {
+      "id": "xrechnung-testsuite",
+      "url": "https://github.com/itplr-kosit/xrechnung-testsuite/releases/download/v2026-01-31/xrechnung-3.0.2-testsuite-2026-01-31.zip",
+      "sha256": "a1e2b26d7de6db6903076d4a8548b66ca603e7b25ad17233202a73cfbfeb29ee",
+      "extract": true,
+      "scope": "fixtures"
+    },
+    {
+      "id": "en16931-ubl",
+      "url": "https://github.com/ConnectingEurope/eInvoicing-EN16931/releases/download/validation-1.3.16/en16931-ubl-1.3.16.zip",
+      "sha256": "bafada015efbc5248bf5e05ad2191e1d9833ef96e9dd5f4bce420a747342da85",
+      "extract": true,
+      "scope": "runtime-source"
+    },
+    {
+      "id": "en16931-cii",
+      "url": "https://github.com/ConnectingEurope/eInvoicing-EN16931/releases/download/validation-1.3.16/en16931-cii-1.3.16.zip",
+      "sha256": "1cd53cb8a84d38aedc82c0caede217da983a7934dd663f793a092fd66443c561",
+      "extract": true,
+      "scope": "runtime-source"
+    },
+    {
+      "id": "kosit-validator",
+      "url": "https://github.com/itplr-kosit/validator/releases/download/v1.6.3/validator-1.6.3-standalone.jar",
+      "sha256": "799e64befca97d4080e03608c80b85dd5a5ecc5f4ae4f35d1116ec2855b9a7c9",
+      "extract": false,
+      "scope": "ci-oracle"
+    },
+    {
+      "id": "schxslt-cli",
+      "url": "https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.10.1/cli-1.10.1.jar",
+      "sha256": "cefb6c45441252675270bacc67a1ec4421ed1133f7fb8fee8f314ecfa6a0171a",
+      "extract": false,
+      "scope": "build-tool"
+    }
+  ]
+}
