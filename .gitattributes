@@ -12,3 +12,6 @@ packages/server/samples/** -text
 *.jar binary
 *.gz binary
 *.zip binary
+
+packages/rules/pdf/*.ttf binary
+packages/rules/pdf/*.icc binary

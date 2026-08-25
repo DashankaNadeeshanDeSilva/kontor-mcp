@@ -47,3 +47,36 @@ jobs:
       - run: pnpm artifacts
       - run: pnpm build
       - run: pnpm test
+
+  pdfa:
+    name: Generated ZUGFeRD PDFs (veraPDF PDF/A-3b + Mustang)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: pnpm install --frozen-lockfile
+      - name: Cache pinned standards artifacts
+        uses: actions/cache@v4
+        with:
+          path: fixtures/_downloads
+          key: artifacts-${{ hashFiles('tools/artifacts.manifest.json') }}
+      - run: pnpm artifacts
+      - name: Install veraPDF (unattended)
+        run: |
+          curl -sSL -o /tmp/verapdf-installer.zip https://software.verapdf.org/rel/verapdf-installer.zip
+          unzip -q /tmp/verapdf-installer.zip -d /tmp/verapdf-installer
+          java -jar /tmp/verapdf-installer/verapdf-*/verapdf-izpack-installer-*.jar tools/verapdf-auto-install.xml
+          /opt/verapdf/verapdf --version
+      - run: pnpm build
+      - run: pnpm check:zugferd
+        env:
+          VERAPDF: /opt/verapdf/verapdf
+          KONTOR_JAVA: java

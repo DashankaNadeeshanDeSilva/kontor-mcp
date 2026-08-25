@@ -133,9 +133,9 @@ export function createServer(): McpServer {
   server.registerTool(
     "generate_invoice",
     {
-      title: "Generate XRechnung",
+      title: "Generate XRechnung / ZUGFeRD",
       description:
-        "Create a compliant XRechnung 3.0 (UBL 2.1) invoice from structured data: amounts, VAT breakdown and totals are derived decimal-safe, the result is validated internally (fail-honest: `valid` reports the real verdict, findings tell what is missing). Optional `output_path` writes the XML to the server's local filesystem (no overwrite unless `overwrite=true`). Fully offline.",
+        "Create a compliant e-invoice from structured data: XRechnung 3.0 (UBL 2.1, default) or a ZUGFeRD 2.3 / Factur-X PDF/A-3 with embedded factur-x.xml (`target: zugferd-pdf`, profiles EN16931 / BASIC / EXTENDED). Amounts, VAT breakdown and totals are derived decimal-safe; the result is validated internally — for PDFs the XML is read back out of the generated file first (fail-honest: `valid` reports the real verdict, findings tell what is missing). Optional `output_path` writes the .xml / .pdf to the server's local filesystem (no overwrite unless `overwrite=true`). Fully offline.",
       inputSchema: GenerateInputSchema.shape,
       outputSchema: GenerateOutputSchema.shape,
       annotations: { ...ANNOTATIONS, readOnlyHint: false },

@@ -1,6 +1,11 @@
 /** Canonical finding model across all validation layers (PRD §5.2). */
 export type FindingSeverity = "fatal" | "error" | "warning" | "info";
-export type FindingSource = "xsd" | "schematron-en16931" | "schematron-xrechnung" | "plausibility";
+export type FindingSource =
+  | "xsd"
+  | "schematron-en16931"
+  | "schematron-xrechnung"
+  | "plausibility"
+  | "generation";
 
 export interface Finding {
   /** e.g. "BR-DE-15", "XSD", "KONTOR-PLAUS-IBAN" */

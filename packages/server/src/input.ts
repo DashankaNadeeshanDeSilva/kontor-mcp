@@ -116,10 +116,11 @@ export function resolveOutputPath(p: string, allowedExt: string[], overwrite: bo
   return abs;
 }
 
-export function writeOutput(abs: string, content: string): void {
+export function writeOutput(abs: string, content: string | Uint8Array): void {
   try {
     mkdirSync(dirname(abs), { recursive: true });
-    writeFileSync(abs, content, "utf8");
+    if (typeof content === "string") writeFileSync(abs, content, "utf8");
+    else writeFileSync(abs, content);
   } catch (e) {
     throw new ToolError(`Could not write ${abs}: ${e instanceof Error ? e.message : String(e)}`);
   }

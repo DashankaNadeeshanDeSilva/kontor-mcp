@@ -8,40 +8,10 @@ import {
   parseInvoice,
   runPlausibility,
 } from "../src/index.js";
+import { REFERENCE } from "./fixtures/reference-input.js";
 
 const golden = (name: string) => fileURLToPath(new URL(`./golden/${name}`, import.meta.url));
 const TODAY = new Date("2026-08-26T00:00:00Z");
-
-/** A complete, XRechnung-valid B2G input — the reference case. */
-const REFERENCE: InvoiceInput = {
-  number: "RE-2026-0815",
-  issueDate: "2026-08-25",
-  dueDate: "2026-09-24",
-  buyerReference: "04011000-12345-03",
-  seller: {
-    name: "Muster Consulting GmbH",
-    vatId: "DE123456789",
-    address: { street: "Musterstraße 1", city: "Berlin", postCode: "10115", countryCode: "DE" },
-    contactName: "Erika Muster",
-    phone: "+49 30 1234567",
-    email: "rechnung@muster-consulting.example",
-  },
-  buyer: {
-    name: "Bundesamt für Beispiele",
-    email: "rechnungseingang@bfb.example",
-    address: { street: "Amtsweg 2", city: "Bonn", postCode: "53113", countryCode: "DE" },
-  },
-  payment: {
-    iban: "DE75512108001245126199",
-    bic: "SOGEDEFFXXX",
-    accountName: "Muster Consulting GmbH",
-    terms: "Zahlbar innerhalb von 30 Tagen ohne Abzug.",
-  },
-  lines: [
-    { description: "Beratung August 2026", quantity: 10, unit: "HUR", netPrice: 120, vatRate: 19 },
-    { description: "Fachbuch", quantity: 3, unit: "C62", netPrice: 33.33, vatRate: 7 },
-  ],
-};
 
 const errorIds = (fs: { ruleId: string; severity: string }[]) =>
   fs.filter((f) => isErrorLevel(f as never)).map((f) => f.ruleId);
@@ -239,6 +209,22 @@ describe("generateInvoice — property test: 50 seeded random inputs are all val
             .join(" | ")}`,
         );
       }
+    }
+    expect(failures).toEqual([]);
+  }, 120_000);
+
+  it("seeds 1–10 also pass as ZUGFeRD PDF/A-3 (EN16931 / BASIC alternating) with a clean round trip", async () => {
+    const failures: string[] = [];
+    for (let seed = 1; seed <= 10; seed++) {
+      const r = await generateInvoice(randomInput(seed), {
+        target: "zugferd-pdf",
+        zugferdProfile: seed % 2 ? "EN16931" : "BASIC",
+        now: TODAY,
+        plausibility: { today: TODAY },
+      });
+      const errors = r.findings.filter((f) => isErrorLevel(f));
+      if (!r.valid || !r.pdf || errors.length)
+        failures.push(`seed ${seed}: ${errors.map((f) => `${f.ruleId} ${f.message}`).join(" | ")}`);
     }
     expect(failures).toEqual([]);
   }, 120_000);

@@ -26,7 +26,9 @@
     "oracle": "tsx tools/oracle.ts",
     "verapdf": "sh tools/verapdf.sh",
     "spike:pdfa3": "tsx tools/spike-pdfa3.ts",
-    "mustang": "sh tools/mustang.sh"
+    "mustang": "sh tools/mustang.sh",
+    "samples:zugferd": "tsx tools/gen-zugferd-samples.ts",
+    "check:zugferd": "sh tools/check-zugferd-samples.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",

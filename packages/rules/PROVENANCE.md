@@ -46,6 +46,18 @@ Full checksums live in `tools/artifacts.manifest.json`.
 - **EUPL-1.2 (EN 16931 artefacts)**: EUPL-1.2 is a copyleft licence with an explicit compatibility clause; redistributing the *unmodified* artefacts (and derived compiled forms) inside an Apache-2.0 project is permitted provided the EUPL notice accompanies them and the artefacts themselves remain under EUPL. → **bundle**, kept in a clearly separated directory with their own LICENSE, and stated in NOTICE. This is the same posture the KoSIT validator configuration (Apache-2.0) takes by shipping the compiled EN 16931 XSLTs. Re-verify before v1.0 publish (tracked in DECISIONS.md).
 - **OASIS UBL / UNECE CII XSDs**: standard schemas, redistributable under their respective terms; bundled via the KoSIT package.
 
+## PDF assets (`pdf/`, Task 2.7)
+
+Bundled unaltered for ZUGFeRD PDF/A-3 generation (embedded font, OutputIntent). Not downloaded by `pnpm artifacts`; the bytes are asserted by `packages/rules/test/pdf-assets.test.ts`.
+
+| File | Artifact | Version | Source | License | sha256 |
+|---|---|---|---|---|---|
+| `pdf/LiberationSans-Regular.ttf` | Liberation Sans Regular | 2.1.5 (2021-09-30) | https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz (tarball sha256 `7191c669bf38899f73a2094ed00f7b800553364f90e2637010a69c0e268f25d0`) | SIL OFL 1.1 (`pdf/LICENSE-LiberationFonts.txt`) | `76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8` |
+| `pdf/LiberationSans-Bold.ttf` | Liberation Sans Bold | 2.1.5 | same tarball | SIL OFL 1.1 | `788abee4c806d660e8aee46689dd8540cd4bb98da03dcc9d171ce3efd99a9173` |
+| `pdf/sRGB2014.icc` | ICC sRGB v2 profile | 2015-02-15 | https://www.color.org/srgbprofiles.xalter → https://registry.color.org/rgb-registry/profiles/sRGB2014.icc | ICC terms: copy/distribute/embed without restriction (`pdf/LICENSE-sRGB2014.txt`) | `384b832de3412066743b52a75ee906b6fb9fb8d9e09e936fc2c43223815c6e0a` |
+
+Verified 2026-08-25 (D-040). OFL: the fonts are embedded as subsets under their original names and are not sold separately; the licence text ships with the package.
+
 ## Legal sources (`legal/timeline.json`, Task 2.5)
 
 Not artifacts but primary legal texts, checked at development time (last verified 2026-08-25); the JSON carries URL + verbatim quote per fact.

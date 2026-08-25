@@ -20,7 +20,13 @@ const LocalizedSchema = z.object({ de: z.string(), en: z.string() });
 export const FindingSchema = z.object({
   ruleId: z.string(),
   severity: z.enum(["fatal", "error", "warning", "info"]),
-  source: z.enum(["xsd", "schematron-en16931", "schematron-xrechnung", "plausibility"]),
+  source: z.enum([
+    "xsd",
+    "schematron-en16931",
+    "schematron-xrechnung",
+    "plausibility",
+    "generation",
+  ]),
   location: z.string().optional(),
   message: z.string(),
   explanation: LocalizedSchema.optional(),

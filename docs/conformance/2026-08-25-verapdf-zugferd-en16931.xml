@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report>
+  <buildInformation>
+    <releaseDetails id="core" version="1.30.2" buildDate="2026-06-03T10:42:00+02:00"></releaseDetails>
+    <releaseDetails id="validation-model" version="1.30.2" buildDate="2026-06-03T10:46:00+02:00"></releaseDetails>
+    <releaseDetails id="apps" version="1.30.0" buildDate="2026-06-03T13:46:00+02:00"></releaseDetails>
+  </buildInformation>
+  <jobs>
+    <job>
+      <item size="40876">
+        <name>/Users/dashankadesilva/Drive/Projects/Kontor-MCP/fixtures/generated/zugferd-en16931.de.pdf</name>
+      </item>
+      <validationReport jobEndStatus="normal" profileName="PDF/A-3b validation profile" statement="PDF file is compliant with Validation Profile requirements." isCompliant="true">
+        <details passedRules="146" failedRules="0" passedChecks="3565" failedChecks="0"></details>
+      </validationReport>
+      <duration start="1787694678155" finish="1787694678379">00:00:00.224</duration>
+    </job>
+  </jobs>
+  <batchSummary totalJobs="1" failedToParse="0" encrypted="0" outOfMemory="0" veraExceptions="0">
+    <validationReports compliant="1" nonCompliant="0" failedJobs="0">1</validationReports>
+    <featureReports failedJobs="0">0</featureReports>
+    <repairReports failedJobs="0">0</repairReports>
+    <duration start="1787694678136" finish="1787694678389">00:00:00.253</duration>
+  </batchSummary>
+</report>

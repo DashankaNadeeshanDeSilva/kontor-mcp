@@ -171,6 +171,8 @@
 - CI: every generated fixture goes through **veraPDF** (PDF/A-3 conformance) *and* round-trips through Task 1.2 extraction + full validation ("what we generate, we can read and it passes").
 - **AC:** (1) generated EN16931-profile ZUGFeRD sample passes veraPDF with zero PDF/A-3 violations; (2) embedded XML passes the full validation pipeline and the KoSIT oracle where applicable; (3) round-trip test green; (4) at least one external check of a generated sample against a second validator (e.g. a ZUGFeRD community validator) documented in `docs/CONFORMANCE.md`; (5) profile parameter covered by tests for EN16931 + BASIC.
 
+- > **Status (2026-08-25): done.** `core/src/pdf/{layout,render,xmp,pdfa3,zugferd}.ts` (D-040–D-043), bundled font + ICC in `packages/rules/pdf/`, `generate_invoice` `target: zugferd-pdf` + `zugferd_profile`; AC (1) veraPDF PDF/A-3b PASS on all six generated samples, (2) embedded CII passes the full pipeline (EN 16931 CII scenario) and Mustang's profile XSD + Schematron, (3) round-trip test green, (4) Mustang CLI 2.26.0 documented in `docs/CONFORMANCE.md` with recorded reports, (5) EN16931 + BASIC (+ EXTENDED) covered by tests; CI job `pdfa`. **Open (owner):** Claude Desktop run of `generate_invoice` with `target: zugferd-pdf` + `output_path`.
+
 ### Task 2.8 — README v1 + repo public polish
 - Hero, sovereignty statement + "how we prove it", architecture Mermaid diagram, install (Claude Desktop/Code snippets), tool reference (generated from schemas if cheap), draft conformance table, FAQ, SECURITY.md, CONTRIBUTING.md.
 - **AC:** a cold reader (your friend?) can install and audit a sample invoice in < 5 minutes following only the README. Tag **v0.9**.

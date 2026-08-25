@@ -1,4 +1,9 @@
-import { enrichFinding, generateInvoice, InvoiceInputSchema } from "@kontor-mcp/core";
+import {
+  enrichFinding,
+  generateInvoice,
+  InvoiceInputSchema,
+  ZUGFERD_PROFILES,
+} from "@kontor-mcp/core";
 import { z } from "zod";
 import { type Lang, LangSchema, resolveOutputPath, writeOutput } from "../input.js";
 import { DISCLAIMER, toToolError } from "./shared.js";
@@ -8,19 +13,36 @@ export const GenerateInputSchema = z.object({
   invoice: InvoiceInputSchema.describe(
     "Invoice data. Amounts are derived server-side (decimal-safe): line nets, VAT breakdown per category/rate, totals.",
   ),
+  target: z
+    .enum(["xrechnung-ubl", "zugferd-pdf"])
+    .default("xrechnung-ubl")
+    .describe(
+      "Output format: `xrechnung-ubl` (XRechnung 3.0 UBL XML, default — required for German public-sector buyers) or `zugferd-pdf` (ZUGFeRD 2.3 / Factur-X PDF/A-3 with embedded factur-x.xml — the hybrid format for B2B).",
+    ),
+  zugferd_profile: z
+    .enum(ZUGFERD_PROFILES)
+    .default("EN16931")
+    .describe(
+      "ZUGFeRD/Factur-X profile for target zugferd-pdf: EN16931 (default, full EN 16931 content), BASIC (subset — terms outside BASIC are dropped from the XML and reported), EXTENDED.",
+    ),
   output_path: z
     .string()
     .optional()
     .describe(
-      "Optional absolute .xml path on the server's local filesystem to write the result to. Existing files are not overwritten unless overwrite=true.",
+      "Optional absolute path on the server's local filesystem to write the result to (.xml for xrechnung-ubl, .pdf for zugferd-pdf). Existing files are not overwritten unless overwrite=true. For zugferd-pdf the PDF is returned as pdf_base64 only when no output_path is given.",
     ),
   overwrite: z.boolean().default(false),
   lang: LangSchema,
 });
 
 export const GenerateOutputSchema = z.object({
-  xml: z.string(),
-  format: z.literal("xrechnung-3.0-ubl"),
+  xml: z.string().describe("XRechnung UBL, or the CII XML embedded in the ZUGFeRD PDF"),
+  format: z.string().describe("xrechnung-3.0-ubl | zugferd-2.3-<profile>"),
+  profile: z.enum(ZUGFERD_PROFILES).optional(),
+  pdf_base64: z
+    .string()
+    .optional()
+    .describe("The PDF/A-3 (base64) for target zugferd-pdf when no output_path was given"),
   valid: z
     .boolean()
     .describe(
@@ -53,18 +75,24 @@ export async function runGenerate(
   input: z.infer<typeof GenerateInputSchema>,
 ): Promise<{ output: GenerateOutput; text: string }> {
   // Resolve the target first so a bad path fails before any work is done.
+  const isPdf = input.target === "zugferd-pdf";
   const target = input.output_path
-    ? resolveOutputPath(input.output_path, [".xml"], input.overwrite)
+    ? resolveOutputPath(input.output_path, [isPdf ? ".pdf" : ".xml"], input.overwrite)
     : undefined;
   let r: Awaited<ReturnType<typeof generateInvoice>>;
   try {
-    r = await generateInvoice(input.invoice);
+    r = await generateInvoice(input.invoice, {
+      target: input.target,
+      zugferdProfile: input.zugferd_profile,
+      lang: input.lang,
+    });
   } catch (e) {
     throw toToolError(e);
   }
   const output: GenerateOutput = {
     xml: r.xml,
-    format: "xrechnung-3.0-ubl",
+    format: r.format,
+    ...(r.profile ? { profile: r.profile } : {}),
     valid: r.valid,
     plausible: r.plausible,
     findings: r.findings.map(enrichFinding) as GenerateOutput["findings"],
@@ -82,8 +110,10 @@ export async function runGenerate(
     disclaimer: DISCLAIMER[input.lang],
   };
   if (target) {
-    writeOutput(target, r.xml);
+    writeOutput(target, isPdf && r.pdf ? r.pdf : r.xml);
     output.writtenTo = target;
+  } else if (isPdf && r.pdf) {
+    output.pdf_base64 = Buffer.from(r.pdf).toString("base64");
   }
   return { output, text: summarize(output, input.lang, r.model.number, r.model.currency) };
 }
@@ -101,11 +131,14 @@ function summarize(o: GenerateOutput, lang: Lang, number: string, currency: stri
     : L
       ? "UNGÜLTIG"
       : "INVALID";
-  const lines = [
-    `${L ? "XRechnung 3.0 (UBL) erzeugt" : "XRechnung 3.0 (UBL) generated"}: ${number} — ${status}`,
+  const what = o.format.startsWith("zugferd")
+    ? `ZUGFeRD 2.3 / Factur-X ${o.profile ?? ""} (PDF/A-3)`.trim()
+    : "XRechnung 3.0 (UBL)";
+  const lines = [`${what} ${L ? "erzeugt" : "generated"}: ${number} — ${status}`];
+  lines.push(
     `${L ? "Netto" : "Net"} ${o.totals.taxExclusive} · ${L ? "USt" : "VAT"} ${o.totals.taxAmount ?? "0.00"} · ${L ? "Brutto" : "Gross"} ${o.totals.taxInclusive} · ${L ? "Zahlbetrag" : "Due"} ${o.totals.payable} ${currency}`,
     `${L ? "USt-Aufschlüsselung" : "VAT breakdown"}: ${o.taxBreakdown.map((b) => `${b.categoryCode} ${b.rate ?? "–"} %: ${b.taxableAmount} → ${b.taxAmount}`).join(" | ")}`,
-  ];
+  );
   if (o.autoFixes.length)
     lines.push(
       `${L ? "Automatisch korrigiert" : "Auto-fixed"}: ${o.autoFixes.map((f) => f.description).join(" ")}`,
@@ -117,6 +150,12 @@ function summarize(o: GenerateOutput, lang: Lang, number: string, currency: stri
       lines.push(`- [${f.severity}] ${f.ruleId}: ${f.explanation?.[lang] ?? f.message}`);
   }
   if (o.writtenTo) lines.push(`${L ? "Gespeichert unter" : "Written to"}: ${o.writtenTo}`);
+  else if (o.pdf_base64)
+    lines.push(
+      L
+        ? "PDF als pdf_base64 zurückgegeben (output_path angeben, um die Datei direkt zu speichern)."
+        : "PDF returned as pdf_base64 (pass output_path to have it written to disk).",
+    );
   if (!o.valid)
     lines.push(
       L

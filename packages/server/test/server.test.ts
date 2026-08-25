@@ -303,6 +303,112 @@ describe("generate_invoice (Task 2.3)", () => {
   });
 });
 
+describe("generate_invoice target zugferd-pdf (Task 2.7)", () => {
+  const invoice = {
+    number: "RE-2026-0816",
+    issueDate: "2026-08-25",
+    dueDate: "2026-09-24",
+    buyerReference: "04011000-12345-03",
+    seller: {
+      name: "Muster Consulting GmbH",
+      vatId: "DE123456789",
+      address: { street: "Musterstraße 1", city: "Berlin", postCode: "10115" },
+      contactName: "Erika Muster",
+      phone: "+49 30 1234567",
+      email: "rechnung@muster-consulting.example",
+    },
+    buyer: {
+      name: "Beispiel AG",
+      email: "buchhaltung@beispiel.example",
+      address: { street: "Amtsweg 2", city: "Bonn", postCode: "53113" },
+    },
+    payment: { iban: "DE75512108001245126199", bic: "SOGEDEFFXXX" },
+    lines: [{ description: "Beratung", quantity: 10, unit: "HUR", netPrice: 120 }],
+  };
+
+  it("exposes target + zugferd_profile in the input schema", async () => {
+    const tools = await client.listTools();
+    const t = tools.tools.find((x) => x.name === "generate_invoice");
+    const schema = t?.inputSchema as { properties?: Record<string, unknown> } | undefined;
+    expect(Object.keys(schema?.properties ?? {})).toEqual(
+      expect.arrayContaining(["target", "zugferd_profile"]),
+    );
+  });
+
+  it("returns a valid PDF/A-3 as pdf_base64 with the embedded CII and profile", async () => {
+    const r = await call("generate_invoice", { invoice, target: "zugferd-pdf", lang: "en" });
+    expect(r.isError).toBeFalsy();
+    expect(r.sc.format).toBe("zugferd-2.3-en16931");
+    expect(r.sc.profile).toBe("EN16931");
+    expect(r.sc.valid).toBe(true);
+    expect(String(r.sc.xml)).toContain("CrossIndustryInvoice");
+    const pdf = Buffer.from(String(r.sc.pdf_base64), "base64");
+    expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+    expect(pdf.toString("latin1")).toContain("factur-x.xml");
+    expect(r.text).toMatch(/ZUGFeRD 2.3 \/ Factur-X EN16931 \(PDF\/A-3\) generated/);
+    expect(r.text).toMatch(/pdf_base64/);
+  });
+
+  it("BASIC profile drops BT-86 with a warning, still valid", async () => {
+    const r = await call("generate_invoice", {
+      invoice,
+      target: "zugferd-pdf",
+      zugferd_profile: "BASIC",
+      lang: "de",
+    });
+    expect(r.isError).toBeFalsy();
+    expect(r.sc.format).toBe("zugferd-2.3-basic");
+    expect(r.sc.valid).toBe(true);
+    const dropped = (r.sc.findings as Structured[]).filter(
+      (f) => f.ruleId === "KONTOR-GEN-PROFILE-DROPPED",
+    );
+    expect(dropped.map((f) => (f.bt as string[])[0])).toEqual(
+      expect.arrayContaining(["BG-6", "BT-86"]),
+    );
+    expect(r.text).toMatch(/KONTOR-GEN-PROFILE-DROPPED/);
+  });
+
+  it("writes a .pdf to output_path (and then omits pdf_base64); rejects .xml for the PDF target", async () => {
+    const { mkdtempSync, readFileSync: read, rmSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { tmpdir } = await import("node:os");
+    const dir = mkdtempSync(join(tmpdir(), "kontor-zf-"));
+    try {
+      const out = join(dir, "re-2026-0816.pdf");
+      const r = await call("generate_invoice", {
+        invoice,
+        target: "zugferd-pdf",
+        output_path: out,
+      });
+      expect(r.isError).toBeFalsy();
+      expect(r.sc.writtenTo).toBe(out);
+      expect(r.sc.pdf_base64).toBeUndefined();
+      expect(read(out).subarray(0, 5).toString()).toBe("%PDF-");
+      const bad = await call("generate_invoice", {
+        invoice,
+        target: "zugferd-pdf",
+        output_path: join(dir, "x.xml"),
+      });
+      expect(bad.isError).toBe(true);
+      expect(bad.text).toMatch(/\.pdf/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("is fail-honest for the PDF target too: missing seller VAT id → valid:false, PDF still produced", async () => {
+    const { vatId: _v, ...sellerNoVat } = invoice.seller;
+    const r = await call("generate_invoice", {
+      invoice: { ...invoice, seller: sellerNoVat },
+      target: "zugferd-pdf",
+    });
+    expect(r.isError).toBeFalsy();
+    expect(r.sc.valid).toBe(false);
+    expect(typeof r.sc.pdf_base64).toBe("string");
+    expect(r.text).toMatch(/UNGÜLTIG|NICHT versandfertig/);
+  });
+});
+
 describe("convert_invoice (Task 2.4)", () => {
   it("extract-xml from a ZUGFeRD PDF and html-preview from UBL", async () => {
     const x = await call("convert_invoice", {

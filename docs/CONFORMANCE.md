@@ -31,6 +31,32 @@ Notes:
 - `packages/core/test/conformance.test.ts` replays the recorded oracle verdicts (`fixtures/conformance/oracle-verdicts.txt`) against the whole suite on every CI run (artifacts are fetched and cached in CI).
 - `pnpm oracle --diff …` exits 1 on any mismatch and is the release gate (Task 3.5).
 
+## Generated ZUGFeRD PDF/A-3 (Task 2.7)
+
+What `generate_invoice` with `target: zugferd-pdf` produces, checked by two independent validators.
+
+| | Kontor (`@kontor-mcp/core` `generateInvoice`) | Checker 1 | Checker 2 |
+|---|---|---|---|
+| Engine | pdf-lib 1.17.1 + @pdf-lib/fontkit (custom PDF/A-3 assembly, D-022/D-041); CII from `modelToCii` | **veraPDF 1.30.2**, profile PDF/A-3b (`pnpm verapdf`) | **Mustang CLI 2.26.0** `--action validate` (`pnpm mustang`): PDF/A + XMP + Factur-X profile XSD + EN 16931 Schematron |
+| Assets | Liberation Sans 2.1.5 (OFL) subsetted, sRGB2014.icc OutputIntent (`packages/rules/pdf/`, PROVENANCE) | — | — |
+
+### Result (2026-08-25)
+
+Command: `pnpm samples:zugferd && pnpm check:zugferd` (needs Java 17+ and veraPDF). Samples are generated with a fixed clock, so the committed bytes are reproducible; the CI job `pdfa` regenerates them, fails on drift, and runs both checkers.
+
+| Sample (`fixtures/generated/`) | Profile / lang | veraPDF PDF/A-3b | Mustang (pdf · xml · overall) | Kontor round trip (`detectInvoicePdf` → `validateInvoice`) |
+|---|---|---|---|---|
+| `zugferd-en16931.{de,en}.pdf` | EN 16931 | **PASS** (0 failed rules) | **valid · valid · valid** | valid, XMP `EN 16931` → `profile: en16931` |
+| `zugferd-basic.{de,en}.pdf` | BASIC | **PASS** | **valid · valid · valid** (Factur-X BASIC XSD) | valid, 3 × `KONTOR-GEN-PROFILE-DROPPED` warnings (BG-6, BT-85, BT-86) |
+| `zugferd-extended.{de,en}.pdf` | EXTENDED | **PASS** | **valid · valid · valid** | valid, `KONTOR-PDF-PROFILE-UNCHECKED` info |
+
+Recorded reports: `docs/conformance/2026-08-25-verapdf-zugferd-en16931.xml` (146 rules, 0 failed) and `docs/conformance/2026-08-25-mustang-zugferd-{en16931,basic,extended}.xml`. The BASIC golden XML (`packages/core/test/golden/generated-zugferd-basic.xml`) was additionally validated with `xmllint --schema` against Mustang's bundled `FACTUR-X_BASIC.xsd` — that is how the BASIC drop list (D-042) was derived and confirmed.
+
+### Continuous verification
+
+- `packages/core/test/zugferd.test.ts`: structure (OutputIntent, XMP, AF, embedded font, /ID), embedded-CII goldens per profile, extraction round trip + full validation, byte determinism, pagination, glyph fallback; `generate.test.ts` runs 10 random inputs through the PDF target.
+- CI job `pdfa` (Ubuntu, Java 21): regenerate → byte-identical check → veraPDF → Mustang on all six samples.
+
 ## Known differences
 
 None open. Every future divergence gets an issue and a row here.
