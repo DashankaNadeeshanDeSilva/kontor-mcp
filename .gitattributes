@@ -1,0 +1,9 @@
+# Snapshot/golden files and fixtures are compared byte-for-byte in tests: never convert line endings on checkout (Windows CI).
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+*.gif binary
+*.mp4 binary
+*.jar binary
+*.gz binary
+*.zip binary
