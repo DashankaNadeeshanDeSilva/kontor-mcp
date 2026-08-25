@@ -2,7 +2,7 @@
 
 Sovereign MCP server for German/EU e-invoices (XRechnung, ZUGFeRD/Factur-X, EN 16931): parse, validate and explain — 100 % offline, no Java, no network.
 
-## Tools (v0.1)
+## Tools (v0.9)
 
 | Tool | Purpose |
 |---|---|
@@ -17,7 +17,7 @@ Sovereign MCP server for German/EU e-invoices (XRechnung, ZUGFeRD/Factur-X, EN 1
 
 Every document tool accepts either `file_path` (absolute; `.xml`/`.pdf`; ≤ 20 MB, `KONTOR_MAX_FILE_MB`) or `content_base64` (+ optional `content_type`), and `lang: "de" | "en"` (default `de`).
 
-Resources: `kontor://samples/{name}` — bundled sample invoices (`valid-xrechnung-ubl.xml`, `valid-xrechnung-cii.xml`, `broken-missing-buyer-reference.xml`, `valid-zugferd-en16931.pdf`).
+Resources: `kontor://samples/{name}` — bundled sample invoices (`valid-xrechnung-ubl.xml`, `valid-xrechnung-cii.xml`, `broken-missing-buyer-reference.xml`, `valid-zugferd-en16931.pdf`, `generated-zugferd-en16931.pdf`).
 
 ## Claude Desktop
 
@@ -51,7 +51,7 @@ Use an absolute path to `node` (`which node`) if Desktop cannot find it — it l
 
 Restart Claude Desktop, attach an invoice (or `+` → *Add from kontor* → `broken-missing-buyer-reference.xml`) and ask *"Ist diese Rechnung gültig?"*.
 
-All three tools are read-only and offline (`readOnlyHint`, no network, nothing stored), so it is safe to set them to **Always allow** under *Settings → Connectors → kontor*; on first use Desktop shows a "Needs approval" prompt otherwise.
+All tools are offline and stateless; all except `generate_invoice` / `convert_invoice` (which may write a file when `output_path` is given) are read-only (`readOnlyHint`), so it is safe to set them to **Always allow** under *Settings → Connectors → kontor*; on first use Desktop shows a "Needs approval" prompt otherwise.
 
 **PDFs:** Desktop does not hand attached PDF bytes to the server, so reference ZUGFeRD/Factur-X PDFs by local path instead: *"Was steht in dieser Rechnung? /path/to/invoice.pdf"*. XML attachments work either way (the model re-sends them as `content_base64`).
 

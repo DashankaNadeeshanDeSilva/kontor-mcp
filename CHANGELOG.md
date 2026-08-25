@@ -4,7 +4,10 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-08-25 (Phase 2 exit)
+
 ### Added
+- README v1 (quickstart, sovereignty proof table, architecture, conformance table, FAQ), `SECURITY.md`, `CONTRIBUTING.md`, `NOTICE` (Task 2.8).
 - `generate_invoice` target `zugferd-pdf` (T5, Task 2.7): ZUGFeRD 2.3 / Factur-X PDF/A-3b with embedded `factur-x.xml` (`AFRelationship /Alternative`, MIME `text/xml`), sRGB OutputIntent, XMP with `pdfaid` + Factur-X extension schema, embedded subsetted Liberation Sans; visual page rendered from the same DE/EN layout as the HTML preview (no browser); profiles `EN16931` (default) / `BASIC` (unsupported terms dropped and reported as `KONTOR-GEN-PROFILE-DROPPED`) / `EXTENDED` (`KONTOR-PDF-PROFILE-UNCHECKED` info); fail-honest: the XML is read back out of the generated PDF and fully validated before `valid` is set; `output_path` accepts `.pdf`, otherwise `pdf_base64` is returned. Byte-deterministic under a fixed clock. Verified: veraPDF 1.30.2 PDF/A-3b zero violations and Mustang CLI 2.26.0 `valid` on all six committed samples (`docs/CONFORMANCE.md`); CI job `pdfa`. Core: `generateZugferdPdf`, `applyZugferdProfile`, `assemblePdfA3`, `buildFacturXXmp`, `PageFlow`; rules: `loadPdfAsset` + bundled font/ICC with provenance.
 - `Finding.source` gains `"generation"` (generator-side findings).
 - `@kontor-mcp/core`: Layer-3 plausibility checks (`runPlausibility`, namespace `KONTOR-PLAUS-*`, 22 rule ids with DE+EN explanation and fix hint): decimal recomputation of line nets, document totals and VAT breakdown (cent-exact where the official BR-CO-17 tolerates ±1), DE VAT-rate and category/rate consistency, IBAN mod-97 and BIC, EU VAT-ID formats, German Steuernummer, Leitweg-ID structure + ISO 7064 MOD 97-10 check digits, date sanity (future / stale / due-before-issue / inverted periods) and caller-provided duplicate list. Runs as third layer of `validateInvoice` (`layers.plausibility`, `skipLayers: ["plausibility"]`, `plausibility: { knownInvoiceNumbers, today, futureToleranceDays }`); never changes the official verdict (Task 2.1).

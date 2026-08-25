@@ -1,0 +1,31 @@
+Kontor MCP
+Copyright 2026 Dashanka Nadeeshan De Silva
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This distribution bundles third-party components under their own licences
+(details, versions and checksums: packages/rules/PROVENANCE.md):
+
+- KoSIT XRechnung Schematron, validator configuration, test suite and code
+  lists — Koordinierungsstelle für IT-Standards (KoSIT), Apache License 2.0.
+- EN 16931 validation artefacts (CEN/TC 434, ConnectingEurope
+  eInvoicing-EN16931) — European Union Public Licence 1.2 (EUPL-1.2), bundled
+  unmodified with their licence; derived compiled forms remain under EUPL-1.2.
+- OASIS UBL 2.1 and UN/CEFACT CII D16B XML schemas — under their respective
+  standard licences, bundled via the KoSIT package.
+- Liberation Fonts 2.1.5 (Liberation Sans Regular/Bold) — Copyright 2012 Red
+  Hat, Inc., digitised data copyright 2010 Google Corporation; SIL Open Font
+  License 1.1 (packages/rules/pdf/LICENSE-LiberationFonts.txt). Embedded as
+  subsets in generated PDFs.
+- sRGB2014.icc — Copyright International Color Consortium, 2015; distributed
+  and embedded without restriction per the ICC terms
+  (packages/rules/pdf/LICENSE-sRGB2014.txt).
+
+Runtime libraries (see each package.json): pdf-lib and @pdf-lib/fontkit (MIT),
+Saxon-JS (Mozilla Public License 2.0), xmllint-wasm (MIT), @xmldom/xmldom
+(MIT), decimal.js (MIT), ibantools (MPL-2.0), zod (MIT),
+@modelcontextprotocol/sdk (MIT).
+
+Sample invoices under packages/server/samples and fixtures/ come from the
+KoSIT test suite (Apache-2.0), the ZUGFeRD/Factur-X community corpora and
+Kontor's own generator, as recorded in fixtures/*/README.md.

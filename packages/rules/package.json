@@ -1,6 +1,6 @@
 {
   "name": "@kontor-mcp/rules",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "description": "Kontor MCP \u2014 bundled standards artifacts (XSDs, compiled Schematron, codelists) and rule knowledge base",
   "license": "Apache-2.0",
   "type": "module",

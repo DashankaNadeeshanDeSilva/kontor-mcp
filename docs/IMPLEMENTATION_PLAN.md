@@ -177,6 +177,8 @@
 - Hero, sovereignty statement + "how we prove it", architecture Mermaid diagram, install (Claude Desktop/Code snippets), tool reference (generated from schemas if cheap), draft conformance table, FAQ, SECURITY.md, CONTRIBUTING.md.
 - **AC:** a cold reader (your friend?) can install and audit a sample invoice in < 5 minutes following only the README. Tag **v0.9**.
 
+- > **Status (2026-08-25): done.** README v1 (hero, five-minute quickstart, tools, sovereignty proof table, Mermaid architecture, conformance table, FAQ), `SECURITY.md`, `CONTRIBUTING.md`, `NOTICE`; packages at 0.9.0, tag `v0.9.0`. Tool reference stays hand-written in `packages/server/README.md` (schema-generated docs deferred — cheap only once the tool surface is frozen at 3.6). **Open (owner):** the cold-reader < 5 min test.
+
 **Phase 2 exit:** full tool surface incl. ZUGFeRD generation; v0.9 public; conformance table drafted.
 
 ---
