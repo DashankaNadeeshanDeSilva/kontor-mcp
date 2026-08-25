@@ -35,6 +35,7 @@ describe("kontor-mcp server (Task 1.6)", () => {
     const names = tools.map((t) => t.name).sort();
     expect(names).toEqual([
       "audit_invoice",
+      "check_obligations",
       "convert_invoice",
       "explain_rule",
       "generate_invoice",
@@ -375,5 +376,41 @@ describe("convert_invoice (Task 2.4)", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("check_obligations (Task 2.5)", () => {
+  it("answers with structured obligations, sources, lastVerified and the disclaimer (DE text)", async () => {
+    const tools = await client.listTools();
+    expect(tools.tools.find((t) => t.name === "check_obligations")?.annotations?.readOnlyHint).toBe(
+      true,
+    );
+    const r = await call("check_obligations", {
+      role: "issuer",
+      counterparty: "b2b",
+      date: "2027-03-01",
+      annual_revenue_eur: 900000,
+      lang: "de",
+    });
+    expect(r.isError).toBeFalsy();
+    const obligations = r.sc.obligations as Structured[];
+    expect(obligations.find((o) => o.id === "b2b-issue")?.status).toBe("required");
+    expect((obligations[0]?.sources as Structured[]).length).toBeGreaterThan(0);
+    expect(r.sc.lastVerified).toBe("2026-08-25");
+    expect(r.text).toMatch(/PFLICHT/);
+    expect(r.text).toMatch(/keine steuerliche oder rechtliche Beratung/);
+    expect(r.text).toMatch(/gesetze-im-internet\.de/);
+  });
+
+  it("B2G freelancer (EN text) names the Leitweg-ID; invalid input is a tool error", async () => {
+    const r = await call("check_obligations", { role: "issuer", counterparty: "b2g", lang: "en" });
+    expect(r.text).toMatch(/Leitweg-ID/);
+    expect(r.text).toMatch(/not tax or legal advice/);
+    const bad = await call("check_obligations", {
+      role: "issuer",
+      counterparty: "b2b",
+      date: "2027-13-01",
+    });
+    expect(bad.isError).toBe(true);
   });
 });

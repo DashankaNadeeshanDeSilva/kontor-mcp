@@ -103,3 +103,4 @@ export function loadXsdSet(syntax: ScenarioSyntax): XsdSet {
 }
 
 export * from "./kb.js";
+export * from "./legal.js";

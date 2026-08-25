@@ -19,6 +19,7 @@
     "dist",
     "artifacts",
     "kb",
+    "legal",
     "README.md"
   ],
   "scripts": {

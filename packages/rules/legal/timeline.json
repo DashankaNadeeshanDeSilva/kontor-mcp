@@ -1,0 +1,72 @@
+{
+  "lastVerified": "2026-08-25",
+  "verifiedBy": "Primary legal texts on gesetze-im-internet.de and the BMF FAQ (updated 2026-03-23), checked at development time; no runtime network access.",
+  "sources": {
+    "ustg-14": {
+      "title": "§ 14 UStG – Ausstellung von Rechnungen",
+      "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+      "quote": "Eine elektronische Rechnung ist eine Rechnung, die in einem strukturierten elektronischen Format ausgestellt, übermittelt und empfangen wird und eine elektronische Verarbeitung ermöglicht."
+    },
+    "ustg-27-38": {
+      "title": "§ 27 Abs. 38 UStG – Übergangsregelung E-Rechnung",
+      "url": "https://www.gesetze-im-internet.de/ustg_1980/__27.html",
+      "quote": "bis zum 31. Dezember 2026 für einen nach dem 31. Dezember 2024 und vor dem 1. Januar 2027 ausgeführten Umsatz auf Papier oder vorbehaltlich der Zustimmung des Empfängers in einem elektronischen Format, das nicht § 14 Absatz 1 Satz 6 entspricht, übermittelt werden […] bis zum 31. Dezember 2027 […] wenn der Gesamtumsatz (§ 19 Absatz 2) des die Rechnung ausstellenden Unternehmers im vorangegangenen Kalenderjahr nicht mehr als 800 000 Euro betragen hat"
+    },
+    "ustdv-33": {
+      "title": "§ 33 UStDV – Rechnungen über Kleinbeträge",
+      "url": "https://www.gesetze-im-internet.de/ustdv_1980/__33.html",
+      "quote": "Eine Rechnung, deren Gesamtbetrag 250 Euro nicht übersteigt […] kann abweichend von § 14 Absatz 2 Satz 2 des Gesetzes immer als sonstige Rechnung im Sinne von § 14 Absatz 1 Satz 4 des Gesetzes übermittelt werden."
+    },
+    "ustdv-34": {
+      "title": "§ 34 UStDV – Fahrausweise als Rechnungen",
+      "url": "https://www.gesetze-im-internet.de/ustdv_1980/__34.html",
+      "quote": "Eine Rechnung nach Satz 1 kann abweichend von § 14 Absatz 2 Satz 2 des Gesetzes immer als sonstige Rechnung […] übermittelt werden."
+    },
+    "ustdv-34a": {
+      "title": "§ 34a UStDV – Rechnungen von Kleinunternehmern",
+      "url": "https://www.gesetze-im-internet.de/ustdv_1980/__34a.html",
+      "quote": "Eine Rechnung über Umsätze, die nach § 19 Absatz 1 des Gesetzes steuerfrei sind […] kann abweichend von § 14 Absatz 2 Satz 2 des Gesetzes immer als sonstige Rechnung übermittelt werden."
+    },
+    "bmf-faq": {
+      "title": "BMF – Fragen und Antworten zur obligatorischen E-Rechnung (Stand 23.03.2026); BMF-Schreiben vom 15.10.2024 und 15.10.2025",
+      "url": "https://www.bundesfinanzministerium.de/Content/DE/FAQ/e-rechnung.html",
+      "quote": "Kleinunternehmer […] müssen dennoch in der Lage sein, E-Rechnungen zu empfangen. […] XRechnung, ZUGFeRD ab Version 2.0.1 (ausgenommen die Profile MINIMUM und BASIC-WL)."
+    },
+    "erechv-3": {
+      "title": "§ 3 E-RechV – Verbindlichkeit der elektronischen Form (Bund)",
+      "url": "https://www.gesetze-im-internet.de/erechv/__3.html",
+      "quote": "Rechnungssteller müssen Rechnungen gegenüber Rechnungsempfängern in elektronischer Form ausstellen und übermitteln. […] Absatz 1 gilt nicht […] bei Direktaufträgen bis zu einem Auftragswert von 1.000 Euro"
+    },
+    "erechnung-bund": {
+      "title": "E-Rechnung Bund – Rechtliche Grundlagen, Leitweg-ID",
+      "url": "https://www.e-rechnung-bund.de/",
+      "quote": "Seit dem 27. November 2020 ist die E-Rechnung für Rechnungssteller grundsätzlich verpflichtend. Die Leitweg-ID ist im Standard XRechnung im Feld Buyer Reference (BT-10) anzugeben."
+    }
+  },
+  "facts": {
+    "b2b-receive-from": { "value": "2025-01-01", "sources": ["ustg-14", "ustg-27-38", "bmf-faq"] },
+    "b2b-issue-transition-all-until": { "value": "2026-12-31", "sources": ["ustg-27-38"] },
+    "b2b-issue-large-from": { "value": "2027-01-01", "sources": ["ustg-27-38"] },
+    "b2b-issue-transition-small-until": { "value": "2027-12-31", "sources": ["ustg-27-38"] },
+    "b2b-issue-small-threshold-eur": { "value": 800000, "sources": ["ustg-27-38"] },
+    "b2b-issue-edi-until": { "value": "2027-12-31", "sources": ["ustg-27-38", "bmf-faq"] },
+    "b2b-issue-all-from": { "value": "2028-01-01", "sources": ["ustg-27-38"] },
+    "kleinbetrag-gross-eur": { "value": 250, "sources": ["ustdv-33"] },
+    "kleinunternehmer-exempt": { "value": true, "sources": ["ustdv-34a", "bmf-faq"] },
+    "fahrausweise-exempt": { "value": true, "sources": ["ustdv-34"] },
+    "exempt-supplies-4-8-29": { "value": true, "sources": ["ustg-14", "bmf-faq"] },
+    "b2c-not-mandated": { "value": true, "sources": ["ustg-14", "bmf-faq"] },
+    "cross-border-not-mandated": { "value": true, "sources": ["ustg-14", "bmf-faq"] },
+    "accepted-formats": {
+      "value": [
+        "XRechnung",
+        "ZUGFeRD ≥ 2.0.1 (not MINIMUM / BASIC-WL)",
+        "other EN 16931-conformant formats agreed between the parties (e.g. EDIFACT, if the UStG data can be extracted)"
+      ],
+      "sources": ["bmf-faq"]
+    },
+    "b2g-federal-from": { "value": "2020-11-27", "sources": ["erechv-3", "erechnung-bund"] },
+    "b2g-direct-order-threshold-net-eur": { "value": 1000, "sources": ["erechv-3"] },
+    "b2g-leitweg-id-bt10": { "value": true, "sources": ["erechnung-bund"] }
+  }
+}

@@ -6,6 +6,11 @@ import { AuditInputSchema, AuditOutputSchema, runAudit } from "./tools/audit.js"
 import { ConvertInputSchema, ConvertOutputSchema, runConvert } from "./tools/convert.js";
 import { ExplainInputSchema, ExplainOutputSchema, runExplain } from "./tools/explain.js";
 import { GenerateInputSchema, GenerateOutputSchema, runGenerate } from "./tools/generate.js";
+import {
+  ObligationsOutputSchema,
+  ObligationsToolInputSchema,
+  runObligations,
+} from "./tools/obligations.js";
 import { ParseInputSchema, ParseOutputSchema, runParse } from "./tools/parse.js";
 import { runValidate, ValidateInputSchema, ValidateOutputSchema } from "./tools/validate.js";
 
@@ -148,6 +153,22 @@ export function createServer(): McpServer {
     async (input) => {
       void log("convert_invoice called");
       return guard(() => runConvert(input));
+    },
+  );
+
+  server.registerTool(
+    "check_obligations",
+    {
+      title: "Check e-invoicing obligations (Germany)",
+      description:
+        "Offline decision tree over the German e-invoicing mandate (§ 14 / § 27 Abs. 38 UStG, UStDV §§ 33/34/34a, E-RechV): what applies to an issuer or receiver (B2B / B2G / B2C), from when, transition rules (2026, 2027 with the €800,000 prior-year turnover threshold, 2028), exemptions (small business, small-amount invoices, exempt supplies, cross-border), accepted formats and whether a Leitweg-ID is needed. Every answer carries the primary sources, the date the legal parameters were last verified, and a non-advice disclaimer.",
+      inputSchema: ObligationsToolInputSchema.shape,
+      outputSchema: ObligationsOutputSchema.shape,
+      annotations: ANNOTATIONS,
+    },
+    async (input) => {
+      void log("check_obligations called");
+      return guard(() => runObligations(input));
     },
   );
 
