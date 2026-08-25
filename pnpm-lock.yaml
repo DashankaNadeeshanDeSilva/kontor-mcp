@@ -50,6 +50,15 @@ importers:
       '@kontor-mcp/rules':
         specifier: workspace:*
         version: link:../rules
+      '@xmldom/xmldom':
+        specifier: 0.9.12
+        version: 0.9.12
+      xpath:
+        specifier: 0.0.34
+        version: 0.0.34
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/rules: {}
 
@@ -431,6 +440,10 @@ packages:
 
   '@vitest/utils@4.1.11':
     resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
+
+  '@xmldom/xmldom@0.9.12':
+    resolution: {integrity: sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==}
+    engines: {node: '>=14.6'}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -840,9 +853,16 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
+  xpath@0.0.34:
+    resolution: {integrity: sha512-FxF6+rkr1rNSQrhUNYrAFJpRXNzlDoMxeXN5qI84939ylEv3qqPFKa85Oxr6tDaJKqwW6KKyo2v26TSv3k6LeA==}
+    engines: {node: '>=0.6.0'}
+
   xslt3@2.7.0:
     resolution: {integrity: sha512-Vt32LhCt4CQULtGPWlGW++PhS+o3LA6z3PDvig9lDfbo2cIHcaEnyrRYDTilw4N0EbAyxCaw5E0B+DICZEYktQ==}
     hasBin: true
+
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -1077,6 +1097,8 @@ snapshots:
       '@vitest/pretty-format': 4.1.11
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
+
+  '@xmldom/xmldom@0.9.12': {}
 
   agent-base@6.0.2:
     dependencies:
@@ -1429,6 +1451,8 @@ snapshots:
       siginfo: 2.0.0
       stackback: 0.0.2
 
+  xpath@0.0.34: {}
+
   xslt3@2.7.0:
     dependencies:
       axios: 1.19.0
@@ -1436,3 +1460,5 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  zod@4.4.3: {}
