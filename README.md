@@ -24,7 +24,7 @@ pnpm test
 pnpm lint
 ```
 
-Requires Node ≥ 20 and pnpm (`corepack enable`).
+Requires Node ≥ 20 and pnpm 10 (`corepack enable` picks the pinned version from `packageManager`).
 
 ## Docs
 
