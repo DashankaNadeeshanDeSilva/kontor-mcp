@@ -37,9 +37,9 @@ const lines = [
   "Diese PDF-Datei enthält eine maschinenlesbare Rechnung",
   `(ZUGFeRD / Factur-X, factur-x.xml, Profil ${level}).`,
 ];
-lines.forEach((t, i) =>
-  page.drawText(t, { x: 56, y: 780 - i * 22, size: i ? 11 : 16, font, color: rgb(0.1, 0.1, 0.1) }),
-);
+for (const [i, t] of lines.entries()) {
+  page.drawText(t, { x: 56, y: 780 - i * 22, size: i ? 11 : 16, font, color: rgb(0.1, 0.1, 0.1) });
+}
 
 // --- embedded file (Factur-X / ZUGFeRD 2.x): name factur-x.xml, MIME text/xml, AFRelationship Alternative
 await doc.attach(xml, "factur-x.xml", {
