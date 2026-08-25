@@ -17,14 +17,18 @@
     "lint:fix": "biome check --write .",
     "typecheck": "pnpm -r typecheck",
     "clean": "pnpm -r clean",
-    "artifacts": "tsx tools/fetch-artifacts.ts"
+    "artifacts": "tsx tools/fetch-artifacts.ts",
+    "spike:sef": "sh tools/compile-sef.sh",
+    "spike:saxon": "tsx tools/spike-saxon.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
     "@types/node": "^22.0.0",
     "fflate": "^0.8.3",
+    "saxon-js": "^2.7.0",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "xslt3": "^2.7.0"
   }
 }

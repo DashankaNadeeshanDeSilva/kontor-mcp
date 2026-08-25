@@ -22,3 +22,9 @@ Dated entries for every PRD assumption confirmed/changed and every library chose
 - **D-013 License posture:** KoSIT (Apache-2.0), SchXslt (MIT) → bundle. EN 16931 artefacts are **EUPL-1.2** → bundle unmodified in a separate directory with their licence + NOTICE entry (same as KoSIT does); re-verify before v1.0 publish. See `packages/rules/PROVENANCE.md`.
 - **D-014 ZUGFeRD fixtures:** 8 PDFs from `ZUGFeRD/corpus` (Apache-2.0) pinned at commit `d891458e`, committed under `fixtures/zugferd/` with SHA256SUMS.
 - **D-015 Java:** OpenJDK 21 (Homebrew `openjdk@21`, keg-only, on PATH via `.zshrc`) for build/CI tooling. Temurin cask needs sudo, so the formula was used.
+
+## 2026-08-25 — Task 0.3 spike: PASS (see docs/spikes/2026-08-25-saxon-js-schematron-spike.md)
+
+- **D-016 Engine confirmed: Saxon-JS 2.7 runs the official EN 16931 + XRechnung Schematron XSLTs unmodified.** All 4 stylesheets compile to SEF with `xslt3` without warnings; SVRL findings identical to the KoSIT validator on the spike files and on all 86 official test-suite instances. Warm validation 44–549 ms, cold < 1 s. PRD D1 stands; D8 (Java sidecar fallback) is **not needed**.
+- **D-017 Scenario model is part of the rule set.** KoSIT's `scenarios.xml` selects rule sets by CustomizationID *and* remaps severities per scenario (`customLevel`). Verdict parity requires implementing this; the 4 initial verdict diffs were entirely due to it. Task 1.4 will bundle a typed JSON derived from `scenarios.xml`.
+- **D-018 SEF artefacts are build outputs of `tools/compile-sef.sh`;** they will be committed into `packages/rules/artifacts/` (Task 1.4) so `npx @kontor-mcp/server` needs no build step. `xslt3` stays a devDependency.
