@@ -4,6 +4,12 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+### Added
+- `docs/VERIFICATION-v0.1.md`: Claude Desktop manual verification (S1–S6) with findings, plus first demo recording and screenshots in `docs/media/`.
+
+### Changed
+- Server README: Inspector commands use `@latest`; notes on absolute `node` path, read-only tools / "Always allow", and referencing PDFs by local path in Claude Desktop.
+
 ### Fixed
 - `file_path` description and "File not found" error now tell the model to fall back to `content_base64` for chat attachments / sandboxed uploads, avoiding a wasted round-trip in Claude Desktop.
 - Sample resources now carry their filename as `title`, so Claude Desktop lists four distinct entries instead of four identical "Sample invoices" rows.

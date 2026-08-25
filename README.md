@@ -4,7 +4,11 @@
 
 Kontor MCP is an open-source [Model Context Protocol](https://modelcontextprotocol.io) server and reference client that gives AI assistants (Claude Desktop, Claude Code, agent platforms) fully local capabilities for German/EU electronic invoicing: parse, validate, audit, explain, generate and convert **XRechnung** and **ZUGFeRD/Factur-X** invoices — with the *official* KoSIT / EN 16931 rule sets, and no data ever leaving your machine.
 
-**Status:** Phase 0 (de-risk & foundation) — not yet usable. See [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
+**Status:** v0.1.0 — Phase 1 complete: `parse_invoice`, `validate_invoice`, `explain_rule` over stdio, verified in Claude Desktop ([verification report](docs/VERIFICATION-v0.1.md)). Phase 2 (audit, generate, convert) next — see [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
+
+![Kontor MCP in Claude Desktop: validate a broken XRechnung, parse a ZUGFeRD PDF, explain BR-DE-18](docs/media/v0.1-desktop-demo.gif)
+
+*Claude Desktop with the `kontor` server: validate → BR-DE-15 (missing Leitweg-ID) with fix hint · parse a ZUGFeRD PDF · explain BR-DE-18. [MP4](docs/media/v0.1-desktop-demo.mp4)*
 
 ## Packages
 
@@ -31,6 +35,7 @@ Requires Node ≥ 20 and pnpm 10 (`corepack enable` picks the pinned version fro
 - [Product Requirements](docs/PRD.md)
 - [Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
 - [Decision log](docs/DECISIONS.md)
+- [v0.1 Claude Desktop verification](docs/VERIFICATION-v0.1.md)
 
 ## License
 

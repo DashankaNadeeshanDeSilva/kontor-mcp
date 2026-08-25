@@ -127,6 +127,8 @@
 
 **Phase 1 exit:** v0.1 demo works in Claude Desktop; conformance run recorded.
 
+> **Status (2026-08-25): Phase 1 complete.** Tag `v0.1.0`; conformance 89/89; Claude Desktop 1.34493.1 manual verification S1–S6 passed and recorded in [`VERIFICATION-v0.1.md`](VERIFICATION-v0.1.md) (demo: `docs/media/v0.1-desktop-demo.{mp4,gif}`). Open findings F5–F10 carried into Phase 2.
+
 ---
 
 ## 4. Phase 2 — Workflow Depth + Generation (Week 2)

@@ -10,3 +10,6 @@ coverage/
 .vitest/
 # large downloaded standards artifacts are fetched by tools/fetch-artifacts (Task 0.2)
 fixtures/_downloads/
+
+# raw screen recordings (keep only derived mp4/gif in the repo)
+docs/media/*.mov

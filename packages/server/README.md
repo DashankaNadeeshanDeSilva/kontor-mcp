@@ -42,7 +42,13 @@ From a local checkout (before the npm publish):
 }
 ```
 
-Restart Claude Desktop, attach an invoice (or ask for `kontor://samples/broken-missing-buyer-reference.xml`) and ask *"Ist diese Rechnung gültig?"*.
+Use an absolute path to `node` (`which node`) if Desktop cannot find it — it launches servers with a minimal `PATH`. Quit Desktop fully (⌘Q) and reopen; the config is read at launch. Logs: `~/Library/Logs/Claude/mcp-server-kontor.log`.
+
+Restart Claude Desktop, attach an invoice (or `+` → *Add from kontor* → `broken-missing-buyer-reference.xml`) and ask *"Ist diese Rechnung gültig?"*.
+
+All three tools are read-only and offline (`readOnlyHint`, no network, nothing stored), so it is safe to set them to **Always allow** under *Settings → Connectors → kontor*; on first use Desktop shows a "Needs approval" prompt otherwise.
+
+**PDFs:** Desktop does not hand attached PDF bytes to the server, so reference ZUGFeRD/Factur-X PDFs by local path instead: *"Was steht in dieser Rechnung? /path/to/invoice.pdf"*. XML attachments work either way (the model re-sends them as `content_base64`).
 
 ## Claude Code
 
@@ -53,9 +59,9 @@ claude mcp add kontor -- node /absolute/path/to/kontor-mcp/packages/server/dist/
 ## MCP Inspector
 
 ```sh
-npx @modelcontextprotocol/inspector node packages/server/dist/bin.js
+npx @modelcontextprotocol/inspector@latest node packages/server/dist/bin.js
 # or headless:
-npx @modelcontextprotocol/inspector --cli node packages/server/dist/bin.js --method tools/list
+npx @modelcontextprotocol/inspector@latest --cli node packages/server/dist/bin.js --method tools/list
 ```
 
 ## Privacy / sovereignty
