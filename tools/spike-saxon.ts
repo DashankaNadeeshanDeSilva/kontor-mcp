@@ -9,7 +9,7 @@ import SaxonJS from "saxon-js";
 
 const SEF_DIR = resolve("fixtures/_downloads/sef");
 
-interface Finding {
+export interface SpikeFinding {
   ruleId: string;
   severity: string;
   location: string;
@@ -21,8 +21,8 @@ function detectSyntax(xml: string): "ubl" | "cii" {
   return "ubl";
 }
 
-function parseSvrl(svrl: string): Finding[] {
-  const out: Finding[] = [];
+function parseSvrl(svrl: string): SpikeFinding[] {
+  const out: SpikeFinding[] = [];
   const re = /<svrl:failed-assert\b([^>]*)>([\s\S]*?)<\/svrl:failed-assert>/g;
   for (const m of svrl.matchAll(re)) {
     const attrs = m[1] ?? "";
@@ -51,11 +51,13 @@ function loadSef(name: string): unknown {
   return s;
 }
 
-async function validate(file: string): Promise<{ findings: Finding[]; ms: number }> {
+export async function validateWithSaxon(
+  file: string,
+): Promise<{ findings: SpikeFinding[]; ms: number }> {
   const xml = readFileSync(file, "utf8");
   const syn = detectSyntax(xml).toUpperCase();
   const t0 = performance.now();
-  const findings: Finding[] = [];
+  const findings: SpikeFinding[] = [];
   for (const sheet of [`EN16931-${syn}-validation`, `XRechnung-${syn}-validation`]) {
     const res = await SaxonJS.transform(
       {
@@ -70,22 +72,27 @@ async function validate(file: string): Promise<{ findings: Finding[]; ms: number
   return { findings, ms: performance.now() - t0 };
 }
 
-const files = process.argv.slice(2);
-const tStart = performance.now();
-for (const f of files) {
-  const { findings, ms } = await validate(f);
-  const errors = findings.filter((x) => x.severity === "fatal" || x.severity === "error");
+const isCli = process.argv[1]?.endsWith("spike-saxon.ts") ?? false;
+if (isCli) {
+  const files = process.argv.slice(2);
+  const tStart = performance.now();
+  for (const f of files) {
+    const { findings, ms } = await validateWithSaxon(f);
+    const errors = findings.filter((x) => x.severity === "fatal" || x.severity === "error");
+    console.log(
+      `\n${basename(f)}: ${errors.length ? "INVALID" : "VALID"} (${ms.toFixed(0)} ms, ${findings.length} findings)`,
+    );
+    for (const x of findings)
+      console.log(
+        `  [${x.severity}] ${x.ruleId} @ ${x.location}\n      ${x.message.slice(0, 160)}`,
+      );
+  }
+  // warm re-run of the first file
+  if (files[0]) {
+    const { ms } = await validateWithSaxon(files[0]);
+    console.log(`\nwarm re-run ${basename(files[0])}: ${ms.toFixed(0)} ms`);
+  }
   console.log(
-    `\n${basename(f)}: ${errors.length ? "INVALID" : "VALID"} (${ms.toFixed(0)} ms, ${findings.length} findings)`,
+    `total wall ${((performance.now() - tStart) / 1000).toFixed(2)} s, rss ${(process.memoryUsage().rss / 1048576).toFixed(0)} MB`,
   );
-  for (const x of findings)
-    console.log(`  [${x.severity}] ${x.ruleId} @ ${x.location}\n      ${x.message.slice(0, 160)}`);
 }
-// warm re-run of the first file
-if (files[0]) {
-  const { ms } = await validate(files[0]);
-  console.log(`\nwarm re-run ${basename(files[0])}: ${ms.toFixed(0)} ms`);
-}
-console.log(
-  `total wall ${((performance.now() - tStart) / 1000).toFixed(2)} s, rss ${(process.memoryUsage().rss / 1048576).toFixed(0)} MB`,
-);

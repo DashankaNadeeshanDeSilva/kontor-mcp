@@ -19,7 +19,8 @@
     "clean": "pnpm -r clean",
     "artifacts": "tsx tools/fetch-artifacts.ts",
     "spike:sef": "sh tools/compile-sef.sh",
-    "spike:saxon": "tsx tools/spike-saxon.ts"
+    "spike:saxon": "tsx tools/spike-saxon.ts",
+    "oracle": "tsx tools/oracle.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",

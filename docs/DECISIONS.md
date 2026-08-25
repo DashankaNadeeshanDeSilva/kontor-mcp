@@ -28,3 +28,9 @@ Dated entries for every PRD assumption confirmed/changed and every library chose
 - **D-016 Engine confirmed: Saxon-JS 2.7 runs the official EN 16931 + XRechnung Schematron XSLTs unmodified.** All 4 stylesheets compile to SEF with `xslt3` without warnings; SVRL findings identical to the KoSIT validator on the spike files and on all 86 official test-suite instances. Warm validation 44–549 ms, cold < 1 s. PRD D1 stands; D8 (Java sidecar fallback) is **not needed**.
 - **D-017 Scenario model is part of the rule set.** KoSIT's `scenarios.xml` selects rule sets by CustomizationID *and* remaps severities per scenario (`customLevel`). Verdict parity requires implementing this; the 4 initial verdict diffs were entirely due to it. Task 1.4 will bundle a typed JSON derived from `scenarios.xml`.
 - **D-018 SEF artefacts are build outputs of `tools/compile-sef.sh`;** they will be committed into `packages/rules/artifacts/` (Task 1.4) so `npx @kontor-mcp/server` needs no build step. `xslt3` stays a devDependency.
+
+## 2026-08-25 — Task 0.4 oracle harness + engine patch
+
+- **D-019 Saxon-JS big-integer precision workaround.** `xs:integer` arithmetic > 2^53 is inexact in Saxon-JS 2.7 (verified: 30-digit `mod 97` → 28 instead of 52; `xs:decimal` exact). Affects only BR-DE-19 (IBAN). `tools/compile-sef.sh` patches that sub-expression to `xs:decimal` before compiling; documented in the spike report. Consider reporting upstream to Saxonica. Rule-ID parity with the KoSIT validator is now 89/89 on spike + test suite.
+- **D-020 Oracle harness:** `pnpm oracle [--diff] [--json] <files|dirs>` (`tools/oracle.ts`) runs the KoSIT JAR (Java from `KONTOR_JAVA`, Homebrew openjdk@21, or PATH), normalises `rep:message` into findings, and diffs verdict + rule-ID sets against the Saxon-JS engine. Exit code 1 on any mismatch → usable as the CI conformance gate (Task 3.5).
+- **D-021 veraPDF** installed via Homebrew (`verapdf` 1.30.2) for Task 0.6 / 2.7 PDF/A-3 checks.

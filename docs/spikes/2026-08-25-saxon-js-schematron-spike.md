@@ -29,6 +29,17 @@ The 4 divergent files (`extension/04.05a` CII, `extension/05.01a` UBL, `technica
 | Whole test suite (86 files) | 3.6 s wall | — |
 | RSS | ~260 MB with all 4 SEFs loaded | — |
 
+## Engine discrepancy found and worked around (D-019)
+
+After building the oracle harness (Task 0.4, `pnpm oracle --diff`), rule-ID-set comparison over all 89 files showed **BR-DE-19** (IBAN mod-97 check, `warning`) firing in Saxon-JS but never in the Java validator. Root cause, isolated with a 3-line stylesheet:
+
+| Expression | Saxon-JS 2.7 | correct |
+|---|---|---|
+| `xs:integer('123456789012345678901234567890') mod 97` | **28** | 52 |
+| `xs:decimal('123456789012345678901234567890') mod 97` | 52 | 52 |
+
+Saxon-JS evaluates `xs:integer` arithmetic beyond 2^53 with double precision. The XRechnung IBAN test builds a ~30-digit integer. **Workaround:** `tools/compile-sef.sh` rewrites exactly the IBAN sub-expression `xs:integer(string-join(for $cp in string-to-codepoints(…` → `xs:decimal(…)` (4 occurrences per XRechnung stylesheet, 0 in EN 16931) before SEF compilation. Semantics are unchanged for a conforming XPath engine. After the patch: **rule-ID sets identical on 89/89 files; verdicts 85/89** with the 4 remaining differences fully explained by scenario `customLevel` (to be implemented in Task 1.4 → expected 89/89). No other `xs:integer(` usages in the XRechnung stylesheets operate on long strings (the Leitweg-ID check uses 8-digit substrings).
+
 ## Consequences / decisions
 
 - **Runtime engine = Saxon-JS 2 HE (`saxon-js`), stylesheets shipped as SEF JSON in `@kontor-mcp/rules`.** `xslt3` is a build-time devDependency only. SchXslt is retained in the manifest only for the case where we need to recompile from `.sch` sources; not needed today.
