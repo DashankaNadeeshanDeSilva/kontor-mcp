@@ -1,5 +1,10 @@
-# Snapshot/golden files and fixtures are compared byte-for-byte in tests: never convert line endings on checkout (Windows CI).
+# Source, tests and golden snapshots are compared byte-for-byte: always LF, never converted on checkout (Windows CI).
 * text=auto eol=lf
+# Third-party artifacts, fixtures and samples keep their original bytes (provenance hashes, MANIFEST.json).
+packages/rules/artifacts/** -text
+fixtures/** -text
+packages/*/fixtures/** -text
+packages/server/samples/** -text
 *.pdf binary
 *.png binary
 *.gif binary
