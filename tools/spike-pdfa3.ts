@@ -35,7 +35,7 @@ const page = doc.addPage([595.28, 841.89]);
 const lines = [
   "Rechnung / Invoice (Kontor MCP spike)",
   "Diese PDF-Datei enthält eine maschinenlesbare Rechnung",
-  "(ZUGFeRD / Factur-X, factur-x.xml, Profil " + level + ").",
+  `(ZUGFeRD / Factur-X, factur-x.xml, Profil ${level}).`,
 ];
 lines.forEach((t, i) =>
   page.drawText(t, { x: 56, y: 780 - i * 22, size: i ? 11 : 16, font, color: rgb(0.1, 0.1, 0.1) }),
