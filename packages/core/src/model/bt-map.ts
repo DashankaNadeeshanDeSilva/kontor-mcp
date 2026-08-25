@@ -1,0 +1,231 @@
+/**
+ * Model path → EN 16931 business term / group. Keys use `[]` for array elements.
+ * Drives `toAnnotatedJson()` and `docs/BT-COVERAGE.md` (tools/bt-coverage.ts).
+ */
+const ADDRESS = (bg: string, bts: [string, string, string, string, string, string, string]) => ({
+  "": bg,
+  line1: bts[0],
+  line2: bts[1],
+  line3: bts[2],
+  city: bts[3],
+  postCode: bts[4],
+  countrySubdivision: bts[5],
+  countryCode: bts[6],
+});
+
+function nest(prefix: string, table: Record<string, string>, out: Record<string, string>) {
+  for (const [k, v] of Object.entries(table)) out[k === "" ? prefix : `${prefix}.${k}`] = v;
+}
+
+export const BT_MAP: Readonly<Record<string, string>> = (() => {
+  const m: Record<string, string> = {
+    number: "BT-1",
+    issueDate: "BT-2",
+    typeCode: "BT-3",
+    currency: "BT-5",
+    vatAccountingCurrency: "BT-6",
+    vatPointDate: "BT-7",
+    vatPointDateCode: "BT-8",
+    dueDate: "BT-9",
+    buyerReference: "BT-10",
+    projectReference: "BT-11",
+    contractReference: "BT-12",
+    purchaseOrderReference: "BT-13",
+    salesOrderReference: "BT-14",
+    receivingAdviceReference: "BT-15",
+    despatchAdviceReference: "BT-16",
+    tenderOrLotReference: "BT-17",
+    invoicedObjectIdentifier: "BT-18",
+    buyerAccountingReference: "BT-19",
+    paymentTerms: "BT-20",
+    businessProcess: "BT-23",
+    specificationIdentifier: "BT-24",
+    notes: "BG-1",
+    "notes[].subjectCode": "BT-21",
+    "notes[].note": "BT-22",
+    precedingInvoices: "BG-3",
+    "precedingInvoices[].reference": "BT-25",
+    "precedingInvoices[].issueDate": "BT-26",
+    invoicePeriod: "BG-14",
+    "invoicePeriod.start": "BT-73",
+    "invoicePeriod.end": "BT-74",
+    seller: "BG-4",
+    "seller.name": "BT-27",
+    "seller.tradingName": "BT-28",
+    "seller.identifiers": "BT-29",
+    "seller.legalRegistrationId": "BT-30",
+    "seller.vatId": "BT-31",
+    "seller.taxRegistrationId": "BT-32",
+    "seller.additionalLegalInfo": "BT-33",
+    "seller.electronicAddress": "BT-34",
+    "seller.contact": "BG-6",
+    "seller.contact.name": "BT-41",
+    "seller.contact.phone": "BT-42",
+    "seller.contact.email": "BT-43",
+    buyer: "BG-7",
+    "buyer.name": "BT-44",
+    "buyer.tradingName": "BT-45",
+    "buyer.identifier": "BT-46",
+    "buyer.legalRegistrationId": "BT-47",
+    "buyer.vatId": "BT-48",
+    "buyer.electronicAddress": "BT-49",
+    "buyer.contact": "BG-9",
+    "buyer.contact.name": "BT-56",
+    "buyer.contact.phone": "BT-57",
+    "buyer.contact.email": "BT-58",
+    payee: "BG-10",
+    "payee.name": "BT-59",
+    "payee.identifier": "BT-60",
+    "payee.legalRegistrationId": "BT-61",
+    sellerTaxRepresentative: "BG-11",
+    "sellerTaxRepresentative.name": "BT-62",
+    "sellerTaxRepresentative.vatId": "BT-63",
+    delivery: "BG-13",
+    "delivery.deliverToName": "BT-70",
+    "delivery.locationId": "BT-71",
+    "delivery.actualDeliveryDate": "BT-72",
+    paymentInstructions: "BG-16",
+    "paymentInstructions.meansTypeCode": "BT-81",
+    "paymentInstructions.meansText": "BT-82",
+    "paymentInstructions.remittanceInfo": "BT-83",
+    "paymentInstructions.creditTransfers": "BG-17",
+    "paymentInstructions.creditTransfers[].account": "BT-84",
+    "paymentInstructions.creditTransfers[].accountName": "BT-85",
+    "paymentInstructions.creditTransfers[].bic": "BT-86",
+    "paymentInstructions.card": "BG-18",
+    "paymentInstructions.card.pan": "BT-87",
+    "paymentInstructions.card.holderName": "BT-88",
+    "paymentInstructions.directDebit": "BG-19",
+    "paymentInstructions.directDebit.mandateReference": "BT-89",
+    "paymentInstructions.directDebit.creditorId": "BT-90",
+    "paymentInstructions.directDebit.debitedAccount": "BT-91",
+    allowances: "BG-20",
+    "allowances[].amount": "BT-92",
+    "allowances[].baseAmount": "BT-93",
+    "allowances[].percentage": "BT-94",
+    "allowances[].vatCategoryCode": "BT-95",
+    "allowances[].vatRate": "BT-96",
+    "allowances[].reason": "BT-97",
+    "allowances[].reasonCode": "BT-98",
+    charges: "BG-21",
+    "charges[].amount": "BT-99",
+    "charges[].baseAmount": "BT-100",
+    "charges[].percentage": "BT-101",
+    "charges[].vatCategoryCode": "BT-102",
+    "charges[].vatRate": "BT-103",
+    "charges[].reason": "BT-104",
+    "charges[].reasonCode": "BT-105",
+    totals: "BG-22",
+    "totals.lineExtension": "BT-106",
+    "totals.allowanceTotal": "BT-107",
+    "totals.chargeTotal": "BT-108",
+    "totals.taxExclusive": "BT-109",
+    "totals.taxAmount": "BT-110",
+    "totals.taxAmountAccountingCurrency": "BT-111",
+    "totals.taxInclusive": "BT-112",
+    "totals.paid": "BT-113",
+    "totals.rounding": "BT-114",
+    "totals.payable": "BT-115",
+    vatBreakdown: "BG-23",
+    "vatBreakdown[].taxableAmount": "BT-116",
+    "vatBreakdown[].taxAmount": "BT-117",
+    "vatBreakdown[].categoryCode": "BT-118",
+    "vatBreakdown[].rate": "BT-119",
+    "vatBreakdown[].exemptionReason": "BT-120",
+    "vatBreakdown[].exemptionReasonCode": "BT-121",
+    additionalDocuments: "BG-24",
+    "additionalDocuments[].reference": "BT-122",
+    "additionalDocuments[].description": "BT-123",
+    "additionalDocuments[].externalUri": "BT-124",
+    "additionalDocuments[].attachment": "BT-125",
+    lines: "BG-25",
+    "lines[].id": "BT-126",
+    "lines[].note": "BT-127",
+    "lines[].objectIdentifier": "BT-128",
+    "lines[].quantity": "BT-129",
+    "lines[].quantityUnitCode": "BT-130",
+    "lines[].netAmount": "BT-131",
+    "lines[].orderLineReference": "BT-132",
+    "lines[].accountingReference": "BT-133",
+    "lines[].period": "BG-26",
+    "lines[].period.start": "BT-134",
+    "lines[].period.end": "BT-135",
+    "lines[].allowances": "BG-27",
+    "lines[].allowances[].amount": "BT-136",
+    "lines[].allowances[].baseAmount": "BT-137",
+    "lines[].allowances[].percentage": "BT-138",
+    "lines[].allowances[].reason": "BT-139",
+    "lines[].allowances[].reasonCode": "BT-140",
+    "lines[].charges": "BG-28",
+    "lines[].charges[].amount": "BT-141",
+    "lines[].charges[].baseAmount": "BT-142",
+    "lines[].charges[].percentage": "BT-143",
+    "lines[].charges[].reason": "BT-144",
+    "lines[].charges[].reasonCode": "BT-145",
+    "lines[].price": "BG-29",
+    "lines[].price.netPrice": "BT-146",
+    "lines[].price.discount": "BT-147",
+    "lines[].price.grossPrice": "BT-148",
+    "lines[].price.baseQuantity": "BT-149",
+    "lines[].price.baseQuantityUnitCode": "BT-150",
+    "lines[].vat": "BG-30",
+    "lines[].vat.categoryCode": "BT-151",
+    "lines[].vat.rate": "BT-152",
+    "lines[].item": "BG-31",
+    "lines[].item.name": "BT-153",
+    "lines[].item.description": "BT-154",
+    "lines[].item.sellerId": "BT-155",
+    "lines[].item.buyerId": "BT-156",
+    "lines[].item.standardId": "BT-157",
+    "lines[].item.classificationIds": "BT-158",
+    "lines[].item.originCountry": "BT-159",
+    "lines[].item.attributes": "BG-32",
+    "lines[].item.attributes[].name": "BT-160",
+    "lines[].item.attributes[].value": "BT-161",
+  };
+  nest(
+    "seller.postalAddress",
+    ADDRESS("BG-5", ["BT-35", "BT-36", "BT-162", "BT-37", "BT-38", "BT-39", "BT-40"]),
+    m,
+  );
+  nest(
+    "buyer.postalAddress",
+    ADDRESS("BG-8", ["BT-50", "BT-51", "BT-163", "BT-52", "BT-53", "BT-54", "BT-55"]),
+    m,
+  );
+  nest(
+    "sellerTaxRepresentative.postalAddress",
+    ADDRESS("BG-12", ["BT-64", "BT-65", "BT-164", "BT-66", "BT-67", "BT-68", "BT-69"]),
+    m,
+  );
+  nest(
+    "delivery.address",
+    ADDRESS("BG-15", ["BT-75", "BT-76", "BT-165", "BT-77", "BT-78", "BT-79", "BT-80"]),
+    m,
+  );
+  return m;
+})();
+
+/** All EN 16931 core business terms (BT-4 does not exist in the published model). */
+export const ALL_BT_IDS: readonly string[] = Array.from(
+  { length: 165 },
+  (_, i) => `BT-${i + 1}`,
+).filter((b) => b !== "BT-4");
+
+/**
+ * Project a model into the PRD §5.3 shape: scalars → `{bt, value}`, groups → `{bg, ...}`,
+ * identifier-like objects → `{bt, value, scheme}`; arrays of BTs → `[{bt, value, …}]`.
+ */
+export function toAnnotatedJson(model: unknown, path = ""): unknown {
+  if (Array.isArray(model)) return model.map((v) => toAnnotatedJson(v, `${path}[]`));
+  const code = BT_MAP[path];
+  if (model !== null && typeof model === "object") {
+    const obj = model as Record<string, unknown>;
+    if (code?.startsWith("BT-")) return { bt: code, ...obj };
+    const out: Record<string, unknown> = code ? { bg: code } : {};
+    for (const [k, v] of Object.entries(obj))
+      out[k] = toAnnotatedJson(v, path ? `${path}.${k}` : k);
+    return out;
+  }
+  return code ? { bt: code, value: model } : model;
+}

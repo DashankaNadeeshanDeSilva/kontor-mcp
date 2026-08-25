@@ -20,6 +20,7 @@
     "artifacts": "tsx tools/fetch-artifacts.ts",
     "spike:sef": "sh tools/compile-sef.sh",
     "spike:saxon": "tsx tools/spike-saxon.ts",
+    "bt-coverage": "tsx tools/bt-coverage.ts",
     "oracle": "tsx tools/oracle.ts",
     "verapdf": "sh tools/verapdf.sh",
     "spike:pdfa3": "tsx tools/spike-pdfa3.ts",
