@@ -30,6 +30,7 @@ export function registerResources(server: McpServer): void {
         resources: listSamples().map((name) => ({
           uri: `kontor://samples/${name}`,
           name,
+          title: name,
           mimeType: mime(name),
           description: SAMPLE_INFO[name] ?? "Sample invoice",
         })),

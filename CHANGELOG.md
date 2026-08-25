@@ -4,6 +4,9 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+### Fixed
+- Sample resources now carry their filename as `title`, so Claude Desktop lists four distinct entries instead of four identical "Sample invoices" rows.
+
 ## [0.1.0] — 2026-08-25 (internal, Phase 1 exit)
 
 ### Added
