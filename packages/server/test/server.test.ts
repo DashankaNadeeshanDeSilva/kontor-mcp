@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createServer } from "../src/server.js";
 
-const sample = (name: string) => new URL(`../samples/${name}`, import.meta.url).pathname;
+const sample = (name: string) => fileURLToPath(new URL(`../samples/${name}`, import.meta.url));
 const b64 = (name: string) => readFileSync(sample(name)).toString("base64");
 
 let client: Client;
@@ -116,7 +117,7 @@ describe("kontor-mcp server (Task 1.6)", () => {
       {},
       { file_path: "samples/valid-xrechnung-ubl.xml" },
       { file_path: sample("does-not-exist.xml") },
-      { file_path: new URL("../package.json", import.meta.url).pathname },
+      { file_path: fileURLToPath(new URL("../package.json", import.meta.url)) },
       { file_path: sample("valid-xrechnung-ubl.xml"), content_base64: "PGE+" },
       { content_base64: "!!!not base64!!!" },
     ]) {
