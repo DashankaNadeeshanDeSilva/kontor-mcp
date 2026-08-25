@@ -1,5 +1,21 @@
 /**
- * @kontor-mcp/client — `kontor-agent` reference MCP client CLI.
- * Placeholder for Task 0.1; the CLI arrives in Task 3.3.
+ * @kontor-mcp/client — `kontor-agent`, the reference MCP client CLI for Kontor MCP.
  */
-export const CLIENT_NAME = "kontor-agent" as const;
+export { type AuditRun, EXIT_CODES, EXIT_ERROR, runAudit } from "./commands/audit.js";
+export {
+  bridgeTools,
+  buildSystemPrompt,
+  type ChatResult,
+  type ChatRunner,
+  DEFAULT_MODEL,
+  runChat,
+} from "./commands/chat.js";
+export { renderTools } from "./commands/tools.js";
+export {
+  CLIENT_NAME,
+  CLIENT_VERSION,
+  type Connection,
+  type ConnectOptions,
+  connect,
+  serverBinPath,
+} from "./connect.js";

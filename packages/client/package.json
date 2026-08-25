@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/client",
   "version": "0.9.0",
-  "description": "kontor-agent \u2014 reference MCP client CLI with an Anthropic agent loop",
+  "description": "kontor-agent — reference MCP client CLI: introspection, one-shot audit, and an Anthropic agent loop over Kontor MCP (stdio or Streamable HTTP)",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -26,6 +26,13 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
-    "@kontor-mcp/core": "workspace:*"
+    "@anthropic-ai/sdk": "0.120.0",
+    "@kontor-mcp/core": "workspace:*",
+    "@kontor-mcp/server": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "commander": "15.0.0"
+  },
+  "bin": {
+    "kontor-agent": "./dist/bin.js"
   }
 }

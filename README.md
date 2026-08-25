@@ -69,6 +69,14 @@ npx @modelcontextprotocol/inspector@latest --cli node packages/server/dist/bin.j
   --tool-arg file_path=$PWD/packages/server/samples/broken-missing-buyer-reference.xml --tool-arg lang=en
 ```
 
+**`kontor-agent` CLI** — the reference client; `audit` needs no LLM and returns 0/1/2 for accept/review/reject, `chat` is an Anthropic agent loop that prints every tool call (needs `ANTHROPIC_API_KEY`):
+
+```sh
+node packages/client/dist/bin.js audit packages/server/samples/broken-missing-buyer-reference.xml --lang en
+node packages/client/dist/bin.js chat -m "Prüfe $PWD/packages/server/samples/valid-zugferd-en16931.pdf"
+node packages/client/dist/bin.js --url http://127.0.0.1:3333/mcp --token "$KONTOR_AUTH_TOKEN" tools   # against Docker / HTTP
+```
+
 **Docker / Streamable HTTP** — the same server over HTTP for remote agents and containers (token required, loopback-published port, TLS is your reverse proxy's job):
 
 ```sh
@@ -157,7 +165,7 @@ Details, commands and recorded reports: [`docs/CONFORMANCE.md`](docs/CONFORMANCE
 | [`@kontor-mcp/core`](packages/core) | MCP-free library: detect, parse, validate, audit, generate, convert, ZUGFeRD PDF |
 | [`@kontor-mcp/rules`](packages/rules) | Bundled standards artefacts (XSDs, compiled Schematron, code lists, legal timeline, PDF assets) + rule knowledge base |
 | [`@kontor-mcp/server`](packages/server) | MCP server (stdio and Streamable HTTP with bearer auth; Docker image) exposing tools, resources, prompts |
-| [`@kontor-mcp/client`](packages/client) | `kontor-agent` — reference MCP client CLI with an Anthropic agent loop (Phase 3) |
+| [`@kontor-mcp/client`](packages/client) | `kontor-agent` — reference MCP client CLI: `tools` introspection, scriptable `audit <file>` (no LLM, exit codes), `chat` Anthropic agent loop with tool-call trace; stdio or HTTP |
 
 ## FAQ
 
