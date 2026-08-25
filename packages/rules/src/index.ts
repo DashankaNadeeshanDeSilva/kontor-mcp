@@ -102,5 +102,6 @@ export function loadXsdSet(syntax: ScenarioSyntax): XsdSet {
   return set;
 }
 
+export * from "./codelists.js";
 export * from "./kb.js";
 export * from "./legal.js";

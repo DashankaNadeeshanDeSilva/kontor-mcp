@@ -4,7 +4,7 @@
 
 Kontor MCP is an open-source [Model Context Protocol](https://modelcontextprotocol.io) server and reference client that gives AI assistants (Claude Desktop, Claude Code, agent platforms) fully local capabilities for German/EU electronic invoicing: parse, validate, audit, explain, generate and convert **XRechnung** and **ZUGFeRD/Factur-X** invoices — with the *official* KoSIT / EN 16931 rule sets, and no data ever leaving your machine.
 
-**Status:** v0.1.0 + Phase 2 in progress — `parse_invoice`, `validate_invoice`, `explain_rule` (verified in Claude Desktop, [report](docs/VERIFICATION-v0.1.md)) plus Phase 2 tools `audit_invoice` (with the `KONTOR-PLAUS-*` plausibility layer), `generate_invoice` (XRechnung 3.0 UBL) `convert_invoice` (UBL ↔ CII, ZUGFeRD extract, HTML preview) and `check_obligations` (German mandate timeline with sources); prompts/resources and ZUGFeRD PDF generation next — see [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
+**Status:** v0.1.0 + Phase 2 in progress — `parse_invoice`, `validate_invoice`, `explain_rule` (verified in Claude Desktop, [report](docs/VERIFICATION-v0.1.md)) plus Phase 2 tools `audit_invoice` (with the `KONTOR-PLAUS-*` plausibility layer), `generate_invoice` (XRechnung 3.0 UBL) `convert_invoice` (UBL ↔ CII, ZUGFeRD extract, HTML preview) `check_obligations` (German mandate timeline with sources), `list_capabilities`, reference resources (rule index, code lists, cheatsheet) and the three prompts; ZUGFeRD PDF generation (Task 2.7) next — see [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
 
 ![Kontor MCP in Claude Desktop: validate a broken XRechnung, parse a ZUGFeRD PDF, explain BR-DE-18](docs/media/v0.1-desktop-demo.gif)
 

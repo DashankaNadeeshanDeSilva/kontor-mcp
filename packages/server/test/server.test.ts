@@ -39,6 +39,7 @@ describe("kontor-mcp server (Task 1.6)", () => {
       "convert_invoice",
       "explain_rule",
       "generate_invoice",
+      "list_capabilities",
       "parse_invoice",
       "validate_invoice",
     ]);
@@ -413,5 +414,122 @@ describe("check_obligations (Task 2.5)", () => {
       date: "2027-13-01",
     });
     expect(bad.isError).toBe(true);
+  });
+});
+
+describe("reference resources, prompts, list_capabilities (Task 2.6)", () => {
+  it("lists the reference resources and serves KB index, cheatsheet and codelists", async () => {
+    const { resources } = await client.listResources();
+    const uris = resources.map((r) => r.uri);
+    expect(uris).toContain("kontor://reference/rules");
+    expect(uris).toContain("kontor://reference/cheatsheet");
+    for (const l of [
+      "units",
+      "vat-categories",
+      "payment-means",
+      "eas",
+      "vatex",
+      "invoice-types",
+      "currencies",
+      "countries",
+      "allowance-reasons",
+      "charge-reasons",
+    ]) {
+      expect(uris).toContain(`kontor://reference/codelists/${l}`);
+    }
+
+    const rules = await client.readResource({ uri: "kontor://reference/rules" });
+    const rulesJson = JSON.parse((rules.contents[0] as { text: string }).text) as {
+      total: number;
+      rules: Array<{ id: string; curated: boolean }>;
+    };
+    expect(rulesJson.total).toBeGreaterThan(1500);
+    expect(rulesJson.rules.find((r) => r.id === "BR-DE-15")?.curated).toBe(true);
+
+    const units = await client.readResource({ uri: "kontor://reference/codelists/units" });
+    const unitsJson = JSON.parse((units.contents[0] as { text: string }).text) as {
+      list: string;
+      standard: string;
+      codes: string[];
+      common: Record<string, { de: string; en: string }>;
+    };
+    expect(unitsJson.codes.length).toBeGreaterThan(2000);
+    expect(unitsJson.codes).toContain("HUR");
+    expect(unitsJson.common.C62?.en).toMatch(/piece|one/i);
+
+    const vat = await client.readResource({ uri: "kontor://reference/codelists/vat-categories" });
+    const vatJson = JSON.parse((vat.contents[0] as { text: string }).text) as {
+      codes: string[];
+      common: Record<string, { de: string; en: string }>;
+    };
+    expect(vatJson.codes).toEqual(
+      expect.arrayContaining(["S", "Z", "E", "AE", "K", "G", "O", "L", "M"]),
+    );
+    expect(vatJson.common.AE?.de).toMatch(/Steuerschuldnerschaft/);
+
+    const cheat = await client.readResource({ uri: "kontor://reference/cheatsheet" });
+    const md = (cheat.contents[0] as { text: string }).text;
+    expect(cheat.contents[0]?.mimeType).toBe("text/markdown");
+    expect(md).toContain("2028-01-01");
+    expect(md).toContain("800");
+    expect(md).toContain("BR-DE-15");
+    expect(md).toContain("Leitweg-ID");
+
+    const unknown = await client
+      .readResource({ uri: "kontor://reference/codelists/nope" })
+      .catch((e: Error) => e);
+    expect(unknown).toBeInstanceOf(Error);
+  });
+
+  it("exposes the three prompts with arguments and renders them", async () => {
+    const { prompts } = await client.listPrompts();
+    expect(prompts.map((p) => p.name).sort()).toEqual([
+      "audit-incoming-invoice",
+      "create-invoice-interview",
+      "draft-supplier-rejection",
+    ]);
+    const rej = prompts.find((p) => p.name === "draft-supplier-rejection");
+    expect(rej?.arguments?.map((a) => a.name)).toEqual(
+      expect.arrayContaining(["findings", "tone"]),
+    );
+
+    const audit = await client.getPrompt({
+      name: "audit-incoming-invoice",
+      arguments: { file_path: "/tmp/x.xml", lang: "de" },
+    });
+    const auditText = audit.messages
+      .map((m) => (m.content as { text?: string }).text ?? "")
+      .join("\n");
+    expect(auditText).toContain("audit_invoice");
+    expect(auditText).toContain("/tmp/x.xml");
+
+    const draft = await client.getPrompt({
+      name: "draft-supplier-rejection",
+      arguments: { findings: "BR-DE-15: Leitweg-ID fehlt", tone: "formal", lang: "de" },
+    });
+    const draftText = draft.messages
+      .map((m) => (m.content as { text?: string }).text ?? "")
+      .join("\n");
+    expect(draftText).toContain("BR-DE-15");
+    expect(draftText).toMatch(/nicht versend|Entwurf/i);
+
+    const interview = await client.getPrompt({
+      name: "create-invoice-interview",
+      arguments: { lang: "en" },
+    });
+    expect(
+      interview.messages.map((m) => (m.content as { text?: string }).text ?? "").join("\n"),
+    ).toContain("generate_invoice");
+  });
+
+  it("list_capabilities reports formats, bundled versions, KB stats, legal lastVerified and the sovereignty statement", async () => {
+    const r = await call("list_capabilities", {});
+    expect(r.isError).toBeFalsy();
+    expect((r.sc.bundledStandards as Structured).xrechnung).toBe("3.0.2");
+    expect((r.sc.knowledgeBase as Structured).total).toBeGreaterThan(1500);
+    expect((r.sc.legal as Structured).lastVerified).toBe("2026-08-25");
+    expect((r.sc.tools as Structured[]).map((t) => t.name)).toContain("audit_invoice");
+    expect(r.sc.sovereignty).toMatch(/no network|offline/i);
+    expect(r.text).toMatch(/XRechnung 3\.0\.2/);
   });
 });

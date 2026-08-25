@@ -12,6 +12,7 @@ Sovereign MCP server for German/EU e-invoices (XRechnung, ZUGFeRD/Factur-X, EN 1
 | `generate_invoice` | Structured data → compliant **XRechnung 3.0 (UBL)**: decimal-safe amounts/VAT/totals, internal validation (fail-honest `valid`), deterministic auto-fixes reported, optional `output_path` (never overwrites unless `overwrite=true`) — the only non-read-only tool |
 | `convert_invoice` | `extract-xml` (ZUGFeRD PDF → XML), `xrechnung-ubl` / `cii` via the semantic model with post-validation and an honest `lossReport`, `html-preview` (self-contained HTML, no scripts/assets); optional `output_path` |
 | `check_obligations` | Offline decision tree over the German mandate (§ 14 / § 27 Abs. 38 UStG, UStDV §§ 33/34/34a, E-RechV): issuer/receiver × B2B/B2G/B2C, transition 2026 → 2027 (€800k) → 2028, exemptions, formats, Leitweg-ID — with primary sources, `lastVerified` and a non-advice disclaimer |
+| `list_capabilities` | Introspection: formats/profiles, bundled standard versions, KB stats, code lists, legal `lastVerified`, tools/resources/prompts, sovereignty statement |
 | `explain_rule` | Explain a rule id such as `BR-DE-15` (official text, explanation, affected BTs, fix hint); unknown ids get suggestions |
 
 Every document tool accepts either `file_path` (absolute; `.xml`/`.pdf`; ≤ 20 MB, `KONTOR_MAX_FILE_MB`) or `content_base64` (+ optional `content_type`), and `lang: "de" | "en"` (default `de`).
@@ -71,3 +72,15 @@ npx @modelcontextprotocol/inspector@latest --cli node packages/server/dist/bin.j
 ## Privacy / sovereignty
 
 Stateless; nothing is stored or transmitted; invoice contents are never logged (see PRD NFR-2/NFR-5/NFR-6). Findings are formal/technical checks, not tax or legal advice.
+
+## Resources and prompts
+
+| URI / name | What |
+|---|---|
+| `kontor://samples/{name}` | Sample invoices (UBL, CII, ZUGFeRD PDF, one broken) |
+| `kontor://reference/rules` | Rule knowledge-base index (all EN 16931 / XRechnung rule ids, severity, curated flag) |
+| `kontor://reference/codelists/{list}` | `units`, `vat-categories`, `payment-means`, `eas`, `vatex`, `invoice-types`, `currencies`, `countries`, `allowance-reasons`, `charge-reasons`, `identifier-schemes`, `mime-types`, `vat-point-date-codes` — official code values with DE/EN names for the common ones |
+| `kontor://reference/cheatsheet` | One-page EN 16931 / XRechnung / ZUGFeRD orientation incl. the German mandate timeline (Markdown) |
+| prompt `audit-incoming-invoice` | Run `audit_invoice` and present a decision-ready AP summary |
+| prompt `draft-supplier-rejection` | Draft (never send) a German rejection e-mail citing the concrete rule violations |
+| prompt `create-invoice-interview` | Interview for the minimal XRechnung field set, then `generate_invoice` |

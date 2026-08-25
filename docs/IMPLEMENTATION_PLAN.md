@@ -163,6 +163,7 @@
 ### Task 2.6 — Prompts + remaining resources + `list_capabilities` (T8)
 - Implement PRD §5.6 resources (codelists, cheatsheet, KB index) and §5.7 prompts; `list_capabilities` reporting bundled versions.
 - **AC:** Inspector shows all resources/prompts; `draft-supplier-rejection` prompt + audit findings produces a sendable German email draft in a manual Claude Desktop run.
+- > **Status (2026-08-25): code done.** `kontor://reference/{rules,cheatsheet,codelists/{list}}` (13 code lists extracted from the pinned EN 16931 artefacts by `pnpm codelists:build`, D-039), three prompts, `list_capabilities`; protocol tests via the in-process client. **Open (owner):** the manual Claude Desktop run of `draft-supplier-rejection`.
 
 ### Task 2.7 — ZUGFeRD PDF/A-3 generation (`generate_invoice` target `zugferd-pdf`)
 - Implement per PRD T5 using the path chosen in Task 0.6: semantic model → CII XML (profile-aware: EN16931 default; BASIC/EXTENDED per input) → visual PDF rendered from the `html-preview` layout (embed fonts; keep the layout deliberately simple and PDF/A-safe) → PDF/A-3 assembly with embedded `factur-x.xml` (correct `AFRelationship`, MIME type) + Factur-X/ZUGFeRD **XMP extension-schema metadata** matching the profile.

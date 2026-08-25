@@ -20,9 +20,11 @@
     "artifacts",
     "kb",
     "legal",
+    "codelists",
     "README.md"
   ],
   "scripts": {
+    "codelists:build": "tsx ../../tools/build-codelists.ts",
     "build": "tsc -b",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --pretty",
     "test": "vitest run",

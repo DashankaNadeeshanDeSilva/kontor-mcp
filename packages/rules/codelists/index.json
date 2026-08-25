@@ -1,0 +1,70 @@
+{
+  "source": "EN 16931 validation artefacts 1.3.16 (ConnectingEurope/eInvoicing-EN16931, EUPL-1.2), schematron/codelist/EN16931-UBL-codes.sch",
+  "lists": {
+    "invoice-types": {
+      "rule": "BR-CL-01",
+      "standard": "UNTDID 1001 (restricted)",
+      "count": 62
+    },
+    "currencies": {
+      "rule": "BR-CL-04",
+      "standard": "ISO 4217 alpha-3",
+      "count": 178
+    },
+    "countries": {
+      "rule": "BR-CL-14",
+      "standard": "ISO 3166-1 alpha-2",
+      "count": 251
+    },
+    "payment-means": {
+      "rule": "BR-CL-16",
+      "standard": "UNTDID 4461",
+      "count": 84
+    },
+    "vat-categories": {
+      "rule": "BR-CL-17",
+      "standard": "UNTDID 5305 (restricted)",
+      "count": 10
+    },
+    "allowance-reasons": {
+      "rule": "BR-CL-19",
+      "standard": "UNTDID 5189",
+      "count": 19
+    },
+    "charge-reasons": {
+      "rule": "BR-CL-20",
+      "standard": "UNTDID 7161",
+      "count": 178
+    },
+    "vatex": {
+      "rule": "BR-CL-22",
+      "standard": "CEF VATEX",
+      "count": 88
+    },
+    "units": {
+      "rule": "BR-CL-23",
+      "standard": "UN/ECE Recommendation 20 + Rec 21",
+      "count": 2162
+    },
+    "eas": {
+      "rule": "BR-CL-25",
+      "standard": "CEF EAS (Electronic Address Scheme)",
+      "count": 104
+    },
+    "identifier-schemes": {
+      "rule": "BR-CL-10",
+      "standard": "ISO 6523 ICD",
+      "count": 244
+    },
+    "mime-types": {
+      "rule": "BR-CL-24",
+      "standard": "MIME media types allowed for attachments (BT-125)",
+      "count": 6
+    },
+    "vat-point-date-codes": {
+      "rule": "BR-CL-06",
+      "standard": "UNTDID 2005 (restricted)",
+      "count": 3
+    }
+  }
+}

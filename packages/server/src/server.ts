@@ -1,8 +1,16 @@
 /** Kontor MCP server factory (transport-agnostic; stdio wiring lives in bin.ts). */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { ToolError } from "./input.js";
+import { DEFAULT_MAX_MB, maxBytes, ToolError } from "./input.js";
+import { registerPrompts } from "./prompts.js";
+import { registerReferenceResources } from "./reference.js";
 import { registerResources } from "./resources.js";
+import { SERVER_NAME, SERVER_VERSION } from "./server-meta.js";
 import { AuditInputSchema, AuditOutputSchema, runAudit } from "./tools/audit.js";
+import {
+  CapabilitiesInputSchema,
+  CapabilitiesOutputSchema,
+  runCapabilities,
+} from "./tools/capabilities.js";
 import { ConvertInputSchema, ConvertOutputSchema, runConvert } from "./tools/convert.js";
 import { ExplainInputSchema, ExplainOutputSchema, runExplain } from "./tools/explain.js";
 import { GenerateInputSchema, GenerateOutputSchema, runGenerate } from "./tools/generate.js";
@@ -14,8 +22,7 @@ import {
 import { ParseInputSchema, ParseOutputSchema, runParse } from "./tools/parse.js";
 import { runValidate, ValidateInputSchema, ValidateOutputSchema } from "./tools/validate.js";
 
-export const SERVER_NAME = "kontor-mcp" as const;
-export const SERVER_VERSION = "0.1.0";
+export { SERVER_NAME, SERVER_VERSION } from "./server-meta.js";
 
 /** Sent to the client on initialize; folds in Desktop verification finding F5 (attachments never reach stdio servers as paths). */
 export const SERVER_INSTRUCTIONS = [
@@ -185,6 +192,22 @@ export function createServer(): McpServer {
     async (input) => guard(() => runExplain(input)),
   );
 
+  server.registerTool(
+    "list_capabilities",
+    {
+      title: "List capabilities",
+      description:
+        "Introspect this server: supported formats and profiles, bundled standard versions (XRechnung, EN 16931, KoSIT configuration, XSDs), rule knowledge-base stats, code lists, legal parameters' last-verified date, tools/resources/prompts and the sovereignty statement (offline, no persistence).",
+      inputSchema: CapabilitiesInputSchema.shape,
+      outputSchema: CapabilitiesOutputSchema.shape,
+      annotations: ANNOTATIONS,
+    },
+    async (input) =>
+      guard(() => runCapabilities(input, Math.round(maxBytes() / (1024 * 1024)) || DEFAULT_MAX_MB)),
+  );
+
   registerResources(server);
+  registerReferenceResources(server);
+  registerPrompts(server);
   return server;
 }

@@ -1,0 +1,26 @@
+{
+  "list": "vat-point-date-codes",
+  "title": {
+    "de": "Codes für das Datum der Steuerentstehung (BT-8)",
+    "en": "VAT point date codes (BT-8)"
+  },
+  "standard": "UNTDID 2005 (restricted)",
+  "rule": "BR-CL-06",
+  "source": "EN 16931 validation artefacts 1.3.16 (ConnectingEurope/eInvoicing-EN16931, EUPL-1.2), schematron/codelist/EN16931-UBL-codes.sch",
+  "count": 3,
+  "codes": ["3", "35", "432"],
+  "common": {
+    "3": {
+      "de": "Rechnungsdatum",
+      "en": "Invoice document issue date"
+    },
+    "35": {
+      "de": "Lieferdatum",
+      "en": "Actual delivery date"
+    },
+    "432": {
+      "de": "Zahlungsdatum",
+      "en": "Paid to date"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "list": "vat-categories",
+  "title": {
+    "de": "Umsatzsteuerkategorien (BT-118, BT-151)",
+    "en": "VAT category codes (BT-118, BT-151)"
+  },
+  "standard": "UNTDID 5305 (restricted)",
+  "rule": "BR-CL-17",
+  "source": "EN 16931 validation artefacts 1.3.16 (ConnectingEurope/eInvoicing-EN16931, EUPL-1.2), schematron/codelist/EN16931-UBL-codes.sch",
+  "count": 10,
+  "codes": ["AE", "L", "M", "E", "S", "Z", "G", "O", "K", "B"],
+  "common": {
+    "S": {
+      "de": "Regelsteuersatz / ermäßigter Satz (steuerpflichtig)",
+      "en": "Standard / reduced rate (taxable)"
+    },
+    "Z": {
+      "de": "Nullsatz (0 %)",
+      "en": "Zero rated"
+    },
+    "E": {
+      "de": "Steuerbefreit (mit Befreiungsgrund BT-120/121)",
+      "en": "Exempt from tax (reason in BT-120/121)"
+    },
+    "AE": {
+      "de": "Steuerschuldnerschaft des Leistungsempfängers (Reverse Charge, § 13b UStG)",
+      "en": "Reverse charge (VAT accounted for by the customer)"
+    },
+    "K": {
+      "de": "Innergemeinschaftliche Lieferung (steuerfrei)",
+      "en": "Intra-community supply (exempt)"
+    },
+    "G": {
+      "de": "Ausfuhrlieferung (steuerfrei)",
+      "en": "Export outside the EU (exempt)"
+    },
+    "O": {
+      "de": "Nicht steuerbar (außerhalb des Anwendungsbereichs)",
+      "en": "Services outside scope of VAT"
+    },
+    "L": {
+      "de": "Kanarische Inseln (IGIC)",
+      "en": "Canary Islands general indirect tax"
+    },
+    "M": {
+      "de": "Ceuta und Melilla (IPSI)",
+      "en": "Tax for production, services and importation in Ceuta and Melilla"
+    }
+  }
+}

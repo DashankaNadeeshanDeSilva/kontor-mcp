@@ -1,0 +1,110 @@
+{
+  "list": "allowance-reasons",
+  "title": {
+    "de": "Nachlassgründe (BT-98, BT-140)",
+    "en": "Allowance reason codes (BT-98, BT-140)"
+  },
+  "standard": "UNTDID 5189",
+  "rule": "BR-CL-19",
+  "source": "EN 16931 validation artefacts 1.3.16 (ConnectingEurope/eInvoicing-EN16931, EUPL-1.2), schematron/codelist/EN16931-UBL-codes.sch",
+  "count": 19,
+  "codes": [
+    "41",
+    "42",
+    "60",
+    "62",
+    "63",
+    "64",
+    "65",
+    "66",
+    "67",
+    "68",
+    "70",
+    "71",
+    "88",
+    "95",
+    "100",
+    "102",
+    "103",
+    "104",
+    "105"
+  ],
+  "common": {
+    "41": {
+      "de": "Bonus für vorgezogene Arbeiten",
+      "en": "Bonus for works ahead of schedule"
+    },
+    "42": {
+      "de": "Sonstiger Bonus",
+      "en": "Other bonus"
+    },
+    "60": {
+      "de": "Herstellerrabatt (Verbraucher)",
+      "en": "Manufacturer's consumer discount"
+    },
+    "62": {
+      "de": "Wegen militärischem Status",
+      "en": "Due to military status"
+    },
+    "63": {
+      "de": "Wegen Unfall",
+      "en": "Due to an accident"
+    },
+    "64": {
+      "de": "Sondervereinbarung",
+      "en": "Special agreement"
+    },
+    "65": {
+      "de": "Produktionsfehler-Nachlass",
+      "en": "Production error discount"
+    },
+    "66": {
+      "de": "Neue-Filiale-Nachlass",
+      "en": "New outlet discount"
+    },
+    "67": {
+      "de": "Musternachlass",
+      "en": "Sample discount"
+    },
+    "68": {
+      "de": "Auslaufware-Nachlass",
+      "en": "End-of-range discount"
+    },
+    "70": {
+      "de": "Incoterm-Nachlass",
+      "en": "Incoterm discount"
+    },
+    "71": {
+      "de": "Umsatzstaffel-Nachlass (Point of Sale)",
+      "en": "Point of sales threshold allowance"
+    },
+    "88": {
+      "de": "Materialzuschlag/-abschlag",
+      "en": "Material surcharge/deduction"
+    },
+    "95": {
+      "de": "Rabatt",
+      "en": "Discount"
+    },
+    "100": {
+      "de": "Sonderrabatt",
+      "en": "Special rebate"
+    },
+    "102": {
+      "de": "Langfristiger Festpreis",
+      "en": "Fixed long term"
+    },
+    "103": {
+      "de": "Vorübergehend",
+      "en": "Temporary"
+    },
+    "104": {
+      "de": "Standard",
+      "en": "Standard"
+    },
+    "105": {
+      "de": "Umsatzabhängig",
+      "en": "Yearly turnover"
+    }
+  }
+}
