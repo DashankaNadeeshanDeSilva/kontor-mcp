@@ -1,0 +1,161 @@
+[
+  {
+    "name": "EN16931 XRechnung (UBL Invoice)",
+    "syntax": "ubl-invoice",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+    "schematron": [
+      "EN16931-UBL-validation",
+      "XRechnung-UBL-validation"
+    ],
+    "customLevels": {
+      "BR-CL-23": "warning",
+      "BR-CL-21": "warning",
+      "UBL-CR-646": "error"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung Extension (UBL Invoice)",
+    "syntax": "ubl-invoice",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0",
+    "schematron": [
+      "EN16931-UBL-validation",
+      "XRechnung-UBL-validation"
+    ],
+    "customLevels": {
+      "BR-CL-21": "information",
+      "BR-CL-23": "warning",
+      "BR-CL-24": "information",
+      "BR-CL-10": "information",
+      "BR-CL-11": "information",
+      "BR-CL-25": "information",
+      "BR-CL-26": "information",
+      "BR-CO-16": "information",
+      "UBL-CR-470": "information",
+      "UBL-CR-646": "information"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung CVD (UBL Invoice)",
+    "syntax": "ubl-invoice",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9",
+    "schematron": [
+      "EN16931-UBL-validation",
+      "XRechnung-UBL-validation"
+    ],
+    "customLevels": {
+      "BR-CL-13": "information",
+      "BR-CL-23": "warning",
+      "BR-CL-21": "warning",
+      "UBL-CR-646": "error"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung (UBL CreditNote)",
+    "syntax": "ubl-creditnote",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+    "schematron": [
+      "EN16931-UBL-validation",
+      "XRechnung-UBL-validation"
+    ],
+    "customLevels": {
+      "BR-CL-23": "warning",
+      "BR-CL-21": "warning"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung CVD (UBL CreditNote)",
+    "syntax": "ubl-creditnote",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9",
+    "schematron": [
+      "EN16931-UBL-validation",
+      "XRechnung-UBL-validation"
+    ],
+    "customLevels": {
+      "BR-CL-13": "information",
+      "BR-CL-23": "warning",
+      "BR-CL-21": "warning",
+      "UBL-CR-646": "error"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung (CII)",
+    "syntax": "cii",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+    "schematron": [
+      "EN16931-CII-validation",
+      "XRechnung-CII-validation"
+    ],
+    "customLevels": {
+      "BR-CL-23": "warning",
+      "BR-CL-21": "warning",
+      "CII-SR-452": "error",
+      "CII-SR-453": "error",
+      "CII-SR-454": "error"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung Extension (CII)",
+    "syntax": "cii",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0",
+    "schematron": [
+      "EN16931-CII-validation",
+      "XRechnung-CII-validation"
+    ],
+    "customLevels": {
+      "BR-CL-23": "warning",
+      "BR-CL-21": "information",
+      "BR-CL-11": "information",
+      "BR-CL-10": "information",
+      "BR-CL-24": "information",
+      "BR-CL-25": "information",
+      "BR-CL-26": "information",
+      "CII-SR-452": "error",
+      "CII-SR-453": "error",
+      "CII-SR-454": "error"
+    }
+  },
+  {
+    "name": "EN16931 XRechnung CVD (CII)",
+    "syntax": "cii",
+    "customizationId": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#compliant#urn:xeinkauf.de:kosit:xrechnung:cvd_0.9",
+    "schematron": [
+      "EN16931-CII-validation",
+      "XRechnung-CII-validation"
+    ],
+    "customLevels": {
+      "BR-CL-13": "information",
+      "BR-CL-23": "warning",
+      "BR-CL-21": "warning",
+      "CII-SR-452": "error",
+      "CII-SR-453": "error",
+      "CII-SR-454": "error"
+    }
+  },
+  {
+    "name": "EN16931 (UBL Invoice)",
+    "syntax": "ubl-invoice",
+    "customizationId": "urn:cen.eu:en16931:2017",
+    "schematron": [
+      "EN16931-UBL-validation"
+    ],
+    "customLevels": {}
+  },
+  {
+    "name": "EN16931 (UBL CreditNote)",
+    "syntax": "ubl-creditnote",
+    "customizationId": "urn:cen.eu:en16931:2017",
+    "schematron": [
+      "EN16931-UBL-validation"
+    ],
+    "customLevels": {}
+  },
+  {
+    "name": "EN16931 (CII)",
+    "syntax": "cii",
+    "customizationId": "urn:cen.eu:en16931:2017",
+    "schematron": [
+      "EN16931-CII-validation"
+    ],
+    "customLevels": {}
+  }
+]

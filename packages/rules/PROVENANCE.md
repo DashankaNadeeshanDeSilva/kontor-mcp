@@ -13,6 +13,15 @@ Retrieval date for all entries below: **2026-08-25**.
 | `en16931-ubl` | EN 16931 validation artefacts, UBL (Schematron source + preprocessed + compiled XSLT) | 1.3.16 | https://github.com/ConnectingEurope/eInvoicing-EN16931/releases/tag/validation-1.3.16 | EUPL-1.2 | `bafada01…da85` |
 | `en16931-cii` | EN 16931 validation artefacts, CII | 1.3.16 | same | EUPL-1.2 | `1cd53cb8…3561` |
 
+## Derived runtime artifacts (`packages/rules/artifacts/`, built by `pnpm rules:build`)
+
+| File(s) | Derived from | Transformation | Checksums |
+|---|---|---|---|
+| `sef/EN16931-{UBL,CII}-validation.sef.json.gz` | `xrechnung-validator-configuration` → `resources/{ubl/2.1,cii/16b}/xsl/*.xsl` (EN 16931 1.3.16, EUPL-1.2) | `xslt3` (Saxon-JS 2.7) SEF export, gzip | `artifacts/MANIFEST.json` |
+| `sef/XRechnung-{UBL,CII}-validation.sef.json.gz` | same package → `resources/xrechnung/3.0.2/xsl/*.xsl` (XRechnung Schematron 2.5.0, Apache-2.0) | D-019 patch (`tools/compile-sef.sh`: BR-DE-19 `xs:integer`→`xs:decimal`), SEF export, gzip | `artifacts/MANIFEST.json` |
+| `xsd/ubl/**`, `xsd/cii/**` | same package → `resources/ubl/2.1/xsd` (Invoice, CreditNote, common), `resources/cii/16b/xsd` | verbatim copy | `artifacts/MANIFEST.json` |
+| `scenarios.json` | same package → `scenarios.xml` | typed projection (name, syntax, CustomizationID, stylesheets, customLevel) | `artifacts/MANIFEST.json` |
+
 ## Fixtures
 
 | id | Artifact | Version | Source | License | sha256 |

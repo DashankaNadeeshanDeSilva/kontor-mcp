@@ -6,7 +6,7 @@
 
 1. Took the **precompiled** Schematron XSLTs that ship with the KoSIT validator configuration 2026-01-31 (XRechnung 3.0.2): `EN16931-{UBL,CII}-validation.xsl` (EN 16931 1.3.16) and `XRechnung-{UBL,CII}-validation.xsl` (XRechnung Schematron 2.5.0). No SchXslt step needed.
 2. Compiled each to SEF with `xslt3` (Saxon-JS 2.7.0 compiler, `-nogo -relocate:on`). All four compiled with **zero errors or warnings**: 6.6 s / 4.4 s / 1.9 s / 1.5 s. Output sizes 9.3 MB, 6.9 MB, 1.8 MB, 1.7 MB (JSON, compresses well).
-3. Ran `SaxonJS.transform()` with `stylesheetInternal` (SEF loaded once, cached) over invoices; parsed SVRL `failed-assert` elements into the `Finding` shape (`tools/spike-saxon.ts`).
+3. Ran `SaxonJS.transform()` with `stylesheetInternal` (SEF loaded once, cached) over invoices; parsed SVRL `failed-assert` elements into the `Finding` shape (`tools/spike-saxon.ts`, since ported to `packages/core/src/validate` in Task 1.4).
 4. Ran the KoSIT validator 1.6.3 JAR on the same files as oracle.
 
 ## Results
@@ -52,6 +52,6 @@ Saxon-JS evaluates `xs:integer` arithmetic beyond 2^53 with double precision. Th
 ```sh
 pnpm artifacts                      # fetch pinned artifacts
 pnpm spike:sef                      # compile the 4 XSLTs → fixtures/_downloads/sef/*.sef.json
-pnpm spike:saxon fixtures/spike/*.xml
+pnpm oracle --diff fixtures/spike/*.xml   # Task 1.4: core engine vs KoSIT (spike-saxon.ts was retired into core/src/validate)
 pnpm oracle fixtures/spike/*.xml    # (Task 0.4) KoSIT validator, Java 17+
 ```

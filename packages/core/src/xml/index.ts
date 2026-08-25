@@ -50,6 +50,7 @@ export const XML_NAMESPACES: Readonly<Record<string, string>> = {
   ram: "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
   udt: "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100",
   qdt: "urn:un:unece:uncefact:data:standard:QualifiedDataType:100",
+  svrl: "http://purl.oclc.org/dsdl/svrl",
 };
 
 const select = xpath.useNamespaces({ ...XML_NAMESPACES });

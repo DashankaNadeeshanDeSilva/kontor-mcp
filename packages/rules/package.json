@@ -1,7 +1,7 @@
 {
   "name": "@kontor-mcp/rules",
   "version": "0.0.0",
-  "description": "Kontor MCP — bundled standards artifacts (XSDs, compiled Schematron, codelists) and rule knowledge base",
+  "description": "Kontor MCP \u2014 bundled standards artifacts (XSDs, compiled Schematron, codelists) and rule knowledge base",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
@@ -17,6 +17,7 @@
   },
   "files": [
     "dist",
+    "artifacts",
     "README.md"
   ],
   "scripts": {

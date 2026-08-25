@@ -1,0 +1,38 @@
+{
+  "generatedBy": "tools/build-rules-artifacts.ts",
+  "sources": {
+    "xrechnung-validator-configuration": "2026-01-31 (XRechnung 3.0.2, Schematron 2.5.0)",
+    "en16931": "1.3.16",
+    "saxon-js": "2.7.0",
+    "patches": [
+      "D-019: BR-DE-19 IBAN xs:integer→xs:decimal (tools/compile-sef.sh)"
+    ]
+  },
+  "files": {
+    "scenarios.json": "b032cf6e8bce51e6b11c18e94e1eed8545979d33182538c44812077402085c88",
+    "sef/EN16931-CII-validation.sef.json.gz": "8537cd8039dc8df8be184917ca54335c91dfb3c0cfd56b9a034968ac13f7107c",
+    "sef/EN16931-UBL-validation.sef.json.gz": "ce9e67e4725cd17acbf9b8353ebd953331e1bca7a048dac9dbc2c080cceaf8d4",
+    "sef/XRechnung-CII-validation.sef.json.gz": "58c594fb6c2cd423e4e3559442a909d71ed49524f8a4917f1967c0a271211763",
+    "sef/XRechnung-UBL-validation.sef.json.gz": "c95d76c9c251dbcfe91a63ed618c768e34e05fc529a195f726c514a5ee12e504",
+    "xsd/cii/CrossIndustryInvoice_100pD16B.xsd": "3baf143b90f289d62c5dfb086aa51fa183490a2d0b38a40c6b31dcae0760f2ba",
+    "xsd/cii/CrossIndustryInvoice_QualifiedDataType_100pD16B.xsd": "6649215914728652e883662bec1d3eab008c215e86a59f3bb417db9723ee8c5c",
+    "xsd/cii/CrossIndustryInvoice_ReusableAggregateBusinessInformationEntity_100pD16B.xsd": "1c42244298a863bcc0b5196983ff0a5d084fcabe58aea77ef82b242e7cd0ddfd",
+    "xsd/cii/CrossIndustryInvoice_UnqualifiedDataType_100pD16B.xsd": "04fce6f6f28521886731294be18a4e6bb5cb3003456457d99ad5c4d3e652f497",
+    "xsd/ubl/common/CCTS_CCT_SchemaModule-2.1.xsd": "dd546e4809df86b6445589f69f0d6c9df162840ae386574ddfc1da7638103e15",
+    "xsd/ubl/common/UBL-CommonAggregateComponents-2.1.xsd": "580b5af6f68f7f556bd15945ba0e819cbf561442c81694f9b9468036ebedec4d",
+    "xsd/ubl/common/UBL-CommonBasicComponents-2.1.xsd": "a3b349bf92e5cff26e303d2f05b7e00c884dcafcfd9e12755fb80289abf5e22e",
+    "xsd/ubl/common/UBL-CommonExtensionComponents-2.1.xsd": "ad7a4e490978adfbcfc5ec0bb20941cf11ac960ccf0c4de8791a7c731a8dbe87",
+    "xsd/ubl/common/UBL-CommonSignatureComponents-2.1.xsd": "4fa9e2370100040fe14c43e135ef77e2eb66b21cb8dbfc2ffb8d82ae991fe92e",
+    "xsd/ubl/common/UBL-CoreComponentParameters-2.1.xsd": "8be3379dbdcbcc7802fafdd16bac72c48fff1c0bb364213a31a17911dd06100b",
+    "xsd/ubl/common/UBL-ExtensionContentDataType-2.1.xsd": "fcee77a11870208e6377ea6311b9f2a050bca24bdad8606ea02d71e9f9e72f8d",
+    "xsd/ubl/common/UBL-QualifiedDataTypes-2.1.xsd": "7dcb156e610239c97ae70940cf4653b88e48c3595bf5f56a2204a32e2893e6cf",
+    "xsd/ubl/common/UBL-SignatureAggregateComponents-2.1.xsd": "9234c2ca48dbfa9a22a786112bb075c5922a305170920eaab1e3c04fa0b7344b",
+    "xsd/ubl/common/UBL-SignatureBasicComponents-2.1.xsd": "0fbe2d7afff0c1e11164b8ec83e13f18801021c3c87e390a9d76f9cf862f6a64",
+    "xsd/ubl/common/UBL-UnqualifiedDataTypes-2.1.xsd": "09052d406b4293e2a5f9c2bfee6df10ad4d8d5f0b36e24a6349d7f7936d89eb6",
+    "xsd/ubl/common/UBL-XAdESv132-2.1.xsd": "a4f726bcf8cc3f7d9ffa4dab99e005535a8e8b60dced1e5d94578d2e05afa96e",
+    "xsd/ubl/common/UBL-XAdESv141-2.1.xsd": "1fa4625e9cefcb7a9abb5ac1b64315547450031eece8a55bd584e4ba4b79dbc1",
+    "xsd/ubl/common/UBL-xmldsig-core-schema-2.1.xsd": "101909c9f06456d61ddcc4fb982f1d40dc357b439f393b1a2eb46e42acd60809",
+    "xsd/ubl/maindoc/UBL-CreditNote-2.1.xsd": "1e117b6c1ab713604b29b0d685442a81a0c78a82575445ee8c43e6050cda7454",
+    "xsd/ubl/maindoc/UBL-Invoice-2.1.xsd": "3a5aacd823f0e5b8f25ae7b5191c2002d5333ba351d87de9371ed62dca2b2b0c"
+  }
+}

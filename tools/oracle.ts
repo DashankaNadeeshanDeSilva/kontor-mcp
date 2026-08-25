@@ -2,7 +2,7 @@
  * Task 0.4 — KoSIT validator oracle harness (CI/dev only; needs Java 17+).
  *
  *   pnpm oracle <file|dir>…            print normalized oracle findings (JSON with --json)
- *   pnpm oracle --diff <file|dir>…     also run Saxon-JS (spike engine) and diff verdicts + rule-ID sets
+ *   pnpm oracle --diff <file|dir>…     also run the Kontor core engine (core/src/validate) and diff verdicts + finding sets (rule id + level)
  *
  * Env: KONTOR_JAVA (path to java binary) overrides PATH lookup.
  */
@@ -10,7 +10,8 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
-import { validateWithSaxon } from "./spike-saxon.js";
+import { validateInvoice } from "../packages/core/src/validate/index.js";
+import { loadScenarios } from "../packages/rules/src/index.js";
 
 const DL = resolve("fixtures/_downloads");
 const JAR = join(DL, "validator-1.6.3-standalone.jar");
@@ -92,8 +93,6 @@ export function runOracle(files: string[]): OracleResult[] {
   return results;
 }
 
-const errorLevels = new Set(["error", "fatal"]);
-
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const diff = args.includes("--diff");
@@ -117,17 +116,25 @@ async function main(): Promise<void> {
         console.log(`  [${f.level}] ${f.ruleId} — ${f.message.slice(0, 120)}`);
       continue;
     }
-    const s = await validateWithSaxon(r.file);
-    const saxonVerdict = s.findings.some((f) => errorLevels.has(f.severity)) ? "reject" : "accept";
-    const oracleIds = new Set(r.findings.map((f) => f.ruleId));
-    const saxonIds = new Set(s.findings.map((f) => f.ruleId));
-    const onlyOracle = [...oracleIds].filter((x) => !saxonIds.has(x));
-    const onlySaxon = [...saxonIds].filter((x) => !oracleIds.has(x));
-    const verdictOk = saxonVerdict === r.verdict;
-    const idsOk = onlyOracle.length === 0 && onlySaxon.length === 0;
+    const t0 = performance.now();
+    const s = await validateInvoice(readFileSync(r.file));
+    const ms = performance.now() - t0;
+    const ours = s.findings.filter((f) => !f.ruleId.startsWith("KONTOR-"));
+    const ourVerdict = s.valid ? "accept" : "reject";
+    const key = (id: string, level: string) => `${id}:${level === "information" ? "info" : level}`;
+    // The VARL report carries the raw SVRL flag level; the accept/reject decision applies the scenario's customLevel.
+    const custom = loadScenarios().find((sc) => sc.name === r.scenario)?.customLevels ?? {};
+    const oracleSet = new Set(r.findings.map((f) => key(f.ruleId, custom[f.ruleId] ?? f.level)));
+    const ourSet = new Set(
+      ours.map((f) => key(f.ruleId, f.severity === "fatal" ? "error" : f.severity)),
+    );
+    const onlyOracle = [...oracleSet].filter((x) => !ourSet.has(x));
+    const onlyOurs = [...ourSet].filter((x) => !oracleSet.has(x));
+    const verdictOk = ourVerdict === r.verdict;
+    const idsOk = onlyOracle.length === 0 && onlyOurs.length === 0;
     if (!verdictOk || !idsOk) mismatches++;
     console.log(
-      `${verdictOk ? "✓" : "✗"} ${name}: oracle=${r.verdict} saxon=${saxonVerdict} ids=${idsOk ? "same" : `oracle-only[${onlyOracle}] saxon-only[${onlySaxon}]`} (${s.ms.toFixed(0)} ms)`,
+      `${verdictOk ? "✓" : "✗"} ${name}: oracle=${r.verdict} kontor=${ourVerdict} findings=${idsOk ? "same" : `oracle-only[${onlyOracle}] kontor-only[${onlyOurs}]`} (${ms.toFixed(0)} ms)`,
     );
   }
   if (diff) {

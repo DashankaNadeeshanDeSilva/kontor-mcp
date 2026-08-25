@@ -39,5 +39,11 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Cache pinned standards artifacts
+        uses: actions/cache@v4
+        with:
+          path: fixtures/_downloads
+          key: artifacts-${{ hashFiles('tools/artifacts.manifest.json') }}
+      - run: pnpm artifacts
       - run: pnpm build
       - run: pnpm test

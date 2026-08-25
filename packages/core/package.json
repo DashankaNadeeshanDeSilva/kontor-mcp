@@ -29,6 +29,8 @@
     "@kontor-mcp/rules": "workspace:*",
     "@xmldom/xmldom": "0.9.12",
     "pdf-lib": "1.17.1",
+    "saxon-js": "2.7.0",
+    "xmllint-wasm": "5.3.0",
     "xpath": "0.0.34",
     "zod": "4.4.3"
   }
