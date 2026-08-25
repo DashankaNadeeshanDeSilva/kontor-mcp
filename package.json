@@ -20,6 +20,8 @@
     "artifacts": "tsx tools/fetch-artifacts.ts",
     "spike:sef": "sh tools/compile-sef.sh",
     "rules:build": "tsx tools/build-rules-artifacts.ts",
+    "kb:build": "tsx tools/build-rules-kb.ts",
+    "kb:lint": "tsx tools/kb-lint.ts",
     "bt-coverage": "tsx tools/bt-coverage.ts",
     "oracle": "tsx tools/oracle.ts",
     "verapdf": "sh tools/verapdf.sh",

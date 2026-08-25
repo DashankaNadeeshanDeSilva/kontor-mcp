@@ -1,0 +1,534 @@
+{
+  "$comment": "Hand-curated rule explanations (PRD T4). Keys are rule ids; 'bt' overrides the generated list when given. Texts are formal/technical guidance, not tax or legal advice (NFR-7).",
+  "BR-DE-1": {
+    "explanation": {
+      "de": "Eine XRechnung muss Zahlungsanweisungen (Gruppe PAYMENT INSTRUCTIONS, BG-16) enthalten – mindestens den Code der Zahlungsart (BT-81).",
+      "en": "An XRechnung must carry payment instructions (group PAYMENT INSTRUCTIONS, BG-16) – at least the payment means type code (BT-81)."
+    },
+    "fixHint": {
+      "de": "cac:PaymentMeans (UBL) bzw. ram:SpecifiedTradeSettlementPaymentMeans (CII) mit BT-81 ergänzen, z. B. 58 (SEPA-Überweisung) plus IBAN in BT-84.",
+      "en": "Add cac:PaymentMeans (UBL) / ram:SpecifiedTradeSettlementPaymentMeans (CII) with BT-81, e.g. 58 (SEPA credit transfer) plus the IBAN in BT-84."
+    }
+  },
+  "BR-DE-2": {
+    "explanation": {
+      "de": "Die Kontaktgruppe des Verkäufers (SELLER CONTACT, BG-6) ist in der XRechnung Pflicht, damit der Rechnungsempfänger Rückfragen stellen kann.",
+      "en": "The seller contact group (SELLER CONTACT, BG-6) is mandatory in XRechnung so the recipient can raise queries."
+    },
+    "fixHint": {
+      "de": "cac:AccountingSupplierParty/cac:Party/cac:Contact (UBL) bzw. ram:SellerTradeParty/ram:DefinedTradeContact (CII) mit Name, Telefon und E-Mail (BT-41…BT-43) anlegen.",
+      "en": "Add cac:AccountingSupplierParty/cac:Party/cac:Contact (UBL) / ram:SellerTradeParty/ram:DefinedTradeContact (CII) with name, phone and e-mail (BT-41…BT-43)."
+    }
+  },
+  "BR-DE-3": {
+    "explanation": {
+      "de": "Der Ort der Verkäuferadresse (Seller city, BT-37) fehlt.",
+      "en": "The seller's city (Seller city, BT-37) is missing."
+    },
+    "fixHint": {
+      "de": "cbc:CityName in cac:PostalAddress des Verkäufers (UBL) bzw. ram:CityName in ram:PostalTradeAddress (CII) befüllen.",
+      "en": "Fill cbc:CityName in the seller's cac:PostalAddress (UBL) / ram:CityName in ram:PostalTradeAddress (CII)."
+    }
+  },
+  "BR-DE-4": {
+    "explanation": {
+      "de": "Die Postleitzahl der Verkäuferadresse (Seller post code, BT-38) fehlt.",
+      "en": "The seller's post code (Seller post code, BT-38) is missing."
+    },
+    "fixHint": {
+      "de": "cbc:PostalZone (UBL) bzw. ram:PostcodeCode (CII) in der Verkäuferadresse ergänzen.",
+      "en": "Add cbc:PostalZone (UBL) / ram:PostcodeCode (CII) to the seller address."
+    }
+  },
+  "BR-DE-5": {
+    "explanation": {
+      "de": "Der Name des Ansprechpartners beim Verkäufer (Seller contact point, BT-41) fehlt.",
+      "en": "The seller contact point name (BT-41) is missing."
+    },
+    "fixHint": {
+      "de": "cac:Contact/cbc:Name (UBL) bzw. ram:DefinedTradeContact/ram:PersonName oder ram:DepartmentName (CII) setzen.",
+      "en": "Set cac:Contact/cbc:Name (UBL) / ram:DefinedTradeContact/ram:PersonName or ram:DepartmentName (CII)."
+    }
+  },
+  "BR-DE-6": {
+    "explanation": {
+      "de": "Die Telefonnummer des Verkäuferkontakts (BT-42) fehlt.",
+      "en": "The seller contact telephone number (BT-42) is missing."
+    },
+    "fixHint": {
+      "de": "cac:Contact/cbc:Telephone (UBL) bzw. ram:TelephoneUniversalCommunication/ram:CompleteNumber (CII) ergänzen; mindestens drei Ziffern (vgl. BR-DE-27).",
+      "en": "Add cac:Contact/cbc:Telephone (UBL) / ram:TelephoneUniversalCommunication/ram:CompleteNumber (CII); at least three digits (see BR-DE-27)."
+    }
+  },
+  "BR-DE-7": {
+    "explanation": {
+      "de": "Die E-Mail-Adresse des Verkäuferkontakts (BT-43) fehlt.",
+      "en": "The seller contact e-mail address (BT-43) is missing."
+    },
+    "fixHint": {
+      "de": "cac:Contact/cbc:ElectronicMail (UBL) bzw. ram:EmailURIUniversalCommunication/ram:URIID (CII) ergänzen; Format vgl. BR-DE-28.",
+      "en": "Add cac:Contact/cbc:ElectronicMail (UBL) / ram:EmailURIUniversalCommunication/ram:URIID (CII); format per BR-DE-28."
+    }
+  },
+  "BR-DE-8": {
+    "explanation": {
+      "de": "Der Ort der Käuferadresse (Buyer city, BT-52) fehlt.",
+      "en": "The buyer's city (Buyer city, BT-52) is missing."
+    },
+    "fixHint": {
+      "de": "cbc:CityName in der Käuferadresse (UBL) bzw. ram:CityName in ram:BuyerTradeParty/ram:PostalTradeAddress (CII) befüllen.",
+      "en": "Fill cbc:CityName in the buyer address (UBL) / ram:CityName in ram:BuyerTradeParty/ram:PostalTradeAddress (CII)."
+    }
+  },
+  "BR-DE-9": {
+    "explanation": {
+      "de": "Die Postleitzahl der Käuferadresse (Buyer post code, BT-53) fehlt.",
+      "en": "The buyer's post code (Buyer post code, BT-53) is missing."
+    },
+    "fixHint": {
+      "de": "cbc:PostalZone (UBL) bzw. ram:PostcodeCode (CII) in der Käuferadresse ergänzen.",
+      "en": "Add cbc:PostalZone (UBL) / ram:PostcodeCode (CII) to the buyer address."
+    }
+  },
+  "BR-DE-10": {
+    "explanation": {
+      "de": "Wird eine Lieferadresse (DELIVER TO ADDRESS, BG-15) angegeben, muss sie einen Ort (BT-77) enthalten.",
+      "en": "If a deliver-to address (BG-15) is given, it must contain a city (BT-77)."
+    },
+    "fixHint": {
+      "de": "cbc:CityName in cac:Delivery/cac:DeliveryLocation/cac:Address (UBL) bzw. ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName (CII) setzen – oder die Lieferadresse ganz weglassen.",
+      "en": "Set cbc:CityName in cac:Delivery/cac:DeliveryLocation/cac:Address (UBL) / ram:ShipToTradeParty/ram:PostalTradeAddress/ram:CityName (CII) – or omit the delivery address entirely."
+    }
+  },
+  "BR-DE-11": {
+    "explanation": {
+      "de": "Wird eine Lieferadresse (BG-15) angegeben, muss sie eine Postleitzahl (BT-78) enthalten.",
+      "en": "If a deliver-to address (BG-15) is given, it must contain a post code (BT-78)."
+    },
+    "fixHint": {
+      "de": "cbc:PostalZone (UBL) bzw. ram:PostcodeCode (CII) in der Lieferadresse ergänzen.",
+      "en": "Add cbc:PostalZone (UBL) / ram:PostcodeCode (CII) to the delivery address."
+    }
+  },
+  "BR-DE-14": {
+    "explanation": {
+      "de": "In jeder Umsatzsteueraufschlüsselung (VAT BREAKDOWN, BG-23) muss der Steuersatz (VAT category rate, BT-119) angegeben sein – auch bei 0 % (z. B. Kategorien Z, E, AE).",
+      "en": "Every VAT breakdown (BG-23) must state the VAT category rate (BT-119) – also for 0 % (e.g. categories Z, E, AE)."
+    },
+    "fixHint": {
+      "de": "cac:TaxSubtotal/cac:TaxCategory/cbc:Percent (UBL) bzw. ram:ApplicableTradeTax/ram:RateApplicablePercent (CII) befüllen; bei steuerfreien Kategorien den Wert 0 eintragen.",
+      "en": "Fill cac:TaxSubtotal/cac:TaxCategory/cbc:Percent (UBL) / ram:ApplicableTradeTax/ram:RateApplicablePercent (CII); use 0 for exempt categories."
+    }
+  },
+  "BR-DE-15": {
+    "explanation": {
+      "de": "Die Käuferreferenz (Buyer reference, BT-10) ist in der XRechnung Pflicht. Bei Rechnungen an öffentliche Auftraggeber in Deutschland wird hier die Leitweg-ID des Empfängers übermittelt; sie steuert die Zustellung im Rechnungseingangsportal (ZRE/OZG-RE). Fehlt sie, wird die Rechnung abgewiesen.",
+      "en": "The buyer reference (BT-10) is mandatory in XRechnung. For invoices to German public-sector buyers it carries the recipient's Leitweg-ID, which routes the invoice inside the central invoice portals (ZRE/OZG-RE). Without it the invoice is rejected."
+    },
+    "fixHint": {
+      "de": "cbc:BuyerReference (UBL) bzw. ram:ApplicableHeaderTradeAgreement/ram:BuyerReference (CII) mit der vom Auftraggeber genannten Leitweg-ID (Format z. B. 04011000-12345-67) bzw. der vereinbarten Käuferreferenz befüllen.",
+      "en": "Fill cbc:BuyerReference (UBL) / ram:ApplicableHeaderTradeAgreement/ram:BuyerReference (CII) with the Leitweg-ID supplied by the buyer (e.g. 04011000-12345-67) or the agreed buyer reference."
+    },
+    "commonCauses": {
+      "de": [
+        "Leitweg-ID wurde vom Auftraggeber nicht abgefragt",
+        "Feld im ERP-Mapping nicht belegt",
+        "Wert steht fälschlich in BT-13 (Bestellreferenz)"
+      ],
+      "en": [
+        "Leitweg-ID was never requested from the buyer",
+        "Field not mapped in the ERP export",
+        "Value was put into BT-13 (purchase order reference) instead"
+      ]
+    }
+  },
+  "BR-DE-16": {
+    "explanation": {
+      "de": "Sobald Steuerkategorien S, Z, E, AE, K, G, L oder M verwendet werden, muss der Verkäufer steuerlich identifizierbar sein: USt-IdNr. (BT-31), Steuernummer (BT-32) oder die USt-IdNr. eines Steuervertreters (BT-63).",
+      "en": "As soon as VAT categories S, Z, E, AE, K, G, L or M are used, the seller must be tax-identifiable: VAT identifier (BT-31), tax registration identifier (BT-32) or the tax representative's VAT identifier (BT-63)."
+    },
+    "fixHint": {
+      "de": "cac:PartyTaxScheme/cbc:CompanyID mit cac:TaxScheme/cbc:ID=VAT (BT-31) oder mit einer anderen Scheme-ID (BT-32) beim Verkäufer eintragen; CII: ram:SpecifiedTaxRegistration/ram:ID mit schemeID VA bzw. FC.",
+      "en": "Add cac:PartyTaxScheme/cbc:CompanyID with cac:TaxScheme/cbc:ID=VAT (BT-31) or another scheme (BT-32) to the seller; CII: ram:SpecifiedTaxRegistration/ram:ID with schemeID VA or FC."
+    }
+  },
+  "BR-DE-17": {
+    "explanation": {
+      "de": "XRechnung erlaubt nur bestimmte Rechnungstypen (BT-3): 326 Teilrechnung, 380 Rechnung, 384 Rechnungskorrektur, 389 Selbstfakturierte Rechnung, 381 Gutschrift, 875/876/877 Teilschlussrechnung/Schlussrechnung (Bauleistungen). Andere Codes lösen eine Warnung aus.",
+      "en": "XRechnung only expects specific invoice type codes (BT-3): 326 partial, 380 commercial, 384 corrected, 389 self-billed invoice, 381 credit note, 875/876/877 partial/final construction invoices. Other codes raise a warning."
+    },
+    "fixHint": {
+      "de": "cbc:InvoiceTypeCode / cbc:CreditNoteTypeCode (UBL) bzw. ram:ExchangedDocument/ram:TypeCode (CII) auf einen der zulässigen Codes setzen – im Regelfall 380.",
+      "en": "Set cbc:InvoiceTypeCode / cbc:CreditNoteTypeCode (UBL) or ram:ExchangedDocument/ram:TypeCode (CII) to one of the accepted codes – usually 380."
+    }
+  },
+  "BR-DE-18": {
+    "explanation": {
+      "de": "Skonto-Angaben müssen in den Zahlungsbedingungen (BT-20) maschinenlesbar kodiert werden: pro Skontostufe eine Zeile der Form #SKONTO#TAGE=14#PROZENT=2.00# (optional #BASISBETRAG=…#), jeweils mit Zeilenumbruch abgeschlossen.",
+      "en": "Cash-discount terms must be machine-readable inside the payment terms (BT-20): one line per tier of the form #SKONTO#TAGE=14#PROZENT=2.00# (optionally #BASISBETRAG=…#), each terminated by a line break."
+    },
+    "fixHint": {
+      "de": "Freitext-Skonto (\"2 % bei Zahlung innerhalb 14 Tagen\") durch die Zeile #SKONTO#TAGE=14#PROZENT=2.00# ersetzen; mehrere Stufen untereinander; Betrag mit Punkt und zwei Nachkommastellen.",
+      "en": "Replace free-text discounts (\"2 % within 14 days\") with the line #SKONTO#TAGE=14#PROZENT=2.00#; one tier per line; decimals with a point and two places."
+    }
+  },
+  "BR-DE-19": {
+    "explanation": {
+      "de": "Bei SEPA-Überweisung (BT-81 = 58) soll die Kontokennung (BT-84) eine gültige IBAN sein (Länge, Länderformat, Prüfziffer nach ISO 7064 MOD 97-10).",
+      "en": "For SEPA credit transfers (BT-81 = 58) the payment account identifier (BT-84) should be a valid IBAN (length, country format, ISO 7064 MOD 97-10 check digits)."
+    },
+    "fixHint": {
+      "de": "IBAN ohne Leerzeichen eintragen und die Prüfziffer kontrollieren; bei Nicht-SEPA-Konten Code 30 statt 58 verwenden.",
+      "en": "Enter the IBAN without spaces and verify its check digits; use code 30 instead of 58 for non-SEPA accounts."
+    }
+  },
+  "BR-DE-20": {
+    "explanation": {
+      "de": "Bei SEPA-Lastschrift (BT-81 = 59) soll die belastete Kontokennung (BT-91) eine gültige IBAN sein.",
+      "en": "For SEPA direct debit (BT-81 = 59) the debited account identifier (BT-91) should be a valid IBAN."
+    },
+    "fixHint": {
+      "de": "IBAN des Zahlungspflichtigen ohne Leerzeichen mit korrekter Prüfziffer in BT-91 eintragen.",
+      "en": "Put the payer's IBAN, without spaces and with valid check digits, in BT-91."
+    }
+  },
+  "BR-DE-21": {
+    "explanation": {
+      "de": "Die Spezifikationskennung (BT-24) soll die aktuelle XRechnung-Kennung sein, z. B. urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0.",
+      "en": "The specification identifier (BT-24) should be the current XRechnung identifier, e.g. urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0."
+    },
+    "fixHint": {
+      "de": "cbc:CustomizationID (UBL) bzw. ram:GuidelineSpecifiedDocumentContextParameter/ram:ID (CII) auf die Kennung der eingesetzten XRechnung-Version setzen; veraltete Versionen (2.x) werden nicht mehr akzeptiert.",
+      "en": "Set cbc:CustomizationID (UBL) / ram:GuidelineSpecifiedDocumentContextParameter/ram:ID (CII) to the identifier of the XRechnung version in use; retired versions (2.x) are no longer accepted."
+    }
+  },
+  "BR-DE-22": {
+    "explanation": {
+      "de": "Eingebettete Anhänge (BT-125) müssen eindeutige Dateinamen (Attribut filename) haben.",
+      "en": "Embedded attachments (BT-125) must have unique file names (filename attribute)."
+    },
+    "fixHint": {
+      "de": "Doppelte filename-Attribute in cbc:EmbeddedDocumentBinaryObject / ram:AttachmentBinaryObject umbenennen.",
+      "en": "Rename duplicate filename attributes on cbc:EmbeddedDocumentBinaryObject / ram:AttachmentBinaryObject."
+    }
+  },
+  "BR-DE-23-a": {
+    "explanation": {
+      "de": "Bei Überweisung (BT-81 = 30 oder 58) muss die Gruppe CREDIT TRANSFER (BG-17) mit der Kontokennung (BT-84) übermittelt werden.",
+      "en": "For credit transfers (BT-81 = 30 or 58) the CREDIT TRANSFER group (BG-17) with the account identifier (BT-84) must be present."
+    },
+    "fixHint": {
+      "de": "cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:ID (UBL) bzw. ram:PayeePartyCreditorFinancialAccount/ram:IBANID (CII) ergänzen.",
+      "en": "Add cac:PaymentMeans/cac:PayeeFinancialAccount/cbc:ID (UBL) / ram:PayeePartyCreditorFinancialAccount/ram:IBANID (CII)."
+    }
+  },
+  "BR-DE-23-b": {
+    "explanation": {
+      "de": "Bei Überweisung (BT-81 = 30 oder 58) dürfen keine Kartendaten (BG-18) und keine Lastschriftdaten (BG-19) übermittelt werden.",
+      "en": "For credit transfers (BT-81 = 30 or 58) neither payment card information (BG-18) nor direct debit data (BG-19) may be present."
+    },
+    "fixHint": {
+      "de": "cac:CardAccount / cac:PaymentMandate (UBL) bzw. ram:ApplicableTradeSettlementFinancialCard / ram:PayerPartyDebtorFinancialAccount (CII) entfernen oder BT-81 anpassen.",
+      "en": "Remove cac:CardAccount / cac:PaymentMandate (UBL) or ram:ApplicableTradeSettlementFinancialCard / ram:PayerPartyDebtorFinancialAccount (CII), or change BT-81."
+    }
+  },
+  "BR-DE-24-a": {
+    "explanation": {
+      "de": "Bei Kartenzahlung (BT-81 = 48, 54 oder 55) muss genau eine Gruppe PAYMENT CARD INFORMATION (BG-18) übermittelt werden.",
+      "en": "For card payments (BT-81 = 48, 54 or 55) exactly one PAYMENT CARD INFORMATION group (BG-18) must be present."
+    },
+    "fixHint": {
+      "de": "cac:PaymentMeans/cac:CardAccount (UBL) bzw. ram:ApplicableTradeSettlementFinancialCard (CII) mit maskierter Kartennummer (BT-87) ergänzen.",
+      "en": "Add cac:PaymentMeans/cac:CardAccount (UBL) / ram:ApplicableTradeSettlementFinancialCard (CII) with the masked card number (BT-87)."
+    }
+  },
+  "BR-DE-24-b": {
+    "explanation": {
+      "de": "Bei Kartenzahlung (BT-81 = 48, 54 oder 55) dürfen weder Überweisungs- (BG-17) noch Lastschriftdaten (BG-19) übermittelt werden.",
+      "en": "For card payments (BT-81 = 48, 54 or 55) neither credit transfer (BG-17) nor direct debit data (BG-19) may be present."
+    },
+    "fixHint": {
+      "de": "Überflüssige Konto- oder Mandatsangaben entfernen oder BT-81 korrigieren.",
+      "en": "Remove the superfluous account or mandate data, or correct BT-81."
+    }
+  },
+  "BR-DE-25-a": {
+    "explanation": {
+      "de": "Bei Lastschrift (BT-81 = 59) muss genau eine Gruppe DIRECT DEBIT (BG-19) übermittelt werden.",
+      "en": "For direct debit (BT-81 = 59) exactly one DIRECT DEBIT group (BG-19) must be present."
+    },
+    "fixHint": {
+      "de": "Mandatsreferenz (BT-89), Gläubiger-ID (BT-90) und belastete IBAN (BT-91) angeben – UBL: cac:PaymentMandate + PartyIdentification/ID[@schemeID='SEPA']; CII: ram:DirectDebitMandateID, ram:CreditorReferenceID, ram:PayerPartyDebtorFinancialAccount.",
+      "en": "Provide mandate reference (BT-89), creditor identifier (BT-90) and debited IBAN (BT-91) – UBL: cac:PaymentMandate + PartyIdentification/ID[@schemeID='SEPA']; CII: ram:DirectDebitMandateID, ram:CreditorReferenceID, ram:PayerPartyDebtorFinancialAccount."
+    }
+  },
+  "BR-DE-25-b": {
+    "explanation": {
+      "de": "Bei Lastschrift (BT-81 = 59) dürfen weder Überweisungs- (BG-17) noch Kartendaten (BG-18) übermittelt werden.",
+      "en": "For direct debit (BT-81 = 59) neither credit transfer (BG-17) nor card data (BG-18) may be present."
+    },
+    "fixHint": {
+      "de": "Konto- bzw. Kartenangaben entfernen oder BT-81 korrigieren.",
+      "en": "Remove the account or card data, or correct BT-81."
+    }
+  },
+  "BR-DE-26": {
+    "explanation": {
+      "de": "Eine Rechnungskorrektur (BT-3 = 384) soll auf die korrigierte Rechnung verweisen (PRECEDING INVOICE REFERENCE, BG-3).",
+      "en": "A corrected invoice (BT-3 = 384) should reference the invoice it corrects (PRECEDING INVOICE REFERENCE, BG-3)."
+    },
+    "fixHint": {
+      "de": "cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID (UBL) bzw. ram:InvoiceReferencedDocument/ram:IssuerAssignedID (CII) mit der Nummer der Ursprungsrechnung ergänzen.",
+      "en": "Add cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID (UBL) / ram:InvoiceReferencedDocument/ram:IssuerAssignedID (CII) with the original invoice number."
+    }
+  },
+  "BR-DE-27": {
+    "explanation": {
+      "de": "Die Telefonnummer des Verkäuferkontakts (BT-42) soll mindestens drei Ziffern enthalten.",
+      "en": "The seller contact telephone number (BT-42) should contain at least three digits."
+    },
+    "fixHint": {
+      "de": "Platzhalter wie \"-\" oder \"n/a\" durch eine echte Rufnummer ersetzen.",
+      "en": "Replace placeholders such as \"-\" or \"n/a\" with a real phone number."
+    }
+  },
+  "BR-DE-28": {
+    "explanation": {
+      "de": "Die E-Mail-Adresse des Verkäuferkontakts (BT-43) soll plausibel sein: genau ein @, beidseitig mindestens zwei Zeichen, kein Punkt oder Leerzeichen direkt am @ und kein Punkt am Anfang/Ende.",
+      "en": "The seller contact e-mail (BT-43) should look valid: exactly one @, at least two characters on each side, no dot or space adjacent to the @, no leading/trailing dot."
+    },
+    "fixHint": {
+      "de": "Adresse bereinigen (Leerzeichen entfernen, Tippfehler wie doppeltes @ korrigieren).",
+      "en": "Clean up the address (remove spaces, fix typos such as a double @)."
+    }
+  },
+  "BR-DE-30": {
+    "explanation": {
+      "de": "Bei Lastschrift (BG-19) muss die Gläubiger-Identifikationsnummer (Bank assigned creditor identifier, BT-90) angegeben werden.",
+      "en": "With direct debit (BG-19) the bank-assigned creditor identifier (BT-90) must be given."
+    },
+    "fixHint": {
+      "de": "UBL: cac:PartyIdentification/cbc:ID mit schemeID=\"SEPA\" beim Verkäufer bzw. Zahlungsempfänger; CII: ram:CreditorReferenceID in ApplicableHeaderTradeSettlement.",
+      "en": "UBL: cac:PartyIdentification/cbc:ID with schemeID=\"SEPA\" on the seller or payee; CII: ram:CreditorReferenceID in ApplicableHeaderTradeSettlement."
+    }
+  },
+  "BR-DE-31": {
+    "explanation": {
+      "de": "Bei Lastschrift (BG-19) muss die belastete Kontokennung (Debited account identifier, BT-91) angegeben werden.",
+      "en": "With direct debit (BG-19) the debited account identifier (BT-91) must be given."
+    },
+    "fixHint": {
+      "de": "UBL: cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID; CII: ram:PayerPartyDebtorFinancialAccount/ram:IBANID.",
+      "en": "UBL: cac:PaymentMandate/cac:PayerFinancialAccount/cbc:ID; CII: ram:PayerPartyDebtorFinancialAccount/ram:IBANID."
+    }
+  },
+  "BR-DE-TMP-32": {
+    "explanation": {
+      "de": "Hinweis: Eine Rechnung sollte das Liefer- bzw. Leistungsdatum ausweisen – entweder als tatsächliches Lieferdatum (BT-72), als Rechnungszeitraum (BG-14) oder in jeder Position als Positionszeitraum (BG-26). Das ist derzeit nur eine Information, wird aber in künftigen XRechnung-Versionen voraussichtlich verpflichtend.",
+      "en": "Notice: an invoice should state the delivery/service date – as actual delivery date (BT-72), invoicing period (BG-14) or an invoice line period (BG-26) on every line. Currently informational; expected to become mandatory in future XRechnung versions."
+    },
+    "fixHint": {
+      "de": "cbc:ActualDeliveryDate (UBL) / ram:ActualDeliverySupplyChainEvent (CII) oder cac:InvoicePeriod / ram:BillingSpecifiedPeriod ergänzen.",
+      "en": "Add cbc:ActualDeliveryDate (UBL) / ram:ActualDeliverySupplyChainEvent (CII) or cac:InvoicePeriod / ram:BillingSpecifiedPeriod."
+    }
+  },
+  "BR-DE-CVD-01": {
+    "explanation": {
+      "de": "Im CVD-Szenario (Clean Vehicles Directive, Fahrzeugbeschaffung der öffentlichen Hand) ist die Vertragsreferenz (BT-12) Pflicht.",
+      "en": "In the CVD scenario (Clean Vehicles Directive, public-sector vehicle procurement) the contract reference (BT-12) is mandatory."
+    },
+    "fixHint": {
+      "de": "cac:ContractDocumentReference/cbc:ID (UBL) bzw. ram:ContractReferencedDocument/ram:IssuerAssignedID (CII) befüllen.",
+      "en": "Fill cac:ContractDocumentReference/cbc:ID (UBL) / ram:ContractReferencedDocument/ram:IssuerAssignedID (CII)."
+    }
+  },
+  "BR-DE-CVD-02": {
+    "explanation": {
+      "de": "Im CVD-Szenario ist die Vergabe-/Losreferenz (Tender or lot reference, BT-17) Pflicht.",
+      "en": "In the CVD scenario the tender or lot reference (BT-17) is mandatory."
+    },
+    "fixHint": {
+      "de": "cac:OriginatorDocumentReference/cbc:ID (UBL) bzw. ram:AdditionalReferencedDocument mit TypeCode 50 (CII) ergänzen.",
+      "en": "Add cac:OriginatorDocumentReference/cbc:ID (UBL) / ram:AdditionalReferencedDocument with TypeCode 50 (CII)."
+    }
+  },
+  "BR-DE-CVD-03": {
+    "explanation": {
+      "de": "Im CVD-Szenario muss mindestens eine Rechnungsposition die Fahrzeugkategorie (BT-158 mit Scheme 'CVD') und das Attribut 'cva' (BT-160/161) tragen.",
+      "en": "In the CVD scenario at least one invoice line must carry the vehicle category (BT-158 with scheme 'CVD') and the 'cva' item attribute (BT-160/161)."
+    },
+    "fixHint": {
+      "de": "Auf der Fahrzeugposition cac:CommodityClassification/cbc:ItemClassificationCode listID=\"CVD\" und cac:AdditionalItemProperty Name=cva ergänzen.",
+      "en": "On the vehicle line add cac:CommodityClassification/cbc:ItemClassificationCode listID=\"CVD\" and cac:AdditionalItemProperty with Name=cva."
+    }
+  },
+  "BR-DE-CVD-04": {
+    "explanation": {
+      "de": "Die CVD-Fahrzeugkategorie (BT-158, Scheme 'CVD') muss ein Wert aus der zulässigen Liste sein (z. B. M1, M2, M3, N1, N2, N3).",
+      "en": "The CVD vehicle category (BT-158, scheme 'CVD') must be one of the permitted values (e.g. M1, M2, M3, N1, N2, N3)."
+    },
+    "fixHint": {
+      "de": "Wert gegen die CVD-Codeliste der XRechnung-Spezifikation prüfen.",
+      "en": "Check the value against the CVD code list in the XRechnung specification."
+    }
+  },
+  "BR-DE-CVD-05": {
+    "explanation": {
+      "de": "Das Attribut 'cva' (Clean Vehicle Attribute, BT-161) muss einen zulässigen Wert enthalten (z. B. CV = sauberes Fahrzeug, EV = emissionsfreies Fahrzeug, NCV = kein sauberes Fahrzeug).",
+      "en": "The 'cva' item attribute (Clean Vehicle Attribute, BT-161) must hold a permitted value (e.g. CV = clean vehicle, EV = zero-emission vehicle, NCV = not a clean vehicle)."
+    },
+    "fixHint": {
+      "de": "cbc:Value des AdditionalItemProperty 'cva' an die Codeliste anpassen.",
+      "en": "Align cbc:Value of the 'cva' AdditionalItemProperty with the code list."
+    }
+  },
+  "BR-DE-CVD-06-a": {
+    "explanation": {
+      "de": "Trägt eine Position die Fahrzeugkategorie (BT-158, Scheme 'CVD'), muss dieselbe Position genau ein Attribut 'cva' (BT-160) enthalten.",
+      "en": "If a line carries the vehicle category (BT-158, scheme 'CVD'), the same line must contain exactly one 'cva' attribute (BT-160)."
+    },
+    "fixHint": {
+      "de": "Genau ein cac:AdditionalItemProperty mit cbc:Name=cva auf der Position ergänzen.",
+      "en": "Add exactly one cac:AdditionalItemProperty with cbc:Name=cva to the line."
+    }
+  },
+  "BR-DE-CVD-06-b": {
+    "explanation": {
+      "de": "Trägt eine Position das Attribut 'cva', muss dieselbe Position genau eine Fahrzeugkategorie (BT-158 mit Scheme 'CVD') enthalten.",
+      "en": "If a line carries the 'cva' attribute, the same line must contain exactly one vehicle category (BT-158 with scheme 'CVD')."
+    },
+    "fixHint": {
+      "de": "Genau einen ItemClassificationCode mit listID=\"CVD\" auf der Position ergänzen.",
+      "en": "Add exactly one ItemClassificationCode with listID=\"CVD\" to the line."
+    }
+  },
+  "BR-01": {
+    "explanation": {
+      "de": "Die Spezifikationskennung (BT-24, CustomizationID) fehlt – ohne sie kann kein Regelwerk zugeordnet werden.",
+      "en": "The specification identifier (BT-24, CustomizationID) is missing – without it no rule set can be selected."
+    },
+    "fixHint": {
+      "de": "cbc:CustomizationID (UBL) bzw. ram:GuidelineSpecifiedDocumentContextParameter/ram:ID (CII) setzen, z. B. urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0.",
+      "en": "Set cbc:CustomizationID (UBL) / ram:GuidelineSpecifiedDocumentContextParameter/ram:ID (CII), e.g. urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0."
+    }
+  },
+  "BR-CO-10": {
+    "explanation": {
+      "de": "Die Summe der Positionsnettobeträge (BT-106) muss exakt der Summe aller Positionsbeträge (BT-131) entsprechen.",
+      "en": "The sum of invoice line net amounts (BT-106) must equal the exact sum of all line net amounts (BT-131)."
+    },
+    "fixHint": {
+      "de": "BT-106 aus den BT-131-Werten neu berechnen (dezimal, nicht Gleitkomma) und mit zwei Nachkommastellen ausgeben.",
+      "en": "Recompute BT-106 from the BT-131 values (decimal, not floating point) and emit it with two decimals."
+    },
+    "commonCauses": {
+      "de": [
+        "Rundung pro Position vs. Rundung der Summe",
+        "Gleitkomma-Arithmetik im Export",
+        "Positionsbetrag enthält bereits Steuer"
+      ],
+      "en": [
+        "Per-line rounding vs. rounding of the sum",
+        "Floating-point arithmetic in the export",
+        "Line amount already includes VAT"
+      ]
+    }
+  },
+  "BR-CO-13": {
+    "explanation": {
+      "de": "Gesamtbetrag ohne Steuer (BT-109) = Summe der Positionsnettobeträge (BT-106) − Summe der Nachlässe (BT-107) + Summe der Zuschläge (BT-108) auf Dokumentebene.",
+      "en": "Invoice total without VAT (BT-109) = sum of line net amounts (BT-106) − document-level allowances (BT-107) + document-level charges (BT-108)."
+    },
+    "fixHint": {
+      "de": "BT-109 aus BT-106, BT-107 und BT-108 neu berechnen; fehlen Nachlässe/Zuschläge, BT-107/108 weglassen oder 0.00 setzen.",
+      "en": "Recompute BT-109 from BT-106, BT-107 and BT-108; if there are no allowances/charges, omit BT-107/108 or set them to 0.00."
+    }
+  },
+  "BR-CO-14": {
+    "explanation": {
+      "de": "Der Gesamtsteuerbetrag (BT-110) muss der Summe der Steuerbeträge aller Steueraufschlüsselungen (BT-117) entsprechen.",
+      "en": "The invoice total VAT amount (BT-110) must equal the sum of the VAT category tax amounts (BT-117) of all breakdowns."
+    },
+    "fixHint": {
+      "de": "BT-110 als Summe der BT-117-Werte neu berechnen.",
+      "en": "Recompute BT-110 as the sum of all BT-117 values."
+    }
+  },
+  "BR-CO-15": {
+    "explanation": {
+      "de": "Gesamtbetrag mit Steuer (BT-112) = Gesamtbetrag ohne Steuer (BT-109) + Gesamtsteuerbetrag (BT-110).",
+      "en": "Invoice total with VAT (BT-112) = invoice total without VAT (BT-109) + invoice total VAT amount (BT-110)."
+    },
+    "fixHint": {
+      "de": "BT-112 aus BT-109 und BT-110 neu berechnen.",
+      "en": "Recompute BT-112 from BT-109 and BT-110."
+    }
+  },
+  "BR-CO-16": {
+    "explanation": {
+      "de": "Fälliger Betrag (BT-115) = Gesamtbetrag mit Steuer (BT-112) − bereits gezahlter Betrag (BT-113) + Rundungsbetrag (BT-114).",
+      "en": "Amount due for payment (BT-115) = invoice total with VAT (BT-112) − paid amount (BT-113) + rounding amount (BT-114)."
+    },
+    "fixHint": {
+      "de": "BT-115 neu berechnen; ohne Anzahlung/Rundung BT-113/114 weglassen oder 0.00 setzen.",
+      "en": "Recompute BT-115; without prepayment/rounding omit BT-113/114 or set them to 0.00."
+    }
+  },
+  "BR-CO-17": {
+    "explanation": {
+      "de": "Der Steuerbetrag einer Steueraufschlüsselung (BT-117) muss dem steuerbaren Betrag (BT-116) multipliziert mit dem Steuersatz (BT-119) entsprechen – kaufmännisch auf zwei Nachkommastellen gerundet.",
+      "en": "The VAT category tax amount (BT-117) must equal the taxable amount (BT-116) multiplied by the rate (BT-119), rounded to two decimals."
+    },
+    "fixHint": {
+      "de": "BT-117 = round(BT-116 × BT-119 / 100, 2) je Kategorie neu berechnen; nicht die Positionssteuern aufsummieren.",
+      "en": "Recompute BT-117 = round(BT-116 × BT-119 / 100, 2) per category; do not sum per-line VAT instead."
+    },
+    "commonCauses": {
+      "de": [
+        "Steuer wurde je Position gerundet und summiert",
+        "Steuersatz als 0.19 statt 19 angegeben"
+      ],
+      "en": ["VAT rounded per line and summed", "Rate given as 0.19 instead of 19"]
+    }
+  },
+  "BR-S-08": {
+    "explanation": {
+      "de": "Für jeden Standardsteuersatz muss der steuerbare Betrag (BT-116) der Aufschlüsselung der Summe der Positionsbeträge (BT-131) abzüglich Nachlässe (BT-92) zuzüglich Zuschläge (BT-99) mit demselben Satz entsprechen.",
+      "en": "For each standard rate the taxable amount (BT-116) of the breakdown must equal the sum of line net amounts (BT-131) minus allowances (BT-92) plus charges (BT-99) carrying that same rate."
+    },
+    "fixHint": {
+      "de": "Positionen, Nachlässe und Zuschläge nach Steuersatz gruppieren und BT-116 je Gruppe neu berechnen; prüfen, ob eine Position einen abweichenden Satz trägt.",
+      "en": "Group lines, allowances and charges by rate and recompute BT-116 per group; check whether a line carries a different rate."
+    }
+  },
+  "BR-S-09": {
+    "explanation": {
+      "de": "Bei Kategorie S muss der Steuerbetrag (BT-117) gleich steuerbarer Betrag (BT-116) × Steuersatz (BT-119) sein, gerundet auf zwei Nachkommastellen.",
+      "en": "For category S the VAT amount (BT-117) must equal taxable amount (BT-116) × rate (BT-119), rounded to two decimals."
+    },
+    "fixHint": {
+      "de": "BT-117 neu berechnen (siehe BR-CO-17).",
+      "en": "Recompute BT-117 (see BR-CO-17)."
+    }
+  },
+  "BR-CL-23": {
+    "explanation": {
+      "de": "Mengeneinheiten (BT-130, BT-150) müssen Codes aus UN/ECE Recommendation 20 bzw. 21 sein, z. B. C62 (Stück), HUR (Stunde), KGM (Kilogramm), LTR (Liter), MTR (Meter), XPP (Stück, verpackt).",
+      "en": "Unit codes (BT-130, BT-150) must come from UN/ECE Recommendation 20/21, e.g. C62 (piece), HUR (hour), KGM (kilogram), LTR (litre), MTR (metre), XPP (piece, packaged)."
+    },
+    "fixHint": {
+      "de": "Freitexte wie \"Stk\" oder \"Std\" durch die Codes C62 bzw. HUR ersetzen (Attribut unitCode).",
+      "en": "Replace free text such as \"pcs\" or \"h\" with the codes C62 / HUR (unitCode attribute)."
+    }
+  },
+  "BR-CL-25": {
+    "explanation": {
+      "de": "Die Scheme-ID der elektronischen Adresse (BT-34/BT-49, Attribut schemeID) muss aus der EAS-Codeliste stammen, z. B. EM (E-Mail), 0204 (Leitweg-ID), 9930 (deutsche USt-IdNr.).",
+      "en": "The scheme identifier of the electronic address (BT-34/BT-49, schemeID attribute) must come from the EAS code list, e.g. EM (e-mail), 0204 (Leitweg-ID), 9930 (German VAT id)."
+    },
+    "fixHint": {
+      "de": "cbc:EndpointID schemeID=\"EM\" für E-Mail-Adressen bzw. den passenden EAS-Code setzen.",
+      "en": "Use cbc:EndpointID schemeID=\"EM\" for e-mail addresses or the matching EAS code."
+    }
+  }
+}

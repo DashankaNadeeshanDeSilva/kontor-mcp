@@ -101,3 +101,5 @@ export function loadXsdSet(syntax: ScenarioSyntax): XsdSet {
   xsdCache.set(syntax, set);
   return set;
 }
+
+export * from "./kb.js";
