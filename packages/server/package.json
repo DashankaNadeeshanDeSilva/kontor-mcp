@@ -1,0 +1,31 @@
+{
+  "name": "@kontor-mcp/server",
+  "version": "0.0.0",
+  "description": "Kontor MCP server — sovereign e-invoice tools for AI agents over stdio and Streamable HTTP",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --pretty",
+    "test": "vitest run",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@kontor-mcp/core": "workspace:*"
+  }
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+.vitest/
+# large downloaded standards artifacts are fetched by tools/fetch-artifacts (Task 0.2)
+fixtures/_downloads/

@@ -1,0 +1,27 @@
+{
+  "name": "kontor-mcp",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Kontor MCP — the sovereign e-invoice toolkit for AI agents. Official XRechnung/EN 16931 validation, ZUGFeRD in and out, 100% offline, zero API keys.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.23.0",
+  "scripts": {
+    "build": "pnpm -r --workspace-concurrency=1 build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "pnpm -r typecheck",
+    "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.10",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

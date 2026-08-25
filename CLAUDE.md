@@ -1,0 +1,11 @@
+# Kontor MCP — project context for Claude Code
+- Read docs/PRD.md (scope, tool specs §5.5, NFRs §6) and docs/IMPLEMENTATION_PLAN.md (current phase) before coding.
+- Monorepo: pnpm workspaces. Node >= 20, TypeScript strict. Test runner: vitest. Run `pnpm -r test` before claiming done.
+- Money math: decimal.js only — never float. XML parsing: XXE disabled everywhere (see NFR-5).
+- Never introduce a runtime network call. The no-network test (packages/core/test/sovereignty.test.ts) must always pass.
+- All MCP tool inputs/outputs: Zod schemas; tools return structuredContent + text summary; findings use the Finding interface (PRD §5.2).
+- Rule namespaces: official rules keep their IDs (BR-*, BR-DE-*); our own checks are KONTOR-PLAUS-*.
+- When touching packages/rules artifacts: update PROVENANCE.md (source, version, date, license, sha256).
+- Conventional commits. Update CHANGELOG.md per user-visible change.
+- npm scope is `@kontor-mcp/*` (decided 2026-08-25, see docs/DECISIONS.md). Verify library versions/APIs against live docs before use; log choices in docs/DECISIONS.md.
+- macOS FS is case-insensitive: never create paths differing only by case (`docs` vs `Docs`).
