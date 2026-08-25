@@ -11,7 +11,10 @@ export const DocumentInputSchema = z.object({
     .string()
     .min(1)
     .optional()
-    .describe("Absolute path to an XML (UBL/CII) or ZUGFeRD/Factur-X PDF file"),
+    .describe(
+      "Absolute path on the machine running this server to an XML (UBL/CII) or ZUGFeRD/Factur-X PDF file. " +
+        "For chat attachments or sandboxed uploads (e.g. /mnt/user-data/...) the server cannot see that filesystem — pass content_base64 instead.",
+    ),
   content_base64: z
     .string()
     .min(1)
@@ -55,7 +58,10 @@ export function resolveInput(input: DocumentInput): { bytes: Uint8Array; label: 
     try {
       st = statSync(abs);
     } catch {
-      throw new ToolError(`File not found: ${abs}`);
+      throw new ToolError(
+        `File not found: ${abs}. This server only sees the local filesystem of the machine it runs on; ` +
+          "for attachments or sandboxed uploads pass the document via content_base64 instead.",
+      );
     }
     if (!st.isFile()) throw new ToolError(`Not a regular file: ${abs}`);
     if (st.size > cap)
