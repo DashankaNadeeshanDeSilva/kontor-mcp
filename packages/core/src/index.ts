@@ -4,5 +4,6 @@
 
 export * from "./detect/index.js";
 export type { Finding, FindingSeverity, FindingSource } from "./finding.js";
+export * from "./pdf/index.js";
 export * from "./xml/index.js";
 export const CORE_PACKAGE = "@kontor-mcp/core" as const;

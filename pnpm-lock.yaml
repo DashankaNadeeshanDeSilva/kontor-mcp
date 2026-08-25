@@ -53,6 +53,9 @@ importers:
       '@xmldom/xmldom':
         specifier: 0.9.12
         version: 0.9.12
+      pdf-lib:
+        specifier: 1.17.1
+        version: 1.17.1
       xpath:
         specifier: 0.0.34
         version: 0.0.34
