@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rechnung 123456XX</title><style>
+:root{--ink:#1a1a1a;--muted:#5f6368;--line:#d9dce0;--accent:#0b57d0;--bg:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:var(--ink);font:14px/1.45 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.page{max-width:900px;margin:24px auto;background:var(--bg);padding:40px 48px;border:1px solid #e5e7eb}
+h1{font-size:26px;margin:0 0 4px}.sub{color:var(--muted);margin-bottom:24px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0}
+.card h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
+dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:2px 12px}dt{color:var(--muted)}dd{margin:0}
+table{width:100%;border-collapse:collapse;margin:16px 0}th,td{padding:8px 6px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+th{text-align:left;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.totals{margin-left:auto;width:340px}.totals td{border:0;padding:4px 6px}.totals tr.grand td{border-top:2px solid var(--ink);font-weight:700;font-size:16px}
+.note{white-space:pre-wrap}.foot{margin-top:32px;font-size:11px;color:var(--muted)}
+@media print{body{background:#fff}.page{border:0;margin:0;max-width:none}}
+</style></head>
+<body><div class="page">
+<h1>Rechnung 123456XX</h1>
+<div class="sub">Rechnungsdatum: 2016-04-04 · Format: UBL-INVOICE · XRechnung 3.0</div>
+<div class="grid">
+
+<div class="card"><h2>Verkäufer</h2>
+<div><strong>[Seller name]</strong><br><span class="muted">[Seller trading name]</span></div>
+<div>[Seller address line 1]<br>12345 [Seller city]<br>DE</div>
+<dl><dt>USt-IdNr.</dt><dd>DE 123456789</dd><dt>Reg.</dt><dd>[HRA-Eintrag]</dd><dt>Kontakt</dt><dd>nicht vorhanden · +49 1234-5678 · seller@email.de</dd><dt>E-Mail/ID</dt><dd>seller@email.de</dd></dl></div>
+
+<div class="card"><h2>Käufer</h2>
+<div><strong>[Buyer name]</strong></div>
+<div>[Buyer address line 1]<br>12345 [Buyer city]<br>DE</div>
+<dl><dt>ID</dt><dd>[Buyer identifier]</dd><dt>E-Mail/ID</dt><dd>buyer@info.de</dd></dl></div>
+</div>
+<dl><dt>Käuferreferenz / Leitweg-ID</dt><dd>04011000-12345-03</dd></dl>
+<table><thead><tr><th>Pos.</th><th>Bezeichnung</th><th class="num">Menge</th><th>Einheit</th><th class="num">Einzelpreis</th><th class="num">USt</th><th class="num">Netto EUR</th></tr></thead>
+<tbody>
+<tr><td>Zeitschrift [...]</td><td>Zeitschrift [...]<br><span class="muted">Zeitschrift Inland</span><br><span class="muted note">Die letzte Lieferung im Rahmen des abgerechneten Abonnements erfolgt in 12/2016 Lieferung erfolgt / erfolgte direkt vom Verlag</span><br><span class="muted">Leistungszeitraum: 2016-01-01 – 2016-12-31</span></td><td class="num">1</td><td>XPP</td><td class="num">288,79</td><td class="num">S 7 %</td><td class="num">288,79</td></tr>
+<tr><td>Porto + Versandkosten</td><td>Porto + Versandkosten</td><td class="num">1</td><td>XPP</td><td class="num">26,07</td><td class="num">S 7 %</td><td class="num">26,07</td></tr>
+</tbody></table>
+<table class="totals"><tbody>
+<tr class=""><td>Summe Positionen</td><td class="num">314,86 EUR</td></tr><tr class=""><td>Gesamt netto</td><td class="num">314,86 EUR</td></tr><tr class=""><td>Umsatzsteuer</td><td class="num">22,04 EUR</td></tr><tr class=""><td>Gesamt brutto</td><td class="num">336,90 EUR</td></tr><tr class="grand"><td>Zahlbetrag</td><td class="num">336,90 EUR</td></tr>
+</tbody></table>
+<h2 style="font-size:12px;text-transform:uppercase;color:#5f6368">Umsatzsteuer-Aufschlüsselung (BG-23)</h2>
+<table><thead><tr><th>Kategorie</th><th class="num">Satz</th><th class="num">Bemessungsgrundlage</th><th class="num">Steuer</th><th>Befreiungsgrund</th></tr></thead><tbody>
+<tr><td>S</td><td class="num">7 %</td><td class="num">314,86</td><td class="num">22,04</td><td></td></tr>
+</tbody></table>
+<div class="grid"><div class="card"><h2>Zahlung</h2><dl><dt>Zahlungsart</dt><dd>58</dd><dt>IBAN</dt><dd>DE75512108001245126199</dd><dt>Zahlungsbedingungen</dt><dd>Zahlbar sofort ohne Abzug.</dd></dl></div></div>
+<div class="card"><h2>Hinweise</h2><p class="note"><span class="muted">[ADU]</span> Es gelten unsere Allgem. Geschäftsbedingungen, die Sie unter […] finden.</p></div>
+<div class="foot">Vorschau erzeugt von Kontor MCP aus dem EN-16931-Datenmodell – keine steuerliche oder rechtliche Beratung.</div>
+</div></body></html>

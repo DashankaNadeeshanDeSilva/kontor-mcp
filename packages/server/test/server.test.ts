@@ -35,6 +35,7 @@ describe("kontor-mcp server (Task 1.6)", () => {
     const names = tools.map((t) => t.name).sort();
     expect(names).toEqual([
       "audit_invoice",
+      "convert_invoice",
       "explain_rule",
       "generate_invoice",
       "parse_invoice",
@@ -42,7 +43,7 @@ describe("kontor-mcp server (Task 1.6)", () => {
     ]);
     for (const t of tools) {
       expect(t.annotations).toMatchObject({
-        readOnlyHint: t.name !== "generate_invoice",
+        readOnlyHint: !["generate_invoice", "convert_invoice"].includes(t.name),
         destructiveHint: false,
         openWorldHint: false,
       });
@@ -294,6 +295,83 @@ describe("generate_invoice (Task 2.3)", () => {
       expect(bad.isError).toBe(true);
       const badExt = await call("generate_invoice", { invoice, output_path: join(dir, "x.txt") });
       expect(badExt.isError).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("convert_invoice (Task 2.4)", () => {
+  it("extract-xml from a ZUGFeRD PDF and html-preview from UBL", async () => {
+    const x = await call("convert_invoice", {
+      file_path: sample("valid-zugferd-en16931.pdf"),
+      target: "extract-xml",
+    });
+    expect(x.isError).toBeFalsy();
+    expect(x.sc.mimeType).toBe("application/xml");
+    expect(String(x.sc.artifact)).toContain("<rsm:CrossIndustryInvoice");
+    expect(x.text).toMatch(/extract-xml/);
+
+    const h = await call("convert_invoice", {
+      file_path: sample("valid-xrechnung-ubl.xml"),
+      target: "html-preview",
+      lang: "en",
+    });
+    expect(h.sc.mimeType).toBe("text/html");
+    expect(String(h.sc.artifact)).toMatch(/^<!DOCTYPE html>/);
+    expect(String(h.sc.artifact)).not.toMatch(/<script/i);
+  });
+
+  it("UBL → cii is post-validated and reports loss; ZUGFeRD → xrechnung-ubl reports the pinned ID", async () => {
+    const c = await call("convert_invoice", {
+      file_path: sample("valid-xrechnung-ubl.xml"),
+      target: "cii",
+      lang: "de",
+    });
+    expect(c.isError).toBeFalsy();
+    expect(c.sc.valid).toBe(true);
+    expect(String(c.sc.artifact)).toContain("<rsm:CrossIndustryInvoice");
+    expect(c.sc.lossReport).toEqual([]);
+    expect(c.text).toMatch(/GÜLTIG/);
+
+    const u = await call("convert_invoice", {
+      file_path: sample("valid-zugferd-en16931.pdf"),
+      target: "xrechnung-ubl",
+      lang: "en",
+    });
+    expect(u.isError).toBeFalsy();
+    expect(typeof u.sc.valid).toBe("boolean");
+    const loss = u.sc.lossReport as Structured[];
+    expect(loss.some((l) => l.kind === "changed" && l.bt === "BT-24")).toBe(true);
+    expect(u.text).toMatch(/BT-24/);
+  });
+
+  it("writes the artifact to output_path with the extension matching the target", async () => {
+    const { mkdtempSync, existsSync, rmSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { tmpdir } = await import("node:os");
+    const dir = mkdtempSync(join(tmpdir(), "kontor-conv-"));
+    try {
+      const ok = await call("convert_invoice", {
+        file_path: sample("valid-xrechnung-ubl.xml"),
+        target: "html-preview",
+        output_path: join(dir, "p.html"),
+      });
+      expect(ok.isError).toBeFalsy();
+      expect(existsSync(join(dir, "p.html"))).toBe(true);
+      const wrongExt = await call("convert_invoice", {
+        file_path: sample("valid-xrechnung-ubl.xml"),
+        target: "cii",
+        output_path: join(dir, "x.html"),
+      });
+      expect(wrongExt.isError).toBe(true);
+      const again = await call("convert_invoice", {
+        file_path: sample("valid-xrechnung-ubl.xml"),
+        target: "html-preview",
+        output_path: join(dir, "p.html"),
+      });
+      expect(again.isError).toBe(true);
+      expect(again.text).toMatch(/exists/);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

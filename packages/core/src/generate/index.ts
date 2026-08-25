@@ -1,14 +1,15 @@
 import type { Finding } from "../finding.js";
 import type { InvoiceModel } from "../model/schema.js";
 import { parseInvoice } from "../parse/index.js";
+import { modelToUbl } from "../serialize/ubl.js";
 import { isErrorLevel, type ValidateOptions, validateInvoice } from "../validate/index.js";
 import { deriveAmounts } from "./derive.js";
 import { type InvoiceInput, type InvoiceInputParsed, InvoiceInputSchema } from "./input.js";
-import { toUblXml } from "./ubl.js";
+import { inputToModel } from "./model.js";
 
 export { deriveAmounts } from "./derive.js";
 export * from "./input.js";
-export { PEPPOL_BILLING_PROFILE_ID, XRECHNUNG_CUSTOMIZATION_ID } from "./ubl.js";
+export { inputToModel, PEPPOL_BILLING_PROFILE_ID, XRECHNUNG_CUSTOMIZATION_ID } from "./model.js";
 
 export interface AutoFix {
   code:
@@ -95,7 +96,7 @@ export async function generateInvoice(
 ): Promise<GenerateResult> {
   const parsed = InvoiceInputSchema.parse(raw);
   const { input, fixes } = applyAutoFixes(parsed);
-  const xml = toUblXml(input, deriveAmounts(input));
+  const xml = modelToUbl(inputToModel(input, deriveAmounts(input)));
   const model = parseInvoice(xml).invoice;
   if (options.skipValidation)
     return { xml, valid: false, plausible: false, findings: [], autoFixes: fixes, model };

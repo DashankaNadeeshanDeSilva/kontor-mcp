@@ -3,6 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ToolError } from "./input.js";
 import { registerResources } from "./resources.js";
 import { AuditInputSchema, AuditOutputSchema, runAudit } from "./tools/audit.js";
+import { ConvertInputSchema, ConvertOutputSchema, runConvert } from "./tools/convert.js";
 import { ExplainInputSchema, ExplainOutputSchema, runExplain } from "./tools/explain.js";
 import { GenerateInputSchema, GenerateOutputSchema, runGenerate } from "./tools/generate.js";
 import { ParseInputSchema, ParseOutputSchema, runParse } from "./tools/parse.js";
@@ -130,6 +131,23 @@ export function createServer(): McpServer {
     async (input) => {
       void log("generate_invoice called");
       return guard(() => runGenerate(input));
+    },
+  );
+
+  server.registerTool(
+    "convert_invoice",
+    {
+      title: "Convert e-invoice",
+      description:
+        "Convert an invoice: extract the XML from a ZUGFeRD/Factur-X PDF, convert UBL ↔ CII via the EN 16931 semantic model (post-validated, with an honest loss report of anything that did not survive), or render a self-contained HTML preview to show the invoice to a human. Optional `output_path` writes the artifact (no overwrite unless `overwrite=true`). Fully offline." +
+        INPUT_HINT,
+      inputSchema: ConvertInputSchema.shape,
+      outputSchema: ConvertOutputSchema.shape,
+      annotations: { ...ANNOTATIONS, readOnlyHint: false },
+    },
+    async (input) => {
+      void log("convert_invoice called");
+      return guard(() => runConvert(input));
     },
   );
 

@@ -153,6 +153,7 @@
 ### Task 2.4 — `convert_invoice` (T6) + HTML preview
 - `extract-xml`; UBL↔CII via model pivot with post-validate + lossReport; `html-preview` (clean, self-contained HTML rendering of the model — no external assets).
 - **AC:** round-trip UBL→CII→UBL on test-suite files preserves semantic model (documented exceptions); preview renders all sample invoices; lossReport populated on an EXTENDED-profile fixture.
+- > **Status (2026-08-25): done.** `core/src/serialize` (full-model UBL Invoice/CreditNote + CII writers; `generate_invoice` now uses the shared UBL writer), `core/src/convert` (targets, post-validation, mechanical `lossReport`), `core/src/preview` (HTML), `convert_invoice` tool. Round trip asserted over every parseable instance of the official test suite with three documented exceptions (D-037); valid standard sources stay valid after conversion; EXTENDED loss and preview goldens covered.
 
 ### Task 2.5 — `check_obligations` (T7) + legal data verification
 - Encode the mandate decision tree as data (`rules/src/legal/timeline.json`) with `sources[]` + `lastVerified`; **verify the legal parameters against authoritative web sources now and record citations**; non-advice disclaimer in every response (NFR-7).

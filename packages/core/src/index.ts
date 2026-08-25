@@ -10,5 +10,8 @@ export * from "./validate/index.js";
 export * from "./xml/index.js";
 export const CORE_PACKAGE = "@kontor-mcp/core" as const;
 export * from "./audit/index.js";
+export * from "./convert/index.js";
 export * from "./generate/index.js";
 export * from "./plausibility/index.js";
+export { formatAmount, renderHtmlPreview } from "./preview/html.js";
+export * from "./serialize/index.js";

@@ -1,6 +1,6 @@
 /** Document input convention (PRD §5.4) + path/size hygiene (NFR-5). */
-import { readFileSync, statSync } from "node:fs";
-import { extname, isAbsolute, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { dirname, extname, isAbsolute, resolve } from "node:path";
 import { z } from "zod";
 
 export const DEFAULT_MAX_MB = 20;
@@ -100,4 +100,27 @@ export function resolveInput(input: DocumentInput): { bytes: Uint8Array; label: 
     bytes: new Uint8Array(Buffer.from(b64, "base64")),
     label: `<${input.content_type ?? "base64 content"}>`,
   };
+}
+
+/** Output-path hygiene shared by the writing tools: absolute, expected extension, no silent overwrite. */
+export function resolveOutputPath(p: string, allowedExt: string[], overwrite: boolean): string {
+  if (!isAbsolute(p)) throw new ToolError(`output_path must be absolute (got "${p}").`);
+  const abs = resolve(p);
+  const ext = extname(abs).toLowerCase();
+  if (!allowedExt.includes(ext))
+    throw new ToolError(
+      `output_path must end in ${allowedExt.join(" or ")} for this target (got "${ext || "no extension"}").`,
+    );
+  if (existsSync(abs) && !overwrite)
+    throw new ToolError(`output_path already exists: ${abs}. Pass overwrite=true to replace it.`);
+  return abs;
+}
+
+export function writeOutput(abs: string, content: string): void {
+  try {
+    mkdirSync(dirname(abs), { recursive: true });
+    writeFileSync(abs, content, "utf8");
+  } catch (e) {
+    throw new ToolError(`Could not write ${abs}: ${e instanceof Error ? e.message : String(e)}`);
+  }
 }

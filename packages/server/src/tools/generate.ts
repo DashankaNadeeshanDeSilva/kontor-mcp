@@ -1,8 +1,6 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { dirname, extname, isAbsolute, resolve } from "node:path";
 import { enrichFinding, generateInvoice, InvoiceInputSchema } from "@kontor-mcp/core";
 import { z } from "zod";
-import { type Lang, LangSchema, ToolError } from "../input.js";
+import { type Lang, LangSchema, resolveOutputPath, writeOutput } from "../input.js";
 import { DISCLAIMER, toToolError } from "./shared.js";
 import { FindingSchema } from "./validate.js";
 
@@ -51,22 +49,12 @@ export const GenerateOutputSchema = z.object({
 });
 export type GenerateOutput = z.infer<typeof GenerateOutputSchema>;
 
-function resolveOutputPath(p: string, overwrite: boolean): string {
-  if (!isAbsolute(p)) throw new ToolError(`output_path must be absolute (got "${p}").`);
-  const abs = resolve(p);
-  if (extname(abs).toLowerCase() !== ".xml")
-    throw new ToolError(`output_path must end in .xml (got "${extname(abs)}").`);
-  if (existsSync(abs) && !overwrite)
-    throw new ToolError(`output_path already exists: ${abs}. Pass overwrite=true to replace it.`);
-  return abs;
-}
-
 export async function runGenerate(
   input: z.infer<typeof GenerateInputSchema>,
 ): Promise<{ output: GenerateOutput; text: string }> {
   // Resolve the target first so a bad path fails before any work is done.
   const target = input.output_path
-    ? resolveOutputPath(input.output_path, input.overwrite)
+    ? resolveOutputPath(input.output_path, [".xml"], input.overwrite)
     : undefined;
   let r: Awaited<ReturnType<typeof generateInvoice>>;
   try {
@@ -94,14 +82,7 @@ export async function runGenerate(
     disclaimer: DISCLAIMER[input.lang],
   };
   if (target) {
-    try {
-      mkdirSync(dirname(target), { recursive: true });
-      writeFileSync(target, r.xml, "utf8");
-    } catch (e) {
-      throw new ToolError(
-        `Could not write ${target}: ${e instanceof Error ? e.message : String(e)}`,
-      );
-    }
+    writeOutput(target, r.xml);
     output.writtenTo = target;
   }
   return { output, text: summarize(output, input.lang, r.model.number, r.model.currency) };
