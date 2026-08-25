@@ -25,6 +25,7 @@ Retrieval date for all entries below: **2026-08-25**.
 | id | Artifact | Version | Source | License | sha256 |
 |---|---|---|---|---|---|
 | `kosit-validator` | KoSIT validator standalone JAR (conformance oracle) | 1.6.3 | https://github.com/itplr-kosit/validator/releases/tag/v1.6.3 | Apache-2.0 | `799e64be…7a9c9` |
+| `mustang-cli` | Mustang CLI (ZUGFeRD/Factur-X validator; second PDF checker) | 2.26.0 | https://github.com/ZUGFeRD/mustangproject/releases/tag/core-2.26.0 | Apache-2.0 | `42d7868c…9736` |
 | `schxslt-cli` | SchXslt CLI (Schematron → XSLT compiler) | 1.10.1 | https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.10.1/ | MIT | `cefb6c45…171a` |
 
 Full checksums live in `tools/artifacts.manifest.json`.

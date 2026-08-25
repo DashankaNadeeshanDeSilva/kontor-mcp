@@ -20,12 +20,17 @@
     "artifacts": "tsx tools/fetch-artifacts.ts",
     "spike:sef": "sh tools/compile-sef.sh",
     "spike:saxon": "tsx tools/spike-saxon.ts",
-    "oracle": "tsx tools/oracle.ts"
+    "oracle": "tsx tools/oracle.ts",
+    "verapdf": "sh tools/verapdf.sh",
+    "spike:pdfa3": "tsx tools/spike-pdfa3.ts",
+    "mustang": "sh tools/mustang.sh"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
+    "@pdf-lib/fontkit": "^1.1.1",
     "@types/node": "^22.0.0",
     "fflate": "^0.8.3",
+    "pdf-lib": "^1.17.1",
     "saxon-js": "^2.7.0",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
