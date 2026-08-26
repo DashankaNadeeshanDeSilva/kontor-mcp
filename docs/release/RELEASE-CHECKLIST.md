@@ -59,9 +59,9 @@ From a clean machine (AC): `npx -y @modelcontextprotocol/inspector@latest --cli 
 brew install mcp-publisher            # or the curl one-liner in the registry quickstart
 cd packages/server
 mcp-publisher validate                # server.json
-mcp-publisher login github            # device flow; namespace io.github.dashankanadeeshandesilva/
+mcp-publisher login github            # device flow; namespace io.github.DashankaNadeeshanDeSilva/
 mcp-publisher publish
-curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.dashankanadeeshandesilva/kontor-mcp"
+curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp"
 ```
 
 ## IRREVERSIBLE — 5. Smithery and mcpmarket

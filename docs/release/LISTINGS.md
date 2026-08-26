@@ -16,7 +16,7 @@ e-invoice · XRechnung · ZUGFeRD · Factur-X · EN 16931 · KoSIT · accounts p
 
 ## Official MCP Registry
 
-`packages/server/server.json` (name `io.github.dashankanadeeshandesilva/kontor-mcp`, npm package `@kontor-mcp/server`, OCI image on GHCR). Publish with `mcp-publisher` — see `RELEASE-CHECKLIST.md` §4.
+`packages/server/server.json` (name `io.github.DashankaNadeeshanDeSilva/kontor-mcp`, npm package `@kontor-mcp/server`, OCI image on GHCR). Publish with `mcp-publisher` — see `RELEASE-CHECKLIST.md` §4.
 
 ## Smithery
 

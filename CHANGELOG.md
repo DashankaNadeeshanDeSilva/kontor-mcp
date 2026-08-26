@@ -4,6 +4,10 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+## [1.0.3] — 2026-08-26
+
+- MCP Registry name is case-sensitive and follows the GitHub login: `io.github.DashankaNadeeshanDeSilva/kontor-mcp` (was lowercase). `mcpName` in `@kontor-mcp/server` and `server.json` updated; no functional change.
+
 ## [1.0.2] — 2026-08-26
 
 - Release workflow: the GHCR image is now tagged with the plain version (`:1.0.2`, previously `:v1.0.1`) so it matches `server.json`'s OCI entry and Docker convention; the tag guard also checks `server.json`.

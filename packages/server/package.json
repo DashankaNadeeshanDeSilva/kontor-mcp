@@ -1,8 +1,8 @@
 {
   "name": "@kontor-mcp/server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Kontor MCP server — sovereign e-invoice tools for AI agents over stdio and Streamable HTTP",
-  "mcpName": "io.github.dashankanadeeshandesilva/kontor-mcp",
+  "mcpName": "io.github.DashankaNadeeshanDeSilva/kontor-mcp",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
