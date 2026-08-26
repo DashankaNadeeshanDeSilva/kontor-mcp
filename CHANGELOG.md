@@ -4,6 +4,11 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+## [1.0.2] — 2026-08-26
+
+- Release workflow: the GHCR image is now tagged with the plain version (`:1.0.2`, previously `:v1.0.1`) so it matches `server.json`'s OCI entry and Docker convention; the tag guard also checks `server.json`.
+- `tools/bump-version.sh X.Y.Z` bumps all nine version sites; `packages/server/test/version-sync.test.ts` fails CI if they disagree.
+
 ## [1.0.1] — 2026-08-26
 
 - First release published by the tag-triggered workflow (npm trusted publishing via OIDC + provenance, GHCR image, GitHub release). 1.0.0 was published manually from a maintainer machine to create the packages; no functional changes.

@@ -76,5 +76,5 @@ curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.das
 
 ## 7. After the release
 
-- `git checkout -b chore/post-1.0 && bump packages to 1.0.1-0`? No — keep 1.0.0 until the next change; add entries under `## [Unreleased]`.
+- Next release: `sh tools/bump-version.sh X.Y.Z` (all nine version sites), move `## [Unreleased]` entries under `## [X.Y.Z] — date`, commit, `git tag -a vX.Y.Z -m vX.Y.Z && git push origin main vX.Y.Z`. The image is tagged `:X.Y.Z` (no `v`) and `:latest`.
 - Update `docs/HANDOFF-*.md` state and close Phase 3 in `docs/IMPLEMENTATION_PLAN.md`.

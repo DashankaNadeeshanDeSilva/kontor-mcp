@@ -39,6 +39,7 @@ jobs:
           grep -q "SERVER_VERSION = \"$tag\"" packages/server/src/server-meta.ts
           grep -q "CLIENT_VERSION = \"$tag\"" packages/client/src/connect.ts
           grep -q "^## \[$tag\]" CHANGELOG.md
+          node -e "const s=require('./packages/server/server.json'); const vs=[s.version,...s.packages.map(p=>p.version)]; if(vs.some(v=>v!=='$tag')){console.error('server.json versions',vs);process.exit(1)}"
       - uses: actions/cache@v4
         with:
           path: fixtures/_downloads
@@ -85,13 +86,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image tag = version without the v prefix (matches server.json's OCI entry)
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
       - uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/dashankanadeeshandesilva/kontor-mcp:${{ github.ref_name }}
+            ghcr.io/dashankanadeeshandesilva/kontor-mcp:${{ env.VERSION }}
             ghcr.io/dashankanadeeshandesilva/kontor-mcp:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

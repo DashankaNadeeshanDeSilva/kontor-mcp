@@ -1,5 +1,5 @@
 export const SERVER_NAME = "kontor-mcp" as const;
-export const SERVER_VERSION = "1.0.1";
+export const SERVER_VERSION = "1.0.2";
 
 /** One line per tool, also reported by list_capabilities. */
 export const TOOL_SUMMARY: Array<{ name: string; readOnly: boolean; summary: string }> = [
