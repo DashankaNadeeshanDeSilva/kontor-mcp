@@ -153,7 +153,7 @@ jobs:
       - name: Licence inventory must match docs/LICENSES.md
         run: pnpm licenses:check
       - run: pnpm build
-      - name: Pack check (publishable tarballs: contents + size)
+      - name: Pack check (publishable tarballs, contents + size)
         run: sh tools/pack-check.sh
       - name: Sovereignty (no-network guard) and hardening suites
         run: |
