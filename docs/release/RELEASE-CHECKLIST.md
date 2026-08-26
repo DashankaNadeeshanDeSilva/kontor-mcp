@@ -59,7 +59,7 @@ From a clean machine (AC): `npx -y @modelcontextprotocol/inspector@latest --cli 
 brew install mcp-publisher            # or the curl one-liner in the registry quickstart
 cd packages/server
 mcp-publisher validate                # server.json
-mcp-publisher login github            # device flow; namespace io.github.DashankaNadeeshanDeSilva/
+mcp-publisher login github            # device flow; namespace io.github.DashankaNadeeshanDeSilva/ (case-sensitive = GitHub login); token expires in < 1 h — log in right before publish. Repeat after EVERY release.
 mcp-publisher publish
 curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp"
 ```
