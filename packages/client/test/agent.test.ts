@@ -44,6 +44,13 @@ describe("kontor-agent connection layer", () => {
     expect(stdio.transport).toBe("stdio");
     expect(remote.transport).toBe("http");
   });
+  it("closing an HTTP connection terminates the server session (DELETE)", async () => {
+    const before = http.sessionCount();
+    const extra = await connect({ url: `http://127.0.0.1:${http.port}/mcp`, token: TOKEN });
+    expect(http.sessionCount()).toBe(before + 1);
+    await extra.close();
+    expect(http.sessionCount()).toBe(before);
+  });
   it("HTTP with a wrong token fails clearly", async () => {
     await expect(
       connect({ url: `http://127.0.0.1:${http.port}/mcp`, token: "wrong-token-0123456789" }),

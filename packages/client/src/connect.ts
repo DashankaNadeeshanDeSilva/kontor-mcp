@@ -43,7 +43,16 @@ export async function connect(opts: ConnectOptions): Promise<Connection> {
     });
     // Cast: the class's optional-getter types trip exactOptionalPropertyTypes; it is a Transport.
     await client.connect(transport as Transport);
-    return { client, transport: "http", target: opts.url, close: () => client.close() };
+    return {
+      client,
+      transport: "http",
+      target: opts.url,
+      // Be a good citizen: DELETE the session so the server frees it immediately.
+      close: async () => {
+        await transport.terminateSession().catch(() => {});
+        await client.close();
+      },
+    };
   }
   const argv = opts.stdio?.length ? opts.stdio : [process.execPath, serverBinPath()];
   const [command, ...args] = argv as [string, ...string[]];
