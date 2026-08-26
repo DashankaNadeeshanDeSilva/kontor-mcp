@@ -13,6 +13,16 @@ Kontor MCP processes invoices — documents that carry personal and business dat
 - **Container:** multi-stage image on `node:22-alpine`, runs as the unprivileged `node` user, no shell tooling beyond the base image, refuses to start without a token; the compose example adds `read_only`, `cap_drop: ALL` and `no-new-privileges`.
 - **Supply chain:** exact dependency versions, `pnpm install --frozen-lockfile` in CI, no native compilation.
 
+## How we prove it
+
+| Claim | Proof (runs in CI on every push) |
+|---|---|
+| No outbound network, ever | `packages/core/test/sovereignty.test.ts` patches every outbound path Node has (sockets, TLS, DNS, http/https clients, `fetch`) to record-and-throw, then runs validate/audit/generate (incl. PDF/A-3)/convert/obligations; `packages/server/test/sovereignty.test.ts` does the same for **every** MCP tool, resource and prompt; a static scan asserts no runtime source imports a network module except the inbound HTTP host. The Docker job additionally runs a full `audit_invoice` in a container started with `--network none`. |
+| XML hardening | `packages/core/test/xml-load.test.ts` + `packages/server/test/security.test.ts`: external-entity XXE, parameter-entity XXE, billion laughs, 5 000-level nesting, oversized input — all rejected as `KONTOR-XML-*` findings/tool errors within bounded time. |
+| Path hygiene | traversal, relative paths, directories, special files (`/dev/null`), wrong extensions, a `.xml` symlink to a secret — rejected, and the error text never echoes file contents or a stack trace. `output_path`: never overwrites without `overwrite=true`, never a directory or a wrong extension; parent directories are created (same privilege as writing the file). |
+| PDF hardening | encrypted PDF, fake PDF, garbage → clean errors; embedded streams are inflated with a hard cap (`KONTOR-PDF-DECOMPRESS-SIZE`). |
+| Supply chain | `pnpm audit --prod --audit-level high` and a generated licence inventory (`docs/LICENSES.md`, `pnpm licenses:check`) — an unreviewed or non-allow-listed licence fails the build. |
+
 ## Supported versions
 
 The latest tagged release and `main`.

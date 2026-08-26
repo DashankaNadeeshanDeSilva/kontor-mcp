@@ -106,7 +106,7 @@ Resources: `kontor://samples/{name}`, `kontor://reference/rules`, `kontor://refe
 
 | Claim | Proof |
 |---|---|
-| No network at runtime | No HTTP client in the dependency tree; every rule set, schema, code list and legal fact is bundled in `@kontor-mcp/rules` with [provenance and checksums](packages/rules/PROVENANCE.md). A network-guard test is part of the Phase 3 security pass. |
+| No network at runtime | Every rule set, schema, code list and legal fact is bundled in `@kontor-mcp/rules` with [provenance and checksums](packages/rules/PROVENANCE.md). Proven by [`sovereignty.test.ts`](packages/core/test/sovereignty.test.ts): all outbound paths (sockets, DNS, TLS, http/https, `fetch`) are blocked and recorded while every tool, resource and prompt runs — zero attempts; a static scan allows a network import only in the inbound HTTP host; CI also runs a full audit in a `--network none` container. See [SECURITY.md](SECURITY.md#how-we-prove-it). |
 | No Java, no native code | Schematron is compiled at build time and executed with Saxon-JS; XSD via `xmllint-wasm`; PDF via `pdf-lib`. Java is used only by the development-time oracles (KoSIT validator, veraPDF, Mustang) in CI. |
 | Nothing stored, nothing logged | The server is stateless; invoice contents never reach a log (`KONTOR_LOG_PAYLOADS` defaults to off). |
 | The verdicts are the official ones | [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md): 89/89 files of the official XRechnung test suite with identical verdicts *and* identical findings vs the KoSIT validator, replayed on every CI run. |

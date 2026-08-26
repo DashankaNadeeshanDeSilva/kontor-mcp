@@ -28,7 +28,9 @@
     "spike:pdfa3": "tsx tools/spike-pdfa3.ts",
     "mustang": "sh tools/mustang.sh",
     "samples:zugferd": "tsx tools/gen-zugferd-samples.ts",
-    "check:zugferd": "sh tools/check-zugferd-samples.sh"
+    "check:zugferd": "sh tools/check-zugferd-samples.sh",
+    "licenses:build": "tsx tools/licenses.ts",
+    "licenses:check": "tsx tools/licenses.ts --check"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",

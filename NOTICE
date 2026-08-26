@@ -21,10 +21,18 @@ This distribution bundles third-party components under their own licences
   and embedded without restriction per the ICC terms
   (packages/rules/pdf/LICENSE-sRGB2014.txt).
 
-Runtime libraries (see each package.json): pdf-lib and @pdf-lib/fontkit (MIT),
-Saxon-JS (Mozilla Public License 2.0), xmllint-wasm (MIT), @xmldom/xmldom
-(MIT), decimal.js (MIT), ibantools (MPL-2.0), zod (MIT),
-@modelcontextprotocol/sdk (MIT).
+Runtime libraries (complete generated inventory: docs/LICENSES.md): pdf-lib and
+@pdf-lib/fontkit (MIT), xmllint-wasm (MIT), @xmldom/xmldom (MIT), decimal.js
+(MIT), ibantools (MPL-2.0), zod (MIT), @modelcontextprotocol/sdk (MIT), express
+(MIT), @anthropic-ai/sdk (MIT), commander (MIT).
+
+- Saxon-JS 2.7.0 — Copyright Saxonica Ltd. Distributed under the Saxonica
+  Saxon-JS licence (node_modules/saxon-js/LICENSE.txt): redistribution in
+  binary form, without modification, as part of an application is permitted
+  provided this copyright notice and the licence's disclaimer are reproduced;
+  no reverse engineering. Kontor MCP bundles it unmodified and executes
+  pre-compiled SEF stylesheets with it. THE SOFTWARE IS PROVIDED BY SAXONICA
+  "AS IS" WITHOUT WARRANTY OF ANY KIND, as stated in that licence.
 
 Sample invoices under packages/server/samples and fixtures/ come from the
 KoSIT test suite (Apache-2.0), the ZUGFeRD/Factur-X community corpora and

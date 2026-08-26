@@ -81,6 +81,27 @@ jobs:
           VERAPDF: /opt/verapdf/verapdf
           KONTOR_JAVA: java
 
+  security:
+    name: Security (audit, licences, sovereignty + hardening suites)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Dependency audit (runtime tree, high+)
+        run: pnpm audit --prod --audit-level high
+      - name: Licence inventory must match docs/LICENSES.md
+        run: pnpm licenses:check
+      - run: pnpm build
+      - name: Sovereignty (no-network guard) and hardening suites
+        run: |
+          pnpm --filter @kontor-mcp/core exec vitest run test/sovereignty.test.ts
+          pnpm --filter @kontor-mcp/server exec vitest run test/sovereignty.test.ts test/security.test.ts
+
   docker:
     name: Docker image (amd64+arm64 build, HTTP smoke via Inspector)
     runs-on: ubuntu-latest
@@ -136,6 +157,11 @@ jobs:
           npx -y @modelcontextprotocol/inspector@latest --cli http://127.0.0.1:3333/mcp --transport http --header "$H" \
             --method tools/call --tool-name validate_invoice --tool-arg file_path=/app/samples/broken-missing-buyer-reference.xml > broken.json
           jq -e '.structuredContent.verdict == "invalid"' broken.json
+      - name: Full audit inside a container with NO network at all (stdio, --network none)
+        run: |
+          npx -y @modelcontextprotocol/inspector@latest --cli sh tools/docker-stdio-offline.sh kontor-mcp:ci \
+            --method tools/call --tool-name audit_invoice --tool-arg file_path=/app/samples/valid-zugferd-en16931.pdf > offline.json
+          jq -e '.structuredContent.recommendation == "accept"' offline.json
       - name: Graceful shutdown on SIGTERM
         if: always()
         run: |
