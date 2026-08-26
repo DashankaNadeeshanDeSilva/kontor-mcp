@@ -7,14 +7,14 @@
     "url": "https://github.com/DashankaNadeeshanDeSilva/kontor-mcp",
     "source": "github"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "websiteUrl": "https://github.com/DashankaNadeeshanDeSilva/kontor-mcp#readme",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@kontor-mcp/server",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
@@ -38,9 +38,7 @@
     },
     {
       "registryType": "oci",
-      "registryBaseUrl": "https://ghcr.io",
-      "identifier": "ghcr.io/dashankanadeeshandesilva/kontor-mcp",
-      "version": "1.0.3",
+      "identifier": "ghcr.io/dashankanadeeshandesilva/kontor-mcp:1.0.4",
       "transport": {
         "type": "streamable-http",
         "url": "http://127.0.0.1:3333/mcp"

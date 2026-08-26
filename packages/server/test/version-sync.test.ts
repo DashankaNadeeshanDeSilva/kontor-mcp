@@ -15,11 +15,13 @@ describe("version sites agree (bump with tools/bump-version.sh)", () => {
   }
   const meta = json("packages/server/server.json") as {
     version: string;
-    packages: { version: string }[];
+    packages: { registryType: string; version?: string; identifier: string }[];
   };
   sites["server.json#version"] = meta.version;
   meta.packages.forEach((pkg, i) => {
-    sites[`server.json#packages[${i}]`] = pkg.version;
+    // OCI entries carry the version as the image tag in the identifier (registry rule); others in `version`.
+    sites[`server.json#packages[${i}]`] =
+      pkg.registryType === "oci" ? (pkg.identifier.split(":")[1] ?? "") : (pkg.version ?? "");
   });
   sites["SERVER_VERSION"] = SERVER_VERSION;
   sites["CLIENT_VERSION"] =

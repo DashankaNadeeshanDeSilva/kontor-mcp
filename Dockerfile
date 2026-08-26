@@ -23,7 +23,8 @@ RUN pnpm build \
 
 # ---------- runtime: non-root, HTTP on 0.0.0.0:3333, token required ----------
 FROM ${NODE_IMAGE} AS runtime
-LABEL org.opencontainers.image.title="Kontor MCP" \
+LABEL io.modelcontextprotocol.server.name="io.github.DashankaNadeeshanDeSilva/kontor-mcp" \
+      org.opencontainers.image.title="Kontor MCP" \
       org.opencontainers.image.description="Sovereign e-invoice tools (XRechnung/ZUGFeRD) for AI agents — MCP over Streamable HTTP" \
       org.opencontainers.image.source="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp" \
       org.opencontainers.image.licenses="Apache-2.0"
