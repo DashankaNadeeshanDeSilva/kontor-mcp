@@ -30,7 +30,10 @@
     "samples:zugferd": "tsx tools/gen-zugferd-samples.ts",
     "check:zugferd": "sh tools/check-zugferd-samples.sh",
     "licenses:build": "tsx tools/licenses.ts",
-    "licenses:check": "tsx tools/licenses.ts --check"
+    "licenses:check": "tsx tools/licenses.ts --check",
+    "conformance": "tsx tools/oracle.ts --diff --report docs/conformance/latest.json fixtures/spike fixtures/_downloads/xrechnung-testsuite/instances",
+    "conformance:report": "tsx tools/conformance-report.ts",
+    "conformance:check": "tsx tools/conformance-report.ts --check"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",

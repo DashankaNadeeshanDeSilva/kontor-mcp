@@ -26,7 +26,7 @@ Die Rechnung ist abzulehnen: …
   [3 412 in / 388 out · stop=end_turn]
 ```
 
-Defaults: `claude-sonnet-5` (`--model claude-opus-5` for the larger model), adaptive thinking, effort `high`, 20 tool rounds per message, streaming; the server-side refusal fallback is enabled when an Opus 5 / Fable 5 model is selected. Interactive mode keeps the full exchange (including tool calls) as history; an empty line or Ctrl-D ends the session.
+Defaults: `claude-sonnet-5` (`--model claude-opus-5` recommended for hard cases — ambiguous multi-invoice questions, long reasoning over many findings), adaptive thinking, effort `high`, 20 tool rounds per message, streaming; the server-side refusal fallback is enabled when an Opus 5 / Fable 5 model is selected. Interactive mode keeps the full exchange (including tool calls) as history; an empty line or Ctrl-D ends the session.
 
 **Sovereignty note:** the Kontor *server* never touches the network. `chat` is the optional client that talks to Anthropic — what leaves your machine is exactly the tool schemas, your messages and the tool results shown in the trace. `tools` and `audit` send nothing anywhere.
 

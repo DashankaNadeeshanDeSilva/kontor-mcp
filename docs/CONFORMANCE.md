@@ -11,14 +11,19 @@ How closely Kontor's pure-TypeScript validation engine matches the official **Ko
 | Scenario model | `scenarios.json` projection of `scenarios.xml` incl. `customLevel` (D-017, D-029) | `scenarios.xml` |
 | Patches | D-019: BR-DE-19 IBAN mod-97 computed in `xs:decimal` (Saxon-JS `xs:integer` > 2^53 is inexact) | none |
 
-## Corpus and result (2026-08-25)
+## Corpus and result
 
-Command: `pnpm artifacts && pnpm oracle --diff fixtures/spike fixtures/_downloads/xrechnung-testsuite/instances` (needs Java 17+).
+Command: `pnpm conformance` (= `pnpm artifacts && pnpm oracle --diff --report docs/conformance/latest.json fixtures/spike fixtures/_downloads/xrechnung-testsuite/instances`, needs Java 17+), then `pnpm conformance:report` to render the table below and the README badge from `docs/conformance/latest.json`.
+
+<!-- conformance:begin -->
+Last oracle run: 2026-08-26 (validator-1.6.3-standalone.jar, `pnpm oracle --diff --report`). Thresholds (PRD S1): verdict parity 100 %, finding parity 100 % — enforced by the CI job `conformance` on every change to `packages/core`, `packages/rules` or the artefact manifest.
 
 | Corpus | Files | Verdict parity | Finding parity (rule id + effective level) |
 |---|---|---|---|
-| Official XRechnung 3.0.2 test suite (standard, extension, technical-cases/cius, technical-cases/cvd) | 86 | **86/86** | **86/86** |
-| Kontor spike fixtures (valid UBL, valid CII, UBL without BuyerReference) | 3 | **3/3** | **3/3** |
+| Official XRechnung test suite (standard, extension, technical-cases) | 86 | **86/86** | **86/86** |
+| Kontor spike fixtures | 3 | **3/3** | **3/3** |
+| **Total** | **89** | **89/89** | **89/89** |
+<!-- conformance:end -->
 
 Notes:
 

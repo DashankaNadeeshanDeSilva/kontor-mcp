@@ -3,13 +3,22 @@
  *
  *   pnpm oracle <file|dir>…            print normalized oracle findings (JSON with --json)
  *   pnpm oracle --diff <file|dir>…     also run the Kontor core engine (core/src/validate) and diff verdicts + finding sets (rule id + level)
+ *   pnpm oracle --diff --report <json> <file|dir>…   additionally write a machine-readable parity report (CI conformance gate, Task 3.5)
  *
  * Env: KONTOR_JAVA (path to java binary) overrides PATH lookup.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join, resolve } from "node:path";
+import { basename, join, relative, resolve } from "node:path";
 import { validateInvoice } from "../packages/core/src/validate/index.js";
 import { loadScenarios } from "../packages/rules/src/index.js";
 
@@ -23,6 +32,23 @@ export interface OracleFinding {
   location: string;
   message: string;
 }
+/** Machine-readable parity report consumed by tools/conformance-report.ts. */
+export interface ConformanceReport {
+  generatedAt: string;
+  validatorJar: string;
+  files: Array<{
+    file: string;
+    scenario: string;
+    oracleVerdict: "accept" | "reject" | "unknown";
+    kontorVerdict: "accept" | "reject";
+    verdictOk: boolean;
+    findingsOk: boolean;
+    onlyOracle: string[];
+    onlyOurs: string[];
+    ms: number;
+  }>;
+}
+
 export interface OracleResult {
   file: string;
   verdict: "accept" | "reject" | "unknown";
@@ -97,7 +123,10 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const diff = args.includes("--diff");
   const json = args.includes("--json");
-  const files = collectXml(args.filter((a) => !a.startsWith("--")));
+  const reportIdx = args.indexOf("--report");
+  const reportPath = reportIdx >= 0 ? args[reportIdx + 1] : undefined;
+  const positional = args.filter((a, i) => !a.startsWith("--") && i !== reportIdx + 1);
+  const files = collectXml(positional);
   if (!files.length) {
     console.error("usage: pnpm oracle [--diff] [--json] <file|dir>…");
     process.exit(2);
@@ -108,6 +137,11 @@ async function main(): Promise<void> {
     return;
   }
   let mismatches = 0;
+  const report: ConformanceReport = {
+    generatedAt: new Date().toISOString(),
+    validatorJar: basename(JAR),
+    files: [],
+  };
   for (const r of results) {
     const name = basename(r.file);
     if (!diff) {
@@ -133,12 +167,27 @@ async function main(): Promise<void> {
     const verdictOk = ourVerdict === r.verdict;
     const idsOk = onlyOracle.length === 0 && onlyOurs.length === 0;
     if (!verdictOk || !idsOk) mismatches++;
+    report.files.push({
+      file: relative(process.cwd(), r.file).split("\\").join("/"),
+      scenario: r.scenario,
+      oracleVerdict: r.verdict,
+      kontorVerdict: ourVerdict,
+      verdictOk,
+      findingsOk: idsOk,
+      onlyOracle,
+      onlyOurs,
+      ms: Math.round(ms),
+    });
     console.log(
       `${verdictOk ? "✓" : "✗"} ${name}: oracle=${r.verdict} kontor=${ourVerdict} findings=${idsOk ? "same" : `oracle-only[${onlyOracle}] kontor-only[${onlyOurs}]`} (${ms.toFixed(0)} ms)`,
     );
   }
   if (diff) {
     console.log(`\n${results.length - mismatches}/${results.length} files agree`);
+    if (reportPath) {
+      writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+      console.log(`report written to ${reportPath}`);
+    }
     if (mismatches) process.exit(1);
   }
 }
