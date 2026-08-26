@@ -4,6 +4,8 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+- Landing page (`site/`, deployed to GitHub Pages by `.github/workflows/pages.yml`): declaration-of-conformity layout with a live Official MCP Registry seal, tools, install, evidence, security and standards annexes. README badges for npm, the MCP Registry and the site.
+
 ## [1.0.4] — 2026-08-26
 
 - MCP Registry listing: `server.json` OCI entry now uses the canonical `ghcr.io/…/kontor-mcp:<version>` identifier (no `registryBaseUrl`/`version`), and the image carries the `io.modelcontextprotocol.server.name` label the registry requires for ownership. `tools/bump-version.sh` and the version-sync test cover the image tag. No functional change.

@@ -13,3 +13,4 @@ fixtures/_downloads/
 
 # raw screen recordings (keep only derived mp4/gif in the repo)
 docs/media/*.mov
+PRODUCT.md

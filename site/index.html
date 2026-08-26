@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kontor MCP — Declaration of Conformity</title>
+<meta name="description" content="Kontor MCP: an open-source, fully offline MCP server for German/EU e-invoicing (XRechnung, ZUGFeRD, EN 16931). Listed in the Official MCP Registry, published on npm with provenance, 89/89 KoSIT conformance.">
+<meta property="og:title" content="Kontor MCP — Declaration of Conformity">
+<meta property="og:description" content="Offline e-invoice tools for AI agents. Listed in the Official MCP Registry. 89/89 KoSIT conformance. Zero network calls.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dashankanadeeshandesilva.github.io/kontor-mcp/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23b3231f' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23b3231f' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ffffff;
+    --paper-2: #f6f6f4;
+    --ink: #141414;
+    --ink-2: #4a4a48;
+    --ink-3: #7a7a77;
+    --rule: #d9d9d5;
+    --rule-strong: #141414;
+    --seal: #b3231f;
+    --seal-ink: #8e1a17;
+    --pass: #1f6b3a;
+    --pass-bg: #edf6ef;
+    --sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --measure: 68ch;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper-2); color: var(--ink);
+    font-family: var(--sans); font-size: 17px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--seal); color: #fff; }
+  a { color: inherit; text-decoration: underline; text-underline-offset: 0.16em; text-decoration-thickness: 1px; }
+  a:hover { color: var(--seal-ink); }
+  :focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; border-radius: 2px; }
+  code, pre, .mono { font-family: var(--mono); font-size: 0.86em; }
+  h1, h2, h3 { font-weight: 500; letter-spacing: -0.01em; line-height: 1.12; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--serif); font-size: clamp(2rem, 3.2vw, 2.8rem); font-weight: 400; }
+  h3 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); font-weight: 600; }
+  p { margin: 0; max-width: var(--measure); }
+  p + p { margin-top: 0.9em; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* the document */
+  .doc { max-width: 1120px; margin: 0 auto; padding: 0 24px 96px; }
+  .sheet {
+    background: var(--paper); border: 1px solid var(--rule); border-top: 0;
+    padding: clamp(28px, 4vw, 56px) clamp(20px, 5vw, 72px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -24px rgba(20,20,20,0.25);
+  }
+  .sheet + .sheet { margin-top: 0; }
+  .sheet:first-of-type { border-top: 1px solid var(--rule); margin-top: 32px; }
+
+  /* masthead */
+  .masthead {
+    display: grid; grid-template-columns: 1fr auto; gap: 16px 32px; align-items: end;
+    padding-bottom: 20px; border-bottom: 2px solid var(--rule-strong);
+    font-size: 0.86rem; color: var(--ink-2);
+  }
+  .masthead .brand { font-family: var(--serif); font-size: 1.6rem; color: var(--ink); letter-spacing: 0; }
+  .masthead .brand span { color: var(--ink-3); font-family: var(--sans); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 12px; vertical-align: middle; }
+  .masthead dl { display: grid; grid-template-columns: auto auto; gap: 2px 14px; margin: 0; text-align: right; }
+  .masthead dt { color: var(--ink-3); }
+  .masthead dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* hero: declaration */
+  .declaration { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; padding-top: 44px; align-items: start; }
+  .declaration h1 { font-family: var(--serif); font-size: clamp(2.6rem, 5.4vw, 4.6rem); font-weight: 400; letter-spacing: -0.015em; line-height: 1.02; }
+  .declaration h1 em { font-style: italic; color: var(--seal-ink); }
+  .declaration .de { font-family: var(--serif); font-style: italic; color: var(--ink-3); font-size: 1.15rem; margin-top: 10px; }
+  .declaration .lede { font-size: 1.22rem; line-height: 1.5; margin-top: 28px; max-width: 58ch; }
+  .declaration .lede strong { font-weight: 600; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px;
+    background: var(--ink); color: #fff; text-decoration: none; font-weight: 600; font-size: 0.98rem;
+    border: 1px solid var(--ink); border-radius: 3px; transition: background 160ms ease-out, transform 160ms cubic-bezier(.2,.8,.2,1);
+  }
+  .btn:hover { background: #000; color: #fff; transform: translateY(-1px); }
+  .btn svg { width: 18px; height: 18px; fill: currentColor; }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--paper-2); color: var(--ink); }
+
+  /* the seal */
+  .seal-block { justify-self: end; text-align: center; width: 300px; }
+  .seal { position: relative; width: 240px; height: 240px; margin: 0 auto; }
+  .seal svg { width: 100%; height: 100%; display: block; }
+  .seal .inner { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; pointer-events: none; }
+  .seal .inner .k { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--seal-ink); font-weight: 600; }
+  .seal .inner .v { font-family: var(--serif); font-size: 1.55rem; color: var(--seal-ink); line-height: 1; }
+  .seal .inner .s { font-size: 0.74rem; color: var(--seal-ink); font-variant-numeric: tabular-nums; }
+  .seal-block figcaption { font-size: 0.82rem; color: var(--ink-2); margin-top: 14px; line-height: 1.45; }
+  .seal-block figcaption a { white-space: nowrap; }
+  .seal-block .live { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-top: 8px; }
+  .seal-block .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); display: inline-block; }
+  .seal-block .live.ok i { background: var(--pass); box-shadow: 0 0 0 3px var(--pass-bg); }
+  @keyframes stamp { 0% { transform: scale(1.18) rotate(-9deg); opacity: 0; filter: blur(2px); } 60% { transform: scale(0.98) rotate(-6deg); opacity: 1; filter: blur(0); } 100% { transform: scale(1) rotate(-6deg); } }
+  .seal { transform: rotate(-6deg); animation: stamp 700ms cubic-bezier(.2,.9,.25,1) 250ms both; }
+  @media (prefers-reduced-motion: reduce) { .seal { animation: none; } .btn { transition: none; } }
+
+  /* attestation table */
+  .attest { margin-top: 56px; border-top: 2px solid var(--rule-strong); }
+  .attest h3 { padding: 14px 0 6px; }
+  .attest ol { list-style: none; margin: 0; padding: 0; counter-reset: cl; }
+  .attest li {
+    counter-increment: cl; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 8px 20px;
+    padding: 16px 0; border-top: 1px solid var(--rule); align-items: baseline;
+  }
+  .attest li::before { content: counter(cl, decimal-leading-zero); font-variant-numeric: tabular-nums; color: var(--ink-3); font-size: 0.9rem; }
+  .attest .claim { font-weight: 600; }
+  .attest .claim small { display: block; font-weight: 400; color: var(--ink-2); font-size: 0.92rem; margin-top: 2px; max-width: 64ch; }
+  .attest .proof { font-size: 0.9rem; color: var(--ink-2); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .attest .proof b { color: var(--pass); font-weight: 600; }
+
+  /* generic sections */
+  .sheet > header { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 28px; }
+  .sheet > header .no { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px 56px; align-items: start; }
+  .cols > * { min-width: 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-top: 1px solid var(--rule); }
+  thead th { border-top: 2px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); font-weight: 600; }
+  td.num, th.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td code { white-space: nowrap; }
+  .tag { display: inline-block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border: 1px solid var(--rule); border-radius: 2px; color: var(--ink-2); }
+  .tag.w { border-color: var(--seal); color: var(--seal-ink); }
+
+  /* timeline */
+  .timeline { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule-strong); }
+  .timeline li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; padding: 14px 0; border-top: 1px solid var(--rule); }
+  .timeline time { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .timeline li.now time { color: var(--seal-ink); }
+  .timeline small { display: block; color: var(--ink-2); font-size: 0.9rem; margin-top: 2px; }
+
+  /* code blocks */
+  pre {
+    margin: 0; padding: 14px 16px; background: var(--ink); color: #f2f2ee; border-radius: 3px;
+    overflow-x: auto; line-height: 1.5; font-size: 0.84rem; position: relative;
+  }
+  pre code { font-size: inherit; }
+  .cmd { position: relative; margin-top: 10px; }
+  .cmd + .cmd { margin-top: 16px; }
+  .cmd .lbl { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); margin-bottom: 6px; font-weight: 600; }
+  .copy {
+    position: absolute; top: 34px; right: 8px; font: 600 0.72rem var(--sans); letter-spacing: 0.06em; text-transform: uppercase;
+    background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 2px; padding: 4px 8px; cursor: pointer;
+  }
+  .copy:hover { background: rgba(255,255,255,0.2); }
+  .copy[data-done="1"] { background: var(--pass); border-color: var(--pass); }
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: st; }
+  .steps li { counter-increment: st; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--rule); }
+  .steps li::before { content: counter(st); font-family: var(--serif); font-size: 1.4rem; line-height: 1; color: var(--ink-3); }
+  .steps li strong { display: block; margin-bottom: 4px; }
+
+  /* evidence figures */
+  .evidence { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 8px; }
+  .evidence figure { margin: 0; }
+  .evidence img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: #fff; }
+  .evidence figcaption { font-size: 0.88rem; color: var(--ink-2); margin-top: 10px; line-height: 1.45; }
+  .evidence figcaption code { font-size: 0.8em; }
+  .video { margin-top: 32px; border: 1px solid var(--rule); background: #000; }
+  .video video { width: 100%; height: auto; display: block; max-height: 640px; }
+  .video p { padding: 10px 14px; font-size: 0.86rem; color: var(--ink-2); background: var(--paper); border-top: 1px solid var(--rule); max-width: none; }
+
+  /* guarantee list */
+  .guar { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule-strong); }
+  .guar li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-top: 1px solid var(--rule); align-items: start; }
+  .guar li svg { width: 20px; height: 20px; margin-top: 3px; }
+  .guar li strong { display: block; }
+  .guar li span { color: var(--ink-2); font-size: 0.95rem; }
+
+  /* footer */
+  .colophon { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; padding-top: 24px; border-top: 2px solid var(--rule-strong); font-size: 0.9rem; color: var(--ink-2); }
+  .colophon .sig { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); }
+  .colophon ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .note { font-size: 0.82rem; color: var(--ink-3); margin-top: 20px; max-width: none; }
+
+  @media (max-width: 900px) {
+    .declaration { grid-template-columns: 1fr; gap: 36px; }
+    .seal-block { justify-self: start; }
+    .cols { grid-template-columns: 1fr; }
+    .evidence { grid-template-columns: 1fr; }
+    .attest li { grid-template-columns: 36px minmax(0, 1fr); }
+    .attest .proof { grid-column: 2; text-align: left; white-space: normal; }
+    .masthead { grid-template-columns: 1fr; }
+    .masthead dl { text-align: left; }
+    .colophon { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    .doc { padding: 0 12px 64px; }
+    .timeline li { grid-template-columns: 1fr; gap: 4px; }
+    .seal { width: 200px; height: 200px; }
+  }
+  @media print {
+    body { background: #fff; }
+    .sheet { box-shadow: none; border-color: #999; break-inside: avoid; }
+    .btn, .copy, .video { display: none !important; }
+    a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: #555; }
+    .seal { animation: none; }
+  }
+</style>
+</head>
+<body>
+<!--
+DIRECTION: Declaration of Conformity (Konformitätserklärung).
+WORLD: the German standards/compliance document — white sheet, black ink, one red stamp; ruled tables with tabular numerals; serif for the declaration voice, grotesque for data, mono only for commands.
+FIRST VIEWPORT: the declaration itself with the Official MCP Registry listing as a live seal, then numbered attestations each with a verifiable proof link.
+VISITOR PATH: recruiter reads the declaration + seal → scans attestations → View on GitHub; developer continues to Scope, Object, Installation, Evidence, Annexes.
+SIGNATURE INTERACTION: the seal is stamped on load and fetches the live registry record; no-JS fallback keeps the static facts.
+RISK: a document can read as dry — pacing alternates dense tables with quiet declaration text and real screenshots.
+-->
+<main class="doc">
+
+  <section class="sheet" aria-labelledby="title">
+    <div class="masthead">
+      <div class="brand">Kontor MCP <span>Model Context Protocol server</span></div>
+      <dl>
+        <dt>Document</dt><dd>KONTOR-DoC</dd>
+        <dt>Edition</dt><dd id="ed-version">1.0.4</dd>
+        <dt>Issued</dt><dd id="ed-date">2026-08-26</dd>
+        <dt>Licence</dt><dd>Apache-2.0</dd>
+      </dl>
+    </div>
+
+    <div class="declaration">
+      <div>
+        <h1 id="title">Declaration of <em>Conformity</em></h1>
+        <div class="de">Konformitätserklärung · für einen MCP-Server zur elektronischen Rechnungsstellung</div>
+        <p class="lede">
+          <strong>Kontor MCP</strong> is an open-source server that gives AI assistants — Claude Desktop, Claude Code, any MCP client — the ability to
+          <strong>parse, validate, audit, explain, generate and convert</strong> German and EU electronic invoices
+          (XRechnung, ZUGFeRD / Factur-X, EN 16931) using the <strong>official KoSIT and CEN rule sets, entirely offline</strong>.
+          No invoice data ever leaves the machine.
+        </p>
+        <div class="actions">
+          <a class="btn" href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            View on GitHub
+          </a>
+          <a class="btn ghost" href="https://www.npmjs.com/package/@kontor-mcp/server">npm · @kontor-mcp/server</a>
+          <a class="btn ghost" href="https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp">Registry record</a>
+        </div>
+      </div>
+
+      <figure class="seal-block" aria-label="Official MCP Registry listing seal">
+        <div class="seal" id="seal">
+          <svg viewBox="0 0 240 240" aria-hidden="true">
+            <defs>
+              <path id="ringTop" d="M120,120 m-92,0 a92,92 0 1,1 184,0"/>
+              <path id="ringBottom" d="M28,120 A92,92 0 0,0 212,120"/>
+            </defs>
+            <circle cx="120" cy="120" r="114" fill="none" stroke="#b3231f" stroke-width="3"/>
+            <circle cx="120" cy="120" r="108" fill="none" stroke="#b3231f" stroke-width="1"/>
+            <circle cx="120" cy="120" r="74" fill="none" stroke="#b3231f" stroke-width="1.2"/>
+            <text font-family="Schibsted Grotesk, Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="3.2" fill="#b3231f">
+              <textPath href="#ringTop" startOffset="50%" text-anchor="middle">OFFICIAL MCP REGISTRY</textPath>
+            </text>
+            <text font-family="Schibsted Grotesk, Arial, sans-serif" font-size="13.5" font-weight="700" letter-spacing="3.2" fill="#b3231f">
+              <textPath href="#ringBottom" startOffset="50%" text-anchor="middle">LISTED · KONTOR-MCP</textPath>
+            </text>
+            <g stroke="#b3231f" stroke-width="1"><line x1="52" y1="120" x2="60" y2="120"/><line x1="180" y1="120" x2="188" y2="120"/></g>
+          </svg>
+          <div class="inner">
+            <div class="k">Status</div>
+            <div class="v" id="seal-status">Active</div>
+            <div class="s">v<span id="seal-version">1.0.4</span></div>
+            <div class="s" id="seal-date">2026-08-26</div>
+          </div>
+        </div>
+        <figcaption>
+          Listed as <a href="https://registry.modelcontextprotocol.io/v0.1/servers/io.github.DashankaNadeeshanDeSilva%2Fkontor-mcp/versions/1.0.4" id="seal-link"><code>io.github.DashankaNadeeshanDeSilva/kontor-mcp</code></a>
+          in the Official MCP Registry at <a href="https://registry.modelcontextprotocol.io/">registry.modelcontextprotocol.io</a>.
+          <div class="live" id="live"><i></i><span>Static record</span></div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="attest">
+      <h3>Attestations</h3>
+      <ol>
+        <li>
+          <div class="claim">Listed in the Official MCP Registry
+            <small>Namespace ownership proven via GitHub OIDC; npm package ownership via <code>mcpName</code>; container image via the <code>io.modelcontextprotocol.server.name</code> label.</small>
+          </div>
+          <div class="proof"><b>active</b> · <a href="https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp">API record</a></div>
+        </li>
+        <li>
+          <div class="claim">Published on npm with build provenance
+            <small><code>@kontor-mcp/rules</code>, <code>core</code>, <code>server</code>, <code>client</code>, released only by a tag-triggered GitHub Actions workflow through npm trusted publishing (OIDC, no long-lived tokens); Sigstore attestations on every version.</small>
+          </div>
+          <div class="proof"><b>provenance</b> · <a href="https://www.npmjs.com/package/@kontor-mcp/server">npm</a></div>
+        </li>
+        <li>
+          <div class="claim">Conformant with the KoSIT XRechnung validator
+            <small>Same verdict <em>and</em> the same findings as KoSIT validator 1.6.3 on the complete XRechnung 3.0.2 test suite (86 official files + 3 fixtures). Re-checked as a CI gate on every commit.</small>
+          </div>
+          <div class="proof"><b>89 / 89</b> · <a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/blob/main/docs/CONFORMANCE.md">report</a></div>
+        </li>
+        <li>
+          <div class="claim">Generated ZUGFeRD PDFs pass PDF/A-3b and Mustang checks
+            <small>veraPDF 1.30.2 profile PDF/A-3b, zero violations; Mustang CLI 2.26.0 accepts every generated hybrid invoice.</small>
+          </div>
+          <div class="proof"><b>6 / 6 · 6 / 6</b></div>
+        </li>
+        <li>
+          <div class="claim">Zero network calls at runtime: proven, not promised
+            <small>A test blocks sockets, DNS, TLS, <code>http(s)</code> and <code>fetch</code> across every tool, resource and prompt and asserts zero attempts; CI additionally audits inside a <code>--network none</code> container. No accounts, no API keys, no telemetry.</small>
+          </div>
+          <div class="proof"><b>0 attempts</b> · <a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/blob/main/packages/core/test/sovereignty.test.ts">test</a></div>
+        </li>
+        <li>
+          <div class="claim">Continuously verified across platforms
+            <small>357 tests; Ubuntu, macOS and Windows × Node 20 and 22; lint, PDF/A, conformance, security-audit and Docker smoke jobs on every push.</small>
+          </div>
+          <div class="proof"><b>357 tests</b> · <a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/actions/workflows/ci.yml">CI</a></div>
+        </li>
+        <li>
+          <div class="claim">Open source under Apache-2.0
+            <small>Bundled third-party artefacts keep their licences: KoSIT (Apache-2.0), CEN EN 16931 (EUPL-1.2), Liberation Fonts (OFL 1.1), all with provenance and checksums.</small>
+          </div>
+          <div class="proof"><a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/blob/main/LICENSE">LICENSE</a> · <a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/blob/main/NOTICE">NOTICE</a></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="scope">
+    <header>
+      <div class="no">Section 1 — Scope</div>
+      <h2 id="scope">Why an offline e-invoice server matters now</h2>
+    </header>
+    <div class="cols">
+      <div>
+        <p>Germany's <em>Wachstumschancengesetz</em> turns electronic invoicing from an option into an obligation. An e-invoice is not a PDF: it is XML governed by EN 16931 (about 160 business terms and more than 100 business rules) in two syntaxes (UBL 2.1 and CII D16B), narrowed by the German profile XRechnung (KoSIT), or embedded as a hybrid PDF/A-3 (ZUGFeRD / Factur-X).</p>
+        <p>An invoice that fails those rules can jeopardise input-VAT deduction, and the validator's language (<code>[BR-DE-15] Buyer reference MUST be provided</code>) means nothing to the people who receive it. At the same time, invoices carry personal data, bank details and prices, so GDPR and procurement policy push processing on-premises, while the existing tooling for AI agents is either a cloud API wrapper or a partial, hand-rolled validator.</p>
+        <p>Kontor MCP closes that gap: <strong>authoritative</strong> (the official Schematron rule sets, unmodified), <strong>fully offline</strong>, and <strong>complete for agent workflows</strong>, from a plain-language verdict with fix hints to generating a valid invoice from structured data.</p>
+      </div>
+      <div>
+        <h3>Mandate timeline (Germany, B2B)</h3>
+        <ul class="timeline">
+          <li><time datetime="2020-11-27">Nov 2020</time><div>B2G suppliers must submit XRechnung with a Leitweg-ID<small>Federal portals ZRE / OZG-RE</small></div></li>
+          <li><time datetime="2025-01-01">1 Jan 2025</time><div>Every business must be able to <strong>receive</strong> EN 16931 e-invoices<small>In force</small></div></li>
+          <li class="now"><time datetime="2027-01-01">1 Jan 2027</time><div>Businesses with turnover above €800,000 must <strong>issue</strong> e-invoices<small>Prior-year turnover</small></div></li>
+          <li><time datetime="2028-01-01">1 Jan 2028</time><div><strong>All</strong> businesses must issue e-invoices for domestic B2B<small>Paper and plain PDF no longer permitted</small></div></li>
+        </ul>
+        <p class="note">Dates and thresholds as recorded in the bundled legal timeline (primary sources, last verified 2026-08-25). Informational, not legal advice.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="object">
+    <header>
+      <div class="no">Section 2 — Object of the declaration</div>
+      <h2 id="object">What the server exposes</h2>
+    </header>
+    <p>Eight MCP tools, four resource families and three prompts. Every tool takes and returns Zod-validated structured content plus a human summary; findings carry the official rule identifier, a DE/EN explanation and a fix hint.</p>
+    <div class="tablewrap" style="margin-top:24px">
+      <table>
+        <thead><tr><th>Tool</th><th>Purpose</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code>validate_invoice</code></td><td>XSD + official EN 16931 / XRechnung rules + plausibility checks; KoSIT-equivalent verdict</td><td><span class="tag">read-only</span></td></tr>
+          <tr><td><code>audit_invoice</code></td><td>One-call audit with an <em>accept / review / reject</em> recommendation</td><td><span class="tag">read-only</span></td></tr>
+          <tr><td><code>parse_invoice</code></td><td>Detect the format (UBL, CII, ZUGFeRD PDF) and return the EN 16931 semantic model</td><td><span class="tag">read-only</span></td></tr>
+          <tr><td><code>explain_rule</code></td><td>Explain any rule id (BR-*, BR-DE-*, BR-CO-*…) with DE/EN text and a fix hint</td><td><span class="tag">read-only</span></td></tr>
+          <tr><td><code>check_obligations</code></td><td>Who must do what, from when, under the German mandate, with sources</td><td><span class="tag">read-only</span></td></tr>
+          <tr><td><code>list_capabilities</code></td><td>Formats, bundled standard versions, knowledge-base stats, sovereignty statement</td><td><span class="tag">read-only</span></td></tr>
+          <tr><td><code>generate_invoice</code></td><td>Structured data → validated XRechnung 3.0 UBL or ZUGFeRD 2.3 / Factur-X PDF/A-3 (EN16931, BASIC, EXTENDED profiles)</td><td><span class="tag w">writes file</span></td></tr>
+          <tr><td><code>convert_invoice</code></td><td>Extract XML from a ZUGFeRD PDF, convert UBL ↔ CII, render an HTML preview</td><td><span class="tag w">writes file</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cols" style="margin-top:36px">
+      <div>
+        <h3>Resources</h3>
+        <p style="margin-top:8px"><code>kontor://samples/{name}</code> · <code>kontor://reference/rules</code> · <code>kontor://reference/codelists/{list}</code> · <code>kontor://reference/cheatsheet</code></p>
+      </div>
+      <div>
+        <h3>Prompts</h3>
+        <p style="margin-top:8px"><code>audit-incoming-invoice</code> · <code>draft-supplier-rejection</code> · <code>create-invoice-interview</code></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="install">
+    <header>
+      <div class="no">Section 3 — Installation and operation</div>
+      <h2 id="install">How it runs</h2>
+    </header>
+    <div class="cols">
+      <div>
+        <p>Two transports from one binary. <strong>stdio</strong> for desktop assistants: the client starts the server as a child process, nothing listens on the network. <strong>Streamable HTTP</strong> for shared or containerised deployments: an Express endpoint bound to loopback, bearer-token protected, one session per <code>Mcp-Session-Id</code>. Requires Node ≥ 20; no Java, no native modules.</p>
+        <ol class="steps" style="margin-top:24px">
+          <li><div><strong>Claude Desktop</strong> Settings → Developer → Edit Config, add the block on the right, quit and reopen. Then ask: <em>"Ist diese Rechnung gültig?"</em> with a local file path.</div></li>
+          <li><div><strong>Claude Code</strong> <code>claude mcp add kontor -- npx -y @kontor-mcp/server</code></div></li>
+          <li><div><strong>Any MCP client</strong> point it at <code>npx -y @kontor-mcp/server</code> (stdio) or run the container and connect to <code>http://127.0.0.1:3333/mcp</code>.</div></li>
+        </ol>
+      </div>
+      <div>
+        <div class="cmd">
+          <div class="lbl">Run (stdio, zero install)</div>
+          <pre><code>npx -y @kontor-mcp/server</code></pre>
+          <button class="copy" type="button" data-copy="npx -y @kontor-mcp/server">Copy</button>
+        </div>
+        <div class="cmd">
+          <div class="lbl">Claude Desktop config</div>
+          <pre><code>{
+  "mcpServers": {
+    "kontor": {
+      "command": "npx",
+      "args": ["-y", "@kontor-mcp/server"]
+    }
+  }
+}</code></pre>
+          <button class="copy" type="button" data-copy='{
+  "mcpServers": {
+    "kontor": {
+      "command": "npx",
+      "args": ["-y", "@kontor-mcp/server"]
+    }
+  }
+}'>Copy</button>
+        </div>
+        <div class="cmd">
+          <div class="lbl">Container (Streamable HTTP, loopback only)</div>
+          <pre><code>docker run -d -p 127.0.0.1:3333:3333 \
+  -e KONTOR_AUTH_TOKEN="$(openssl rand -hex 24)" \
+  ghcr.io/dashankanadeeshandesilva/kontor-mcp</code></pre>
+          <button class="copy" type="button" data-copy='docker run -d -p 127.0.0.1:3333:3333 -e KONTOR_AUTH_TOKEN="$(openssl rand -hex 24)" ghcr.io/dashankanadeeshandesilva/kontor-mcp'>Copy</button>
+        </div>
+        <div class="cmd">
+          <div class="lbl">Reference client: one-shot audit from the shell</div>
+          <pre><code>npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml</code></pre>
+          <button class="copy" type="button" data-copy="npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml">Copy</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="evidence">
+    <header>
+      <div class="no">Section 4 — Evidence of operation</div>
+      <h2 id="evidence">In Claude Desktop, offline</h2>
+    </header>
+    <div class="evidence">
+      <figure>
+        <img src="media/v0.1-s1-validate-broken.png" width="933" height="1166" alt="Claude Desktop conversation: a broken invoice is validated, the verdict is UNGÜLTIG and rule BR-DE-15 is explained with a fix" loading="lazy">
+        <figcaption><code>validate_invoice</code> on an invoice missing its buyer reference: verdict <strong>UNGÜLTIG</strong>, <code>BR-DE-15</code> explained in German with the Leitweg-ID fix.</figcaption>
+      </figure>
+      <figure>
+        <img src="media/v0.1-s3-parse-zugferd.png" width="926" height="1196" alt="Claude Desktop conversation: a ZUGFeRD PDF is parsed and its header, parties and totals are summarised" loading="lazy">
+        <figcaption><code>parse_invoice</code> on a ZUGFeRD PDF: embedded CII XML extracted, EN 16931 profile detected, totals and parties summarised.</figcaption>
+      </figure>
+      <figure>
+        <img src="media/v0.1-s4-explain-br-de-18.png" width="996" height="760" alt="Claude Desktop conversation: the rule BR-DE-18 is explained including the required Skonto format" loading="lazy">
+        <figcaption><code>explain_rule</code> for <code>BR-DE-18</code>: the mandated <code>#SKONTO#TAGE=n#PROZENT=n.nn#</code> payment-terms format, from the bundled rule knowledge base.</figcaption>
+      </figure>
+    </div>
+    <div class="video">
+      <video controls preload="metadata" playsinline muted>
+        <source src="media/v0.1-desktop-demo.mp4" type="video/mp4">
+      </video>
+      <p>43-second recording of the three scenes above in Claude Desktop, network disabled. Earlier build (v0.1); the tool surface is unchanged.</p>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="annex-a">
+    <header>
+      <div class="no">Annex A — Data sovereignty and security</div>
+      <h2 id="annex-a">What the server guarantees</h2>
+    </header>
+    <div class="cols">
+      <ul class="guar">
+        <li><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#1f6b3a" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="#1f6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>No runtime network access</strong><span>All rule sets, schemas, code lists and fonts are bundled with provenance and SHA-256 checksums. Enforced by test and by a no-network CI container.</span></div></li>
+        <li><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#1f6b3a" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="#1f6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Stateless; nothing stored or logged</strong><span>Invoice payloads are never written to disk or logs unless <code>KONTOR_LOG_PAYLOADS</code> is explicitly enabled.</span></div></li>
+        <li><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#1f6b3a" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="#1f6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Hardened XML parsing</strong><span>DTDs and external entities disabled on every parse (XXE, billion-laughs), depth and size caps, path hygiene, PDF bytes treated as untrusted.</span></div></li>
+        <li><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#1f6b3a" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="#1f6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Exact money arithmetic</strong><span>All amounts use <code>decimal.js</code>; floating point is never used for totals, VAT or rounding checks.</span></div></li>
+        <li><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#1f6b3a" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="#1f6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>HTTP mode defence in depth</strong><span>Bearer token with constant-time comparison, Origin allow-list, Host validation against DNS rebinding, loopback bind by default, session cap and 30-minute idle expiry. TLS terminates at your reverse proxy.</span></div></li>
+        <li><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="none" stroke="#1f6b3a" stroke-width="1.5"/><path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="#1f6b3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Supply chain</strong><span>Tag-triggered releases only; npm trusted publishing with Sigstore provenance; multi-arch image built in CI, non-root, ~70 MB.</span></div></li>
+      </ul>
+      <div>
+        <h3>Annex B — Bundled standards</h3>
+        <div class="tablewrap" style="margin-top:10px">
+          <table>
+            <thead><tr><th>Artefact</th><th class="num">Version</th></tr></thead>
+            <tbody>
+              <tr><td>XRechnung specification / CIUS (KoSIT)</td><td class="num">3.0.2</td></tr>
+              <tr><td>XRechnung Schematron (KoSIT), run unmodified</td><td class="num">2.5.0</td></tr>
+              <tr><td>KoSIT validator configuration</td><td class="num">2026-01-31</td></tr>
+              <tr><td>CEN EN 16931 Schematron</td><td class="num">1.3.16</td></tr>
+              <tr><td>UBL 2.1 and CII D16B XML schemas</td><td class="num">—</td></tr>
+              <tr><td>EN 16931 code lists with DE/EN names</td><td class="num">13</td></tr>
+              <tr><td>Rule knowledge base entries (generated + curated)</td><td class="num">1,642 + 50</td></tr>
+              <tr><td>Kontor plausibility rules (<code>KONTOR-PLAUS-*</code>)</td><td class="num">22</td></tr>
+              <tr><td>ZUGFeRD / Factur-X output profiles</td><td class="num">2.3 · EN16931, BASIC, EXTENDED</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Schematron is compiled to XSLT/SEF and executed with Saxon-JS; schemas via <code>xmllint-wasm</code>; PDF/A-3 via <code>pdf-lib</code>. Every artefact's source, version, date, licence and checksum is recorded in <a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/blob/main/packages/rules/PROVENANCE.md">PROVENANCE.md</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="colophon">
+    <div class="colophon">
+      <div>
+        <div class="sig">Dashanka Nadeeshan De Silva</div>
+        <div>Author and maintainer · <a href="https://github.com/DashankaNadeeshanDeSilva">github.com/DashankaNadeeshanDeSilva</a></div>
+      </div>
+      <ul id="colophon">
+        <li><a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp">Repository</a></li>
+        <li><a href="https://www.npmjs.com/org/kontor-mcp">npm organisation</a></li>
+        <li><a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/pkgs/container/kontor-mcp">Container image</a></li>
+        <li><a href="https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp">Registry record</a></li>
+        <li><a href="https://glama.ai/mcp/servers/DashankaNadeeshanDeSilva/kontor-mcp">Glama listing</a></li>
+        <li><a href="https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/blob/main/CHANGELOG.md">Changelog</a></li>
+      </ul>
+    </div>
+    <p class="note">Kontor MCP validates and explains e-invoices; it does not provide legal or tax advice. XRechnung is a standard of the German Koordinierungsstelle für IT-Standards (KoSIT); ZUGFeRD is a standard of FeRD; the Model Context Protocol and its registry are projects of the MCP community. Kontor MCP is not affiliated with or endorsed by any of them.</p>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  // Live seal: read the registry record; keep the static values if anything fails.
+  var name = "io.github.DashankaNadeeshanDeSilva/kontor-mcp";
+  var url = "https://registry.modelcontextprotocol.io/v0.1/servers?search=" + encodeURIComponent(name);
+  var live = document.getElementById("live");
+  fetch(url, { headers: { Accept: "application/json" } })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      var hit = (d.servers || []).filter(function (s) { return s.server && s.server.name === name; })[0];
+      if (!hit) throw new Error("not listed");
+      var s = hit.server, m = (hit._meta || {})["io.modelcontextprotocol.registry/official"] || {};
+      var status = m.status || "listed", ver = s.version || "", when = (m.updatedAt || m.publishedAt || "").slice(0, 10);
+      document.getElementById("seal-status").textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      if (ver) { document.getElementById("seal-version").textContent = ver; document.getElementById("ed-version").textContent = ver;
+        document.getElementById("seal-link").href = "https://registry.modelcontextprotocol.io/v0.1/servers/" + encodeURIComponent(name) + "/versions/" + encodeURIComponent(ver); }
+      if (when) { document.getElementById("seal-date").textContent = when; document.getElementById("ed-date").textContent = when; }
+      live.className = "live ok"; live.querySelector("span").textContent = "Live registry record";
+    })
+    .catch(function () { live.querySelector("span").textContent = "Static record (registry unreachable)"; });
+
+  // Copy buttons.
+  document.querySelectorAll(".copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      navigator.clipboard.writeText(b.getAttribute("data-copy")).then(function () {
+        b.textContent = "Copied"; b.dataset.done = "1";
+        setTimeout(function () { b.textContent = "Copy"; delete b.dataset.done; }, 1600);
+      }, function () { b.textContent = "Select & copy"; });
+    });
+  });
+})();
+</script>
+</body>
+</html>

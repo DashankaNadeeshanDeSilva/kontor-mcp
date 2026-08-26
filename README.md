@@ -6,6 +6,7 @@
 [![Conformance](https://img.shields.io/badge/KoSIT%20conformance-89%2F89-brightgreen)](docs/CONFORMANCE.md)
 [![PDF/A-3](https://img.shields.io/badge/ZUGFeRD%20PDF%2FA--3b-veraPDF%20%2B%20Mustang%20verified-brightgreen)](docs/CONFORMANCE.md#generated-zugferd-pdfa-3-task-27)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![npm](https://img.shields.io/npm/v/%40kontor-mcp%2Fserver?label=npm%20%40kontor-mcp%2Fserver)](https://www.npmjs.com/package/@kontor-mcp/server) [![MCP Registry](https://img.shields.io/badge/Official%20MCP%20Registry-listed-b3231f)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp) [![Website](https://img.shields.io/badge/website-dashankanadeeshandesilva.github.io%2Fkontor--mcp-141414)](https://dashankanadeeshandesilva.github.io/kontor-mcp/)
 
 Kontor MCP is an open-source [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI assistants (Claude Desktop, Claude Code, any MCP client) fully local capabilities for German/EU electronic invoicing: **parse, validate, audit, explain, generate and convert XRechnung and ZUGFeRD/Factur-X invoices** with the *official* KoSIT / EN 16931 rule sets — and no invoice data ever leaving your machine.
 
