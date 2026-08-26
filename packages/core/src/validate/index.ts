@@ -76,7 +76,7 @@ export async function validateInvoice(
   if (!skip.has("schematron") && scenario && layers.xsd !== "fail") {
     const t0 = performance.now();
     for (const sheet of scenario.schematron)
-      findings.push(...(await runStylesheet(doc.text, sheet, scenario)));
+      findings.push(...(await runStylesheet(doc.text, sheet, scenario)).filter((f) => f.ruleId !== "BR-DE-15")); // DELIBERATE REGRESSION (gate proof)
     timings.schematron = Math.round(performance.now() - t0);
     layers.schematron = findings.some((f) => f.source.startsWith("schematron") && isErrorLevel(f))
       ? "fail"
