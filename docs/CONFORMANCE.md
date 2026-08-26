@@ -34,7 +34,12 @@ Notes:
 ## Continuous verification
 
 - `packages/core/test/conformance.test.ts` replays the recorded oracle verdicts (`fixtures/conformance/oracle-verdicts.txt`) against the whole suite on every CI run (artifacts are fetched and cached in CI).
-- `pnpm oracle --diff …` exits 1 on any mismatch and is the release gate (Task 3.5).
+- **CI job `conformance`** (Task 3.5): on every push to `main` and every PR that touches `packages/core`, `packages/rules`, the oracle tooling or the artefact manifest, the Java KoSIT validator runs over the full corpus (`pnpm oracle --diff --report`), and `pnpm conformance:check --against <fresh report>` fails the build if verdict or finding parity drops below 100 %, if any file's parity differs from the committed `docs/conformance/latest.json`, or if this table / the README badge are out of sync with that file. Unrelated changes skip the Java run. Regenerate locally with `pnpm conformance && pnpm conformance:report` and commit `latest.json` + docs together.
+- Proof that the gate is red when it should be: see "Gate proof" below.
+
+## Gate proof
+
+_(filled in by the Task 3.5 red/green exercise: a deliberate regression on a throwaway branch must turn the `conformance` job red.)_
 
 ## Generated ZUGFeRD PDF/A-3 (Task 2.7)
 

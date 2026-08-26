@@ -81,6 +81,62 @@ jobs:
           VERAPDF: /opt/verapdf/verapdf
           KONTOR_JAVA: java
 
+  conformance:
+    name: Conformance gate (KoSIT oracle vs. Kontor engine)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Decide whether the engine or the rules changed
+        id: scope
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          if [ -z "$base" ] || ! git cat-file -e "$base" 2>/dev/null; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "no base commit - running"; exit 0
+          fi
+          changed=$(git diff --name-only "$base" "${{ github.sha }}" -- packages/core packages/rules tools/oracle.ts tools/conformance-report.ts tools/artifacts.manifest.json docs/conformance .github/workflows/ci.yml)
+          if [ -n "$changed" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; echo "$changed"; else echo "run=false" >> "$GITHUB_OUTPUT"; echo "nothing relevant changed - skipping the Java oracle"; fi
+      - if: steps.scope.outputs.run == 'true'
+        uses: pnpm/action-setup@v4
+      - if: steps.scope.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - if: steps.scope.outputs.run == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - if: steps.scope.outputs.run == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.scope.outputs.run == 'true'
+        name: Cache pinned standards artifacts
+        uses: actions/cache@v4
+        with:
+          path: fixtures/_downloads
+          key: artifacts-${{ hashFiles('tools/artifacts.manifest.json') }}
+      - if: steps.scope.outputs.run == 'true'
+        run: pnpm artifacts
+      - if: steps.scope.outputs.run == 'true'
+        run: pnpm build
+      - if: steps.scope.outputs.run == 'true'
+        name: Oracle diff over the full corpus (fresh report)
+        run: pnpm oracle --diff --report /tmp/conformance-ci.json fixtures/spike fixtures/_downloads/xrechnung-testsuite/instances
+      - if: always() && steps.scope.outputs.run == 'true'
+        name: Gate - thresholds on the fresh run, parity with the committed report, docs/badge in sync
+        run: pnpm conformance:check --against /tmp/conformance-ci.json
+      - if: always() && steps.scope.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: conformance-report
+          path: /tmp/conformance-ci.json
+
   security:
     name: Security (audit, licences, sovereignty + hardening suites)
     runs-on: ubuntu-latest

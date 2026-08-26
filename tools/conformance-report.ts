@@ -5,6 +5,8 @@
  *
  *   pnpm conformance:report          rewrite the block + badge
  *   pnpm conformance:report --check  exit 1 if the committed docs differ from the report, or thresholds fail
+ *   ... --check --against <fresh.json>  CI mode: thresholds are enforced on a freshly generated report and its
+ *                                       per-file parity must equal the committed latest.json (timestamps ignored)
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -17,6 +19,8 @@ const README = root("README.md");
 const BEGIN = "<!-- conformance:begin -->";
 const END = "<!-- conformance:end -->";
 const check = process.argv.includes("--check");
+const againstIdx = process.argv.indexOf("--against");
+const against = againstIdx >= 0 ? process.argv[againstIdx + 1] : undefined;
 
 const report = JSON.parse(readFileSync(REPORT, "utf8")) as ConformanceReport;
 const corpora = new Map<string, ConformanceReport["files"]>();
@@ -81,6 +85,26 @@ if (findingsOk !== total) failures.push(`finding parity ${findingsOk}/${total} <
 if (total < 80) failures.push(`corpus too small (${total} files) — artefacts missing?`);
 
 if (check) {
+  if (against) {
+    const fresh = JSON.parse(readFileSync(against, "utf8")) as ConformanceReport;
+    const key = (f: ConformanceReport["files"][number]) =>
+      `${f.file} ${f.oracleVerdict}/${f.kontorVerdict} v=${f.verdictOk} f=${f.findingsOk} ${f.onlyOracle.join(",")}|${f.onlyOurs.join(",")}`;
+    const committed = new Set(report.files.map(key));
+    const freshKeys = new Set(fresh.files.map(key));
+    const changed = [...freshKeys].filter((k) => !committed.has(k));
+    const missing = [...committed].filter((k) => !freshKeys.has(k));
+    const fv = fresh.files.filter((f) => f.verdictOk).length;
+    const ff = fresh.files.filter((f) => f.findingsOk).length;
+    if (fv !== fresh.files.length)
+      failures.push(`fresh run: verdict parity ${fv}/${fresh.files.length} < 100 %`);
+    if (ff !== fresh.files.length)
+      failures.push(`fresh run: finding parity ${ff}/${fresh.files.length} < 100 %`);
+    if (changed.length || missing.length) {
+      failures.push(
+        `fresh run differs from committed docs/conformance/latest.json:\n  changed/new: ${changed.join("\n  ") || "-"}\n  missing: ${missing.join("\n  ") || "-"}`,
+      );
+    }
+  }
   if (nextConf !== conf || nextReadme !== readme) {
     failures.push(
       "docs/CONFORMANCE.md or README badge differ from docs/conformance/latest.json — run `pnpm conformance:report` and commit",
