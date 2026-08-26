@@ -4,6 +4,10 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-08-26
+
+- First release published by the tag-triggered workflow (npm trusted publishing via OIDC + provenance, GHCR image, GitHub release). 1.0.0 was published manually from a maintainer machine to create the packages; no functional changes.
+
 ## [1.0.0] — 2026-08-26 (Phase 3 exit)
 
 ### Added

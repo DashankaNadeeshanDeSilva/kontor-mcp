@@ -1,6 +1,6 @@
 {
   "name": "@kontor-mcp/client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "kontor-agent — reference MCP client CLI: introspection, one-shot audit, and an Anthropic agent loop over Kontor MCP (stdio or Streamable HTTP)",
   "license": "Apache-2.0",
   "repository": {
