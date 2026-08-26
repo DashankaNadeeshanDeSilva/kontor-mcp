@@ -39,7 +39,14 @@ Notes:
 
 ## Gate proof
 
-_(filled in by the Task 3.5 red/green exercise: a deliberate regression on a throwaway branch must turn the `conformance` job red.)_
+Exercised 2026-08-26 with a throwaway branch that silently dropped every `BR-DE-15` finding in `validateInvoice` (PR #1, closed without merge):
+
+| Run | `conformance` job | Result |
+|---|---|---|
+| `main` @ `9dab868` (no regression) | [job 98090389291](https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/actions/runs/32940491161/job/98090389291) | ✅ `89/89 files agree` · `conformance gate OK: 89/89` |
+| PR #1 (deliberate regression) | [job 98090392678](https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/actions/runs/32940519955/job/98090392678) | ❌ `✗ invalid-ubl-missing-buyerref.xml: oracle=reject kontor=accept findings=oracle-only[BR-DE-15:error]` · `88/89 files agree` · gate step failed |
+
+Both the oracle-diff step and the gate step went red; the PR could not have been merged with required checks enabled (owner action: mark `conformance` as a required status check in the branch protection rules).
 
 ## Generated ZUGFeRD PDF/A-3 (Task 2.7)
 
