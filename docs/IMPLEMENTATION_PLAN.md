@@ -185,6 +185,8 @@
 
 ## 5. Phase 3 — Protocol Completeness, Client, Hardening, Launch (Week 3)
 
+> **Status (2026-08-26): Tasks 3.1–3.5 complete, 3.6 prepared.** HTTP+auth (`06ded82`), Docker (`979e8aa`), `kontor-agent` (`9e2b99a`), sovereignty/security (`726d6c9`), conformance gate with red/green proof (`9dab868`, PR #1), release engineering at 1.0.0 (`9b13c03`). Owner-gated steps left: npm org + first publish + trusted publisher, tag `v1.0.0`, MCP Registry / Smithery / mcpmarket, demo GIF — runbook `docs/release/RELEASE-CHECKLIST.md`. Hand-off: `docs/HANDOFF-2026-08-26-b.md`.
+
 **Purpose:** both protocol halves, ops-grade polish, publish. Ends at **v1.0**.
 
 ### Task 3.1 — Streamable HTTP transport + auth
