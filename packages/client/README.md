@@ -5,7 +5,7 @@ Reference MCP client for [Kontor MCP](../../README.md): shows the protocol from 
 ```sh
 kontor-agent tools                                   # tools / resources / prompts with schemas
 kontor-agent audit invoice.xml [--lang en] [--known R-1,R-2] [--json]
-kontor-agent chat [-m "Prüfe /abs/path/invoice.pdf"] [--model claude-opus-5] [--effort high]
+kontor-agent chat [-m "Prüfe /abs/path/invoice.pdf"] [--model claude-sonnet-5] [--effort high]
 ```
 
 Transport is a global option: by default the bundled `@kontor-mcp/server` is spawned over **stdio**; `--url http://host:3333/mcp --token …` (or `KONTOR_AUTH_TOKEN`) talks to a running **Streamable HTTP** host, e.g. the Docker image. `--stdio <command…>` spawns any other stdio server.
@@ -19,14 +19,14 @@ Transport is a global option: by default the bundled `@kontor-mcp/server` is spa
 `chat` uses the Anthropic SDK's Tool Runner (`@anthropic-ai/sdk/helpers/beta/mcp` bridges MCP tool definitions 1:1 — the JSON Schemas the server publishes are what Claude sees). The trace lines are the demo of the protocol:
 
 ```
-[kontor-agent 0.9.0 · stdio → node …/server/dist/bin.js · claude-opus-5 · effort high]
+[kontor-agent 0.9.0 · stdio → node …/server/dist/bin.js · claude-sonnet-5 · effort high]
   → audit_invoice file_path=/…/broken-zugferd.pdf lang=de
   ← audit_invoice recommendation=reject · verdict=invalid · 4 findings · 412 ms
 Die Rechnung ist abzulehnen: …
   [3 412 in / 388 out · stop=end_turn]
 ```
 
-Defaults: `claude-opus-5`, adaptive thinking, effort `high`, 20 tool rounds per message, streaming, server-side refusal fallback enabled. Interactive mode keeps the full exchange (including tool calls) as history; an empty line or Ctrl-D ends the session.
+Defaults: `claude-sonnet-5` (`--model claude-opus-5` for the larger model), adaptive thinking, effort `high`, 20 tool rounds per message, streaming; the server-side refusal fallback is enabled when an Opus 5 / Fable 5 model is selected. Interactive mode keeps the full exchange (including tool calls) as history; an empty line or Ctrl-D ends the session.
 
 **Sovereignty note:** the Kontor *server* never touches the network. `chat` is the optional client that talks to Anthropic — what leaves your machine is exactly the tool schemas, your messages and the tool results shown in the trace. `tools` and `audit` send nothing anywhere.
 

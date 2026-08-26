@@ -10,7 +10,7 @@ import type { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages
 import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 
-export const DEFAULT_MODEL = "claude-opus-5";
+export const DEFAULT_MODEL = "claude-sonnet-5";
 export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 
 export type Trace = (line: string) => void;
@@ -117,9 +117,10 @@ function defaultRunnerFactory(anthropic: Anthropic) {
       max_iterations: p.maxIterations,
       thinking: { type: "adaptive" },
       output_config: { effort: p.effort },
-      // Server-side refusal fallback (opt-in per Anthropic's guidance for the Opus 5 family).
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
+      // Server-side refusal fallback: documented for the Opus 5 / Fable 5 tier only.
+      ...(/^claude-(opus|fable)-5/.test(p.model)
+        ? { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" as const }
+        : {}),
     });
     return {
       async *[Symbol.asyncIterator]() {
