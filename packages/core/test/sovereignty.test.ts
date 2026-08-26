@@ -7,6 +7,10 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+
+// Slow CI runners (Windows) need more than vitest's 5 s default for the full matrix.
+const TIMEOUT = 120_000;
+
 import {
   auditInvoice,
   checkObligations,
@@ -58,42 +62,54 @@ afterAll(() => {
 });
 
 describe("sovereignty: no outbound network from the core library (NFR-2)", () => {
-  it("the guard itself works", async () => {
-    expect(() => fetch("http://example.invalid/")).toThrow(/KONTOR-SOVEREIGNTY/);
-    expect(guard.attempts).toEqual(["fetch(http://example.invalid/)"]);
-    guard.attempts.length = 0;
-  });
+  it(
+    "the guard itself works",
+    async () => {
+      expect(() => fetch("http://example.invalid/")).toThrow(/KONTOR-SOVEREIGNTY/);
+      expect(guard.attempts).toEqual(["fetch(http://example.invalid/)"]);
+      guard.attempts.length = 0;
+    },
+    TIMEOUT,
+  );
 
-  it("validate + audit (UBL, CII, XRechnung extension, ZUGFeRD PDF) make no network attempt", async () => {
-    for (const f of [
-      "detect/ubl-invoice-xrechnung-extension.xml",
-      "detect/ubl-creditnote-xrechnung.xml",
-      "detect/cii-facturx-basic.xml",
-      "spike/invalid-ubl-missing-buyerref.xml",
-    ]) {
-      await validateInvoice(fx(f));
-    }
-    for (const f of ["spike/valid-ubl.xml", "plausibility/broken-leitweg-vat-math.xml"]) {
-      await auditInvoice(fx(f), { plausibility: { today: new Date("2026-08-26") } });
-    }
-    const pdf = readFileSync(
-      fileURLToPath(new URL("../../server/samples/valid-zugferd-en16931.pdf", import.meta.url)),
-    );
-    const embedded = await extractEmbeddedXml(pdf);
-    await auditInvoice(embedded.xml, { plausibility: { today: new Date("2026-08-26") } });
-    expect(guard.attempts).toEqual([]);
-  });
+  it(
+    "validate + audit (UBL, CII, XRechnung extension, ZUGFeRD PDF) make no network attempt",
+    async () => {
+      for (const f of [
+        "detect/ubl-invoice-xrechnung-extension.xml",
+        "detect/ubl-creditnote-xrechnung.xml",
+        "detect/cii-facturx-basic.xml",
+        "spike/invalid-ubl-missing-buyerref.xml",
+      ]) {
+        await validateInvoice(fx(f));
+      }
+      for (const f of ["spike/valid-ubl.xml", "plausibility/broken-leitweg-vat-math.xml"]) {
+        await auditInvoice(fx(f), { plausibility: { today: new Date("2026-08-26") } });
+      }
+      const pdf = readFileSync(
+        fileURLToPath(new URL("../../server/samples/valid-zugferd-en16931.pdf", import.meta.url)),
+      );
+      const embedded = await extractEmbeddedXml(pdf);
+      await auditInvoice(embedded.xml, { plausibility: { today: new Date("2026-08-26") } });
+      expect(guard.attempts).toEqual([]);
+    },
+    TIMEOUT,
+  );
 
-  it("generate (UBL + ZUGFeRD PDF/A-3) and convert (all targets) make no network attempt", async () => {
-    await generateInvoice(invoice);
-    await generateInvoice(invoice, { target: "zugferd-pdf" });
-    const ubl = fx("spike/valid-ubl.xml");
-    for (const target of ["cii", "xrechnung-ubl", "html-preview"] as const) {
-      await convertInvoice(ubl, { target });
-    }
-    checkObligations({ role: "issuer", counterparty: "b2b", date: "2027-03-01" });
-    expect(guard.attempts).toEqual([]);
-  });
+  it(
+    "generate (UBL + ZUGFeRD PDF/A-3) and convert (all targets) make no network attempt",
+    async () => {
+      await generateInvoice(invoice);
+      await generateInvoice(invoice, { target: "zugferd-pdf" });
+      const ubl = fx("spike/valid-ubl.xml");
+      for (const target of ["cii", "xrechnung-ubl", "html-preview"] as const) {
+        await convertInvoice(ubl, { target });
+      }
+      checkObligations({ role: "issuer", counterparty: "b2b", date: "2027-03-01" });
+      expect(guard.attempts).toEqual([]);
+    },
+    TIMEOUT,
+  );
 });
 
 describe("sovereignty: static guard over runtime sources", () => {
