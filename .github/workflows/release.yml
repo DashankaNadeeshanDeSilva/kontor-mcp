@@ -1,0 +1,113 @@
+name: Release
+
+# Owner-triggered: push a tag `vX.Y.Z` that matches the package versions. Gates → npm trusted
+# publishing (provenance is attached automatically by npm ≥ 11.5.1 via OIDC) → GHCR image → GitHub release.
+# Set-up once on npmjs.com: each @kontor-mcp/* package → Settings → Trusted publisher → GitHub Actions,
+# repository DashankaNadeeshanDeSilva/kontor-mcp, workflow filename `release.yml`.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write # GitHub release
+  id-token: write # npm trusted publishing (OIDC)
+  packages: write # GHCR
+
+jobs:
+  gates:
+    name: All gates (tests, lint, licences, conformance, pack)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: pnpm install --frozen-lockfile
+      - name: Tag must equal the package versions
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          for p in rules core server client; do
+            v=$(node -p "require('./packages/$p/package.json').version")
+            test "$v" = "$tag" || { echo "packages/$p is $v, tag is $tag"; exit 1; }
+          done
+          grep -q "SERVER_VERSION = \"$tag\"" packages/server/src/server-meta.ts
+          grep -q "CLIENT_VERSION = \"$tag\"" packages/client/src/connect.ts
+          grep -q "^## \[$tag\]" CHANGELOG.md
+      - uses: actions/cache@v4
+        with:
+          path: fixtures/_downloads
+          key: artifacts-${{ hashFiles('tools/artifacts.manifest.json') }}
+      - run: pnpm artifacts
+      - run: pnpm build
+      - run: pnpm lint
+      - run: pnpm -r test
+      - run: pnpm audit --prod --audit-level high
+      - run: pnpm licenses:check
+      - run: pnpm oracle --diff --report /tmp/conformance-ci.json fixtures/spike fixtures/_downloads/xrechnung-testsuite/instances
+      - run: pnpm conformance:check --against /tmp/conformance-ci.json
+      - name: Pack check (contents + size)
+        run: sh tools/pack-check.sh
+
+  npm:
+    name: Publish to npm (trusted publishing + provenance)
+    needs: gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest && npm --version # trusted publishing needs npm >= 11.5.1
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Publish (dependency order; workspace:* is rewritten to the real versions by pnpm)
+        run: pnpm -r publish --access public --no-git-checks
+
+  docker:
+    name: Publish image to GHCR (amd64 + arm64)
+    needs: gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/dashankanadeeshandesilva/kontor-mcp:${{ github.ref_name }}
+            ghcr.io/dashankanadeeshandesilva/kontor-mcp:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  release:
+    name: GitHub release
+    needs: [npm, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract this version's changelog section
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          awk -v v="$v" '/^## \[/{p = index($0, "## [" v "]") == 1} p' CHANGELOG.md > /tmp/notes.md
+          test -s /tmp/notes.md
+      - uses: softprops/action-gh-release@v3
+        with:
+          body_path: /tmp/notes.md
+          generate_release_notes: false

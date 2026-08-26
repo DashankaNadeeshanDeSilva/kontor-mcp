@@ -9,7 +9,7 @@
 
 Kontor MCP is an open-source [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI assistants (Claude Desktop, Claude Code, any MCP client) fully local capabilities for German/EU electronic invoicing: **parse, validate, audit, explain, generate and convert XRechnung and ZUGFeRD/Factur-X invoices** with the *official* KoSIT / EN 16931 rule sets — and no invoice data ever leaving your machine.
 
-**Status: v0.9** — full tool surface (8 tools, 4 resource families, 3 prompts), KoSIT conformance 89/89, ZUGFeRD PDF/A-3 generation verified by veraPDF and Mustang. Phase 3 (Streamable HTTP + auth, Docker, `kontor-agent` CLI, security pass, npm publish → v1.0) is in progress; until the npm publish, install from source as shown below.
+**Status: v1.0** — 8 tools, 4 resource families, 3 prompts; KoSIT conformance 89/89 enforced by a CI gate; ZUGFeRD PDF/A-3 generation verified by veraPDF and Mustang; stdio and Streamable HTTP with bearer auth; Docker image (amd64/arm64); `kontor-agent` reference client; no-network proof in CI. Install with `npx`, Docker, or from source.
 
 ![Kontor MCP in Claude Desktop: validate a broken XRechnung, parse a ZUGFeRD PDF, explain BR-DE-18](docs/media/v0.1-desktop-demo.gif)
 
@@ -24,13 +24,14 @@ Kontor MCP is an open-source [Model Context Protocol](https://modelcontextprotoc
 
 ## Five-minute quickstart
 
-Requires Node ≥ 20 and pnpm 10 (`corepack enable` picks the pinned version).
+Requires Node ≥ 20. Everything — rules, schemas, code lists, fonts — ships inside the npm package; no downloads at runtime, no Java.
 
-```sh
-git clone https://github.com/DashankaNadeeshanDeSilva/kontor-mcp.git
-cd kontor-mcp
-pnpm install && pnpm build          # ~1 min; all standards artefacts are bundled — no extra downloads, no Java
-```
+| Install path | Command |
+|---|---|
+| **npx** (zero-config stdio) | `npx -y @kontor-mcp/server` |
+| **Docker** (Streamable HTTP, token required) | `docker run -d -p 127.0.0.1:3333:3333 -e KONTOR_AUTH_TOKEN=… ghcr.io/dashankanadeeshandesilva/kontor-mcp` |
+| **Reference client** | `npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml` |
+| **From source** | `git clone … && pnpm install && pnpm build` → `node packages/server/dist/bin.js` |
 
 **Claude Desktop** — Settings → Developer → Edit Config, then quit (⌘Q) and reopen:
 
@@ -38,17 +39,20 @@ pnpm install && pnpm build          # ~1 min; all standards artefacts are bundle
 {
   "mcpServers": {
     "kontor": {
-      "command": "node",
-      "args": ["/absolute/path/to/kontor-mcp/packages/server/dist/bin.js"]
+      "command": "npx",
+      "args": ["-y", "@kontor-mcp/server"]
     }
   }
 }
 ```
 
+(From a source checkout use `"command": "node", "args": ["/absolute/path/to/kontor-mcp/packages/server/dist/bin.js"]` instead.)
+```
+
 **Claude Code:**
 
 ```sh
-claude mcp add kontor -- node /absolute/path/to/kontor-mcp/packages/server/dist/bin.js
+claude mcp add kontor -- npx -y @kontor-mcp/server
 ```
 
 **Now audit a sample invoice.** Ask Claude:

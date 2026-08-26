@@ -9,7 +9,7 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 
 export const CLIENT_NAME = "kontor-agent" as const;
-export const CLIENT_VERSION = "0.9.0";
+export const CLIENT_VERSION = "1.0.0";
 
 export interface ConnectOptions {
   /** `[]` = spawn the bundled `@kontor-mcp/server` with the current Node; otherwise `[command, ...args]`. */

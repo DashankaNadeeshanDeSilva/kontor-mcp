@@ -153,6 +153,8 @@ jobs:
       - name: Licence inventory must match docs/LICENSES.md
         run: pnpm licenses:check
       - run: pnpm build
+      - name: Pack check (publishable tarballs: contents + size)
+        run: sh tools/pack-check.sh
       - name: Sovereignty (no-network guard) and hardening suites
         run: |
           pnpm --filter @kontor-mcp/core exec vitest run test/sovereignty.test.ts

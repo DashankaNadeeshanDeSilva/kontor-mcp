@@ -1,8 +1,31 @@
 {
   "name": "@kontor-mcp/core",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Kontor MCP — MCP-free core library: detect, parse, validate, generate, convert EN 16931 e-invoices (XRechnung, ZUGFeRD)",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DashankaNadeeshanDeSilva/kontor-mcp.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/DashankaNadeeshanDeSilva/kontor-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/DashankaNadeeshanDeSilva/kontor-mcp/issues"
+  },
+  "keywords": [
+    "e-invoice",
+    "xrechnung",
+    "zugferd",
+    "factur-x",
+    "en16931",
+    "mcp",
+    "model-context-protocol",
+    "invoice-validation",
+    "germany",
+    "pdf-a-3",
+    "ubl",
+    "cii"
+  ],
   "type": "module",
   "engines": {
     "node": ">=20"
@@ -19,6 +42,10 @@
     "dist",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false --pretty",
