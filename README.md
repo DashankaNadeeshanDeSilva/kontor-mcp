@@ -12,11 +12,11 @@ Kontor MCP is a local, offline toolbox that lets AI assistants (Claude Desktop, 
 
 Why it matters: since 2025 every German business must be able to *receive* e-invoices, and from 2027/2028 must *issue* them. An e-invoice is validated XML, not a PDF, and a failed rule can cost the input-VAT deduction. Invoices carry personal and bank data, so they should be checked where they live — on your machine — with the same rule sets the public-sector receivers use.
 
-**v1.0** — 8 tools · 4 resource families · 3 prompts · KoSIT conformance 89/89 enforced as a CI gate · ZUGFeRD PDF/A-3 output verified by veraPDF and Mustang · stdio and Streamable HTTP (bearer auth) · Docker image (amd64/arm64) · `kontor-agent` reference client · listed in the [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp). Install with `npx`, Docker, or from source.
-
 ![Kontor MCP in Claude Desktop: validate a broken XRechnung, parse a ZUGFeRD PDF, explain BR-DE-18](docs/media/v0.1-desktop-demo.gif)
 
 *Claude Desktop with the `kontor` server: validate → BR-DE-15 (missing Leitweg-ID) with fix hint · parse a ZUGFeRD PDF · explain BR-DE-18. [MP4](docs/media/v0.1-desktop-demo.mp4)*
+
+**v1.0** — 8 tools · 4 resource families · 3 prompts · KoSIT conformance 89/89 enforced as a CI gate · ZUGFeRD PDF/A-3 output verified by veraPDF and Mustang · stdio and Streamable HTTP (bearer auth) · Docker image (amd64/arm64) · `kontor-agent` reference client · listed in the [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp). Install with `npx`, Docker, or from source.
 
 ## Why
 

@@ -123,7 +123,7 @@
   .term .tb { background: var(--panel); border: 1px solid var(--line); border-bottom: 0; border-radius: 6px 6px 0 0; padding: 8px 12px; font-size: .72rem; color: var(--amber); }
   .term pre { border-radius: 0 0 6px 6px; }
   .term .p { color: #67e8f9; } .term .r { color: var(--err-soft); font-weight: 700; } .term .g { color: var(--ok); } .term .d { color: #6b7280; } .term .y { color: var(--amber); }
-  .arch { margin-top: 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; font-size: .82rem; color: var(--fg-3); }
+  .arch { margin-top: 22px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; font-size: .82rem; color: var(--fg-3); }
   .arch div { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
   .arch b { display: block; color: #fff; font-family: var(--mono); font-size: .8rem; }
   .arch div.s { border-color: var(--amber); }
@@ -272,11 +272,13 @@
     <span class="y">fix</span>  &lt;cbc:BuyerReference&gt;04011000-12345-67&lt;/cbc:BuyerReference&gt;
 <span class="p">›</span> verdict     <span class="r">UNGÜLTIG</span> · recommend <span class="r">reject</span> · <span class="d">0 network calls · exit 2</span></pre>
   </div>
+  <p class="fine"><b style="color:#fff">Reference client <code>kontor-agent</code></b> (<code>@kontor-mcp/client</code>): <code>tools</code> lists the server's surface; <code>audit &lt;file&gt;</code> is a scriptable audit that needs no LLM and exits 0 / 1 / 2 for accept / review / reject (3 on error), so it drops straight into CI or a mail pipeline; <code>chat</code> runs an Anthropic agent loop over the server and prints every tool call (needs <code>ANTHROPIC_API_KEY</code>; the server itself never does).</p>
   <div class="arch" aria-label="Packages">
     <div><b>MCP client</b>Claude Desktop · Claude Code · kontor-agent · any client</div>
     <div class="s"><b>@kontor-mcp/server</b>8 tools · 4 resources · 3 prompts · stdio + HTTP · Zod schemas</div>
     <div><b>@kontor-mcp/core</b>Saxon-JS Schematron · xmllint-wasm · pdf-lib · UBL ↔ CII</div>
     <div><b>@kontor-mcp/rules</b>KoSIT + EN 16931 rule sets · XSDs · code lists · rule KB</div>
+    <div><b>@kontor-mcp/client</b>kontor-agent: tools · audit (exit codes, no LLM) · chat (Anthropic agent loop)</div>
   </div>
 </div></div></section>
 
@@ -308,7 +310,7 @@
     "kontor": { "command": "npx", "args": ["-y", "@kontor-mcp/server"] }
   }
 }'>Copy</button></div>
-      <div class="cmd"><small>Shell audit with the reference client · exit codes 0 / 1 / 2 / 3</small><pre>npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml</pre><button class="copy" type="button" data-copy="npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml">Copy</button></div>
+      <div class="cmd"><small>kontor-agent, the reference client · scriptable audit, exit 0 / 1 / 2 = accept / review / reject</small><pre>npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml</pre><button class="copy" type="button" data-copy="npx -y -p @kontor-mcp/client kontor-agent audit invoice.xml">Copy</button></div>
     </div>
     <div>
       <div class="cmd"><small>Claude Code</small><pre>claude mcp add kontor -- npx -y @kontor-mcp/server</pre><button class="copy" type="button" data-copy="claude mcp add kontor -- npx -y @kontor-mcp/server">Copy</button></div>
