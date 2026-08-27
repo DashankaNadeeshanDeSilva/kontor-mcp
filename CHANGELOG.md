@@ -4,7 +4,7 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
-- Landing page (`site/`, deployed to GitHub Pages by `.github/workflows/pages.yml`): declaration-of-conformity layout with a live Official MCP Registry seal, tools, install, evidence, security and standards annexes. README badges for npm, the MCP Registry and the site.
+- Landing page (`site/`, deployed to GitHub Pages by `.github/workflows/pages.yml`): single-page product site (what, why, how, tools, install, technical, links) with a pinned-findings invoice hero and a live Official MCP Registry badge. README badges for npm, the MCP Registry and the site; README intro rewritten as a plain what/why paragraph.
 
 ## [1.0.4] — 2026-08-26
 
