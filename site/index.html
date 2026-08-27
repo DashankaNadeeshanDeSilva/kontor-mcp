@@ -81,7 +81,7 @@
   .inv-g { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin-top: 14px; }
   .inv-g > div { position: relative; }
   .miss { font-style: italic; color: var(--paper-mute); }
-  .pin { position: absolute; right: 0; top: -14px; font: 700 .64rem var(--mono); padding: 2px 6px; border-radius: 3px; background: var(--err); color: #fff; }
+  .pin { display: inline-block; vertical-align: middle; margin-left: 8px; font: 700 .64rem var(--mono); letter-spacing: 0; text-transform: none; padding: 2px 6px; border-radius: 3px; background: var(--err); color: #fff; }
   .pin.warn { background: var(--amber); color: var(--amber-ink); }
   .inv-t { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: .78rem; }
   .inv-t th, .inv-t td { text-align: left; padding: 5px 0; }
@@ -193,7 +193,7 @@
 <header class="hero" id="top">
   <div class="in">
     <div>
-      <div class="kick"><span>Open source · Apache-2.0</span><a class="live" id="live" href="https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp"><i></i><span id="live-text">Listed in the Official MCP Registry · v1.0.4</span></a></div>
+      <div class="kick"><span>Open source · Apache-2.0</span><a class="live" id="live" href="https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.DashankaNadeeshanDeSilva/kontor-mcp"><i></i><span id="live-text">Listed in the Official MCP Registry · modelcontextprotocol.io · v1.0.4</span></a></div>
       <h1>Sovereign e-invoice tools for AI agents</h1>
       <p class="lead">A local, offline toolbox that lets Claude Desktop, Claude Code and any MCP client read, check, explain, create and convert German/EU e-invoices (XRechnung, ZUGFeRD/Factur-X, EN 16931) with the official KoSIT rulebooks. No cloud, no API keys, no network calls, no Java.</p>
       <div class="cta">
@@ -214,11 +214,11 @@
         <div class="inv-g">
           <div><small>Verkäufer</small>Muster GmbH<br>Bremen</div>
           <div><small>Käufer</small>Freie Hansestadt Bremen<br>Senator für Finanzen</div>
-          <div><small>Käuferreferenz (BT-10)</small><span class="miss">— fehlt —</span><i class="pin">BR-DE-15</i></div>
+          <div><small>Käuferreferenz (BT-10)<i class="pin">BR-DE-15</i></small><span class="miss">— fehlt —</span></div>
           <div><small>Fälligkeit</small>25.09.2026</div>
         </div>
         <table class="inv-t"><thead><tr><th>Pos.</th><th>Beschreibung</th><th class="r">Menge</th><th class="r">Netto</th></tr></thead><tbody><tr><td>1</td><td>Beratung E-Rechnung</td><td class="r">8 h</td><td class="r">1.200,00</td></tr><tr><td>2</td><td>Validator-Integration</td><td class="r">1</td><td class="r">2.400,00</td></tr><tr class="tot"><td colspan="3">Gesamt inkl. 19 % USt.</td><td class="r">4.284,00</td></tr></tbody></table>
-        <div class="inv-f"><small>Zahlungsbedingungen (BT-20)</small>Zahlbar innerhalb 30 Tagen, 2 % Skonto bei 10 Tagen<i class="pin warn">BR-DE-18</i></div>
+        <div class="inv-f"><small>Zahlungsbedingungen (BT-20)<i class="pin warn">BR-DE-18</i></small>Zahlbar innerhalb 30 Tagen, 2 % Skonto bei 10 Tagen</div>
         <div class="verdict"><span class="bad">UNGÜLTIG</span><span>1 error · 1 warning · 84 ms · offline</span></div>
       </div>
       <div class="findings">
@@ -381,7 +381,7 @@
       var hit = (d.servers || []).filter(function (s) { return s.server && s.server.name === name; })[0];
       if (!hit) return;
       var m = (hit._meta || {})["io.modelcontextprotocol.registry/official"] || {};
-      document.getElementById("live-text").textContent = "Listed in the Official MCP Registry · " + (m.status || "active") + " · v" + hit.server.version;
+      document.getElementById("live-text").textContent = "Listed in the Official MCP Registry · modelcontextprotocol.io · " + (m.status || "active") + " · v" + hit.server.version;
       document.getElementById("live").classList.add("on");
     }).catch(function () {});
   document.querySelectorAll(".copy").forEach(function (b) {
